@@ -1,0 +1,408 @@
+<?xml version="1.0" standalone="yes"?>
+<AA3_0>
+  <xs:schema id="AA3_0" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="AA3_0" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Patient">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" default="">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="30" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="FamilyName" type="xs:string" default="" minOccurs="0" />
+                <xs:element name="GivenNames" type="xs:string" default="" minOccurs="0" />
+                <xs:element name="Address" type="xs:string" default="" minOccurs="0" />
+                <xs:element name="PhoneEmail" type="xs:string" default="" minOccurs="0" />
+                <xs:element name="Birthday" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="Sex" type="xs:int" default="-1" />
+                <xs:element name="PatientNotes" type="xs:string" default="" minOccurs="0" />
+                <xs:element name="BestValueType" type="xs:string" default="Measure" />
+                <xs:element name="BestValueTarget" type="xs:int" default="0" />
+                <xs:element name="RateH" type="xs:int" default="80" />
+                <xs:element name="RateL" type="xs:int" default="60" />
+                <xs:element name="ValueH" type="xs:int" default="0" />
+                <xs:element name="ValueL" type="xs:int" default="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Comment">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" default="632003-452">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="30" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="CommentID" type="xs:int" default="0" />
+                <xs:element name="Degree" type="xs:int" default="0" minOccurs="0" />
+                <xs:element name="StartDate" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="EndDate" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="Comment" type="xs:string" default="AAA" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="MeasureRec">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" default="632003-452">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="30" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="MeasureID" type="xs:int" default="0" />
+                <xs:element name="MeasureDate" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="PEFValue" type="xs:int" default="0" minOccurs="0" />
+                <xs:element name="FEV1Value" type="xs:float" default="0" minOccurs="0" />
+                <xs:element name="Error" type="xs:int" default="0" minOccurs="0" />
+                <xs:element name="BestValue" type="xs:int" default="0" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="DataTransferLog">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ID" default="">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="30" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element name="TransferDate" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="NumOfRecord" type="xs:int" default="0" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+      <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+        <xs:selector xpath=".//Patient" />
+        <xs:field xpath="ID" />
+      </xs:unique>
+      <xs:unique name="Comment_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+        <xs:selector xpath=".//Comment" />
+        <xs:field xpath="ID" />
+        <xs:field xpath="CommentID" />
+      </xs:unique>
+      <xs:unique name="MeasureRec_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+        <xs:selector xpath=".//MeasureRec" />
+        <xs:field xpath="ID" />
+        <xs:field xpath="MeasureID" />
+      </xs:unique>
+    </xs:element>
+  </xs:schema>
+  <Patient>
+    <ID>632003-452</ID>
+    <FamilyName>SAMPLE</FamilyName>
+    <GivenNames>PATIENT</GivenNames>
+    <Address>MAIN STREET, 404 CAPITOLCITY</Address>
+    <PhoneEmail>010 538 38 58, p.sample@NET.COM</PhoneEmail>
+    <Birthday>1941-03-09T09:00:00-07:00</Birthday>
+    <Sex>1</Sex>
+    <PatientNotes>HEAVY SMOKER</PatientNotes>
+    <BestValueType>Measure</BestValueType>
+    <BestValueTarget>0</BestValueTarget>
+    <RateH>80</RateH>
+    <RateL>60</RateL>
+    <ValueH>0</ValueH>
+    <ValueL>0</ValueL>
+  </Patient>
+  <Comment>
+    <ID>632003-452</ID>
+    <CommentID>0</CommentID>
+    <Degree>0</Degree>
+    <StartDate>2003-10-24T09:00:00-07:00</StartDate>
+    <EndDate>2003-10-24T09:00:00-07:00</EndDate>
+    <Comment>Medicament Oxis 6 2x1 Bricanyl</Comment>
+  </Comment>
+  <Comment>
+    <ID>632003-452</ID>
+    <CommentID>1</CommentID>
+    <Degree>1</Degree>
+    <StartDate>2003-10-27T09:00:00-07:00</StartDate>
+    <EndDate>2003-10-27T09:00:00-07:00</EndDate>
+    <Comment>Medicament Oxis 6 2x1 Bricanyl</Comment>
+  </Comment>
+  <Comment>
+    <ID>632003-452</ID>
+    <CommentID>2</CommentID>
+    <Degree>2</Degree>
+    <StartDate>2003-10-30T09:00:00-07:00</StartDate>
+    <EndDate>2003-11-01T09:00:00-07:00</EndDate>
+    <Comment>Medicament Oxis 6 2x1 Bricanyl</Comment>
+  </Comment>
+  <Comment>
+    <ID>632003-452</ID>
+    <CommentID>3</CommentID>
+    <Degree>3</Degree>
+    <StartDate>2003-11-07T09:00:00-07:00</StartDate>
+    <EndDate>2003-11-07T09:00:00-07:00</EndDate>
+    <Comment>Medicament Oxis 6 2x1 Bricanyl</Comment>
+  </Comment>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>0</MeasureID>
+    <MeasureDate>2003-10-24T17:15:00-07:00</MeasureDate>
+    <PEFValue>240</PEFValue>
+    <FEV1Value>0.21</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>1</MeasureID>
+    <MeasureDate>2003-10-25T17:06:00-07:00</MeasureDate>
+    <PEFValue>245</PEFValue>
+    <FEV1Value>1.83</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>2</MeasureID>
+    <MeasureDate>2003-10-26T04:07:00-07:00</MeasureDate>
+    <PEFValue>238</PEFValue>
+    <FEV1Value>0.23</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>3</MeasureID>
+    <MeasureDate>2003-10-26T18:08:00-07:00</MeasureDate>
+    <PEFValue>240</PEFValue>
+    <FEV1Value>0.58</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>4</MeasureID>
+    <MeasureDate>2003-10-27T16:02:00-07:00</MeasureDate>
+    <PEFValue>238</PEFValue>
+    <FEV1Value>2.5</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>5</MeasureID>
+    <MeasureDate>2003-10-28T01:44:00-07:00</MeasureDate>
+    <PEFValue>240</PEFValue>
+    <FEV1Value>0.59</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>6</MeasureID>
+    <MeasureDate>2003-10-28T15:06:00-07:00</MeasureDate>
+    <PEFValue>250</PEFValue>
+    <FEV1Value>1.13</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>7</MeasureID>
+    <MeasureDate>2003-10-29T03:15:00-07:00</MeasureDate>
+    <PEFValue>230</PEFValue>
+    <FEV1Value>0.6</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>8</MeasureID>
+    <MeasureDate>2003-10-29T17:15:00-07:00</MeasureDate>
+    <PEFValue>225</PEFValue>
+    <FEV1Value>0.32</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>9</MeasureID>
+    <MeasureDate>2003-10-30T04:06:00-07:00</MeasureDate>
+    <PEFValue>230</PEFValue>
+    <FEV1Value>2.94</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>10</MeasureID>
+    <MeasureDate>2003-10-30T18:07:00-07:00</MeasureDate>
+    <PEFValue>250</PEFValue>
+    <FEV1Value>0.35</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>11</MeasureID>
+    <MeasureDate>2003-10-31T03:01:00-07:00</MeasureDate>
+    <PEFValue>238</PEFValue>
+    <FEV1Value>0.63</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>12</MeasureID>
+    <MeasureDate>2003-10-31T17:02:00-07:00</MeasureDate>
+    <PEFValue>235</PEFValue>
+    <FEV1Value>2.72</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>13</MeasureID>
+    <MeasureDate>2003-11-01T02:44:00-07:00</MeasureDate>
+    <PEFValue>240</PEFValue>
+    <FEV1Value>0.64</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>14</MeasureID>
+    <MeasureDate>2003-11-01T16:06:00-07:00</MeasureDate>
+    <PEFValue>275</PEFValue>
+    <FEV1Value>0.41</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>15</MeasureID>
+    <MeasureDate>2003-11-02T03:15:00-07:00</MeasureDate>
+    <PEFValue>246</PEFValue>
+    <FEV1Value>1.09</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>16</MeasureID>
+    <MeasureDate>2003-11-02T17:15:00-07:00</MeasureDate>
+    <PEFValue>245</PEFValue>
+    <FEV1Value>0.43</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>17</MeasureID>
+    <MeasureDate>2003-11-03T02:06:00-07:00</MeasureDate>
+    <PEFValue>250</PEFValue>
+    <FEV1Value>0.67</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>18</MeasureID>
+    <MeasureDate>2003-11-03T16:07:00-07:00</MeasureDate>
+    <PEFValue>240</PEFValue>
+    <FEV1Value>1.91</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>19</MeasureID>
+    <MeasureDate>2003-11-04T01:08:00-07:00</MeasureDate>
+    <PEFValue>275</PEFValue>
+    <FEV1Value>0.68</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>20</MeasureID>
+    <MeasureDate>2003-11-04T15:01:00-07:00</MeasureDate>
+    <PEFValue>290</PEFValue>
+    <FEV1Value>0.48</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>21</MeasureID>
+    <MeasureDate>2003-11-05T03:02:00-07:00</MeasureDate>
+    <PEFValue>286</PEFValue>
+    <FEV1Value>0.77</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>22</MeasureID>
+    <MeasureDate>2003-11-05T17:44:00-07:00</MeasureDate>
+    <PEFValue>272</PEFValue>
+    <FEV1Value>1.61</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>23</MeasureID>
+    <MeasureDate>2003-11-06T04:06:00-07:00</MeasureDate>
+    <PEFValue>270</PEFValue>
+    <FEV1Value>0.52</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>24</MeasureID>
+    <MeasureDate>2003-11-06T18:15:00-07:00</MeasureDate>
+    <PEFValue>280</PEFValue>
+    <FEV1Value>0.76</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>25</MeasureID>
+    <MeasureDate>2003-11-07T03:15:00-07:00</MeasureDate>
+    <PEFValue>270</PEFValue>
+    <FEV1Value>1.29</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>26</MeasureID>
+    <MeasureDate>2003-11-07T18:06:00-07:00</MeasureDate>
+    <PEFValue>267</PEFValue>
+    <FEV1Value>0.74</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <MeasureRec>
+    <ID>632003-452</ID>
+    <MeasureID>27</MeasureID>
+    <MeasureDate>2003-11-08T05:07:00-07:00</MeasureDate>
+    <PEFValue>250</PEFValue>
+    <FEV1Value>1.19</FEV1Value>
+    <Error>0</Error>
+    <BestValue>0</BestValue>
+  </MeasureRec>
+  <DataTransferLog>
+    <ID>632003-452</ID>
+    <TransferDate>2003-11-07T09:00:00-07:00</TransferDate>
+    <NumOfRecord>1</NumOfRecord>
+  </DataTransferLog>
+</AA3_0>
