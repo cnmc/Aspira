@@ -3,7 +3,7 @@
  * This program does parsing
  * of Spirometer log files
  */
-package spirometerlogparser;
+package edu.asupoly.aspira.dmp.devicelogs;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -23,10 +23,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import edu.asupoly.aspira.model.Patient;
+import edu.asupoly.aspira.model.SpirometerReading;
+
 public class SpirometerLogParser
 {
-    PatientInfo pInfo = new PatientInfo();
-    List<Readings> _readings= new ArrayList<Readings>();
+    // XXX This obviously has to change
+    Patient pInfo = new Patient(System.currentTimeMillis());
+    List<SpirometerReading> _readings= new ArrayList<SpirometerReading>();
     void parseLog(String filename)
     {
         try
@@ -62,18 +66,18 @@ public class SpirometerLogParser
         for (int i = 0; i < len; i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                pInfo.FamilyName = getFirstChildNodeValue(node, "FamilyName");
-                pInfo.GivenNames = getFirstChildNodeValue(node, "GivenNames");
-                pInfo.Address = getFirstChildNodeValue(node, "Address");
-                pInfo.Birthday= getFirstChildNodeValue(node, "Birthday");
-                pInfo.PhoneEmail = getFirstChildNodeValue(node, "PhoneEmail");
-                pInfo.ValueH= getFirstChildNodeValue(node, "ValueH");
-                pInfo.ValueL = getFirstChildNodeValue(node, "ValueL");
-                pInfo.RateH= getFirstChildNodeValue(node, "RateH");
-                pInfo.RateL = getFirstChildNodeValue(node, "RateL");
-                pInfo.BestValueTarget= getFirstChildNodeValue(node, "BestValueTarget");
-                pInfo.BestValueType = getFirstChildNodeValue(node, "BestValueType");
-                pInfo.PatientNotes =getFirstChildNodeValue(node, "PatientNotes");
+                pInfo.setFamilyName(getFirstChildNodeValue(node, "FamilyName"));
+                pInfo.setGivenNames(getFirstChildNodeValue(node, "GivenNames"));
+                pInfo.setAddress(getFirstChildNodeValue(node, "Address"));
+                pInfo.setBirthday(getFirstChildNodeValue(node, "Birthday"));
+                pInfo.setPhoneEmail(getFirstChildNodeValue(node, "PhoneEmail"));
+                pInfo.setValueH(getFirstChildNodeValue(node, "ValueH"));
+                pInfo.setValueL(getFirstChildNodeValue(node, "ValueL"));
+                pInfo.setRateH(getFirstChildNodeValue(node, "RateH"));
+                pInfo.setRateL(getFirstChildNodeValue(node, "RateL"));
+                pInfo.setBestValueTarget(getFirstChildNodeValue(node, "BestValueTarget"));
+                pInfo.setBestValueType(getFirstChildNodeValue(node, "BestValueType"));
+                pInfo.setPatientNotes(getFirstChildNodeValue(node, "PatientNotes"));
             }
         }
     }
@@ -82,16 +86,16 @@ public class SpirometerLogParser
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
         for (int i = 0; i < len; i++) {
-            Readings pr = new Readings();
+            SpirometerReading pr = new SpirometerReading();
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                pr.pid = getFirstChildNodeValue(node, "ID");
-                pr.MeasureID = getFirstChildNodeValue(node, "MeasureID");
-                pr.MeasureDate = getFirstChildNodeValue(node, "MeasureDate");
-                pr.PEFValue = getFirstChildNodeValue(node, "PEFValue");
-                pr.FEV1Value = getFirstChildNodeValue(node, "FEV1Value");
-                pr.Error = getFirstChildNodeValue(node, "Error");
-                pr.BestValue = getFirstChildNodeValue(node, "BestValue");
+                pr.setPid(getFirstChildNodeValue(node, "ID"));
+                pr.setMeasureID(getFirstChildNodeValue(node, "MeasureID"));
+                pr.setMeasureDate(getFirstChildNodeValue(node, "MeasureDate"));
+                pr.setPEFValue(getFirstChildNodeValue(node, "PEFValue"));
+                pr.setFEV1Value(getFirstChildNodeValue(node, "FEV1Value"));
+                pr.setError(getFirstChildNodeValue(node, "Error"));
+                pr.setBestValue(getFirstChildNodeValue(node, "BestValue"));
                 _readings.add(pr);
             }
         }
@@ -100,19 +104,19 @@ public class SpirometerLogParser
     void printReadings()
     {
         System.out.println("ID\tMeasureId\tMeasureDate\t\t\tPEFValue\tFEV1Value");
-        for(Readings pr:_readings)
+        for(SpirometerReading pr:_readings)
         {
-            System.out.println(pr.pid+"\t" + pr.MeasureID+"\t\t"+pr.MeasureDate+"\t"+pr.PEFValue+"\t\t"+pr.FEV1Value );
+            System.out.println(pr.getPid()+"\t" + pr.getMeasureID()+"\t\t"+pr.getMeasureDate()+"\t"+pr.getPEFValue()+"\t\t"+pr.getFEV1Value());
         }
     }
     
     void printPatientInfo()
     {
-        System.out.println("FamilyName: " + pInfo.FamilyName);
-        System.out.println("GivenNames:  " + pInfo.GivenNames);
-        System.out.println( "Birthday: " + pInfo.Birthday);
-        System.out.println("RateH: "  + pInfo.RateH);
-        System.out.println( "RateL: " + pInfo.RateL );
+        System.out.println("FamilyName: " + pInfo.getFamilyName());
+        System.out.println("GivenNames:  " + pInfo.getGivenNames());
+        System.out.println( "Birthday: " + pInfo.getBirthday());
+        System.out.println("RateH: "  + pInfo.getRateH());
+        System.out.println( "RateL: " + pInfo.getRateL());
     }
     String getFirstChildNodeValue(Node node, String name)
     {
