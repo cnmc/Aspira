@@ -1,0 +1,13 @@
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bin\Debug\resources.pri
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bin\Debug\AppxManifest.xml
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bin\Debug\AsthmaMonitoring.build.appxrecipe
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\priconfig.xml
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\layout.resfiles
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\resources.resfiles
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\pri.resfiles
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\LanguageQualifiers.txt
+c:\users\vasu\documents\visual studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\ProjectArchitectures.txt
+C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\priconfig.xml.intermediate
+C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\layout.resfiles.intermediate
+C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\resources.resfiles.intermediate
+C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\pri.resfiles.intermediate
