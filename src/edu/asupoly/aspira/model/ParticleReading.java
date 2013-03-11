@@ -9,8 +9,6 @@ package edu.asupoly.aspira.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
-
 public class ParticleReading implements java.io.Serializable  {
     /**
      * 
@@ -22,13 +20,13 @@ public class ParticleReading implements java.io.Serializable  {
     private int smallParticleCount;
     private int largeParticleCount;
     
-    public ParticleReading(String d, String t, String s, String l) throws DeviceLogException {
+    public ParticleReading(String d, String t, String s, String l) throws AspiraModelException {
         try {
             dateTime = ParticleReading.formatter.parse(d + " " + t);
             smallParticleCount = Integer.parseInt(s);
             largeParticleCount = Integer.parseInt(l);
         } catch (Throwable th) {
-            throw new DeviceLogException(th);
+            throw new AspiraModelException(th);
         }
     }
     
