@@ -33,21 +33,21 @@ public class DylosLogParser
             {
                 finput = br.readLine();
             }
-            finput = br.readLine();
-            while (finput != null)
+            finput = br.readLine().trim();
+            while (finput != null && !finput.isEmpty() && !finput.contains("---------"))
             {
-                if( !(finput.isEmpty()) || finput.contains("-------"))
-                {
-                    st = new StringTokenizer(finput, ",", false);     
-                    dt = st.nextToken();
-                    _dt = new StringTokenizer(dt, " ");
-                    date = _dt.nextToken();
-                    time = _dt.nextToken();
-                    small = st.nextToken();
-                    large = st.nextToken();
-                    ParticleReading pr = new ParticleReading(date, time, small, large);
-                    _dyloslog.add(pr);
-                }
+		st = new StringTokenizer(finput, ",", false);     
+		dt = st.nextToken();
+		_dt = new StringTokenizer(dt, " ");
+		
+		date = _dt.nextToken().trim();
+		time = _dt.nextToken().trim();
+		small = st.nextToken().trim();
+		large = st.nextToken().trim();
+
+		ParticleReading pr = new ParticleReading(date, time, small, large);
+		_dyloslog.add(pr);
+
                 finput = br.readLine(); 
             }
         } catch (Throwable t) {
