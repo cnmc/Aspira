@@ -1,23 +1,60 @@
 /*
  * ASPIRA Project
  * This program does parsing
- * of Spirometer log files 
+ * of Spirometer log files
+ * author djawle
  */
 
-// XXX Need to remove all PII from here
-// XXX Need to convert to proper datatypes
 package edu.asupoly.aspira.model;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Patient {
     
-    public Patient(long anonId) {
-        patientId = anonId;
+    private String patientId;
+    private String familyName;
+    private String givenNames;
+    private String address;
+    private String phoneEmail;
+    private DateFormat df = new SimpleDateFormat("yyyy/mm/ddThh:mm-mm:ss");
+    private Date birthday;
+    private String sex;
+    private String patientNotes;
+    private String bestValueType;
+    private int bestValueTarget;
+    private int rateH;
+    private int rateL;
+    private int valueH;
+    private int valueL;
+    
+    public Patient(String anonId, String fname, String name, String address, String pe, String bday, String sex, String rH, String rL, String vH, String vL, String pN, String btype, String bvalue) throws DeviceLogException
+    {
+        try{
+            this.patientId = anonId;
+            this.familyName = fname;
+            this.givenNames = name;
+            this.address = address;
+            this.phoneEmail = pe;
+            this.birthday = df.parse(bday);
+            this.sex = sex;
+            this.patientNotes = pN;
+            this.bestValueType = btype;
+            this.bestValueTarget = Integer.parseInt(bvalue);
+            this.rateH = Integer.parseInt(rH);
+            this.rateL = Integer.parseInt(rL);
+            this.valueH = Integer.parseInt(vH);
+            this.valueL = Integer.parseInt(vL);
+        }catch (Throwable th) {
+            throw new DeviceLogException(th);
+        }
     }
     
-    public long getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
     public String getFamilyName() {
@@ -44,10 +81,10 @@ public class Patient {
     public void setPhoneEmail(String phoneEmail) {
         this.phoneEmail = phoneEmail;
     }
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
     public String getSex() {
@@ -68,51 +105,42 @@ public class Patient {
     public void setBestValueType(String bestValueType) {
         this.bestValueType = bestValueType;
     }
-    public String getBestValueTarget() {
+    public int getBestValueTarget() {
         return bestValueTarget;
     }
-    public void setBestValueTarget(String bestValueTarget) {
+    public void setBestValueTarget(int bestValueTarget) {
         this.bestValueTarget = bestValueTarget;
     }
-    public String getRateH() {
+    public int getRateH() {
         return rateH;
     }
-    public void setRateH(String rateH) {
+    public void setRateH(int rateH) {
         this.rateH = rateH;
     }
-    public String getRateL() {
+    public int getRateL() {
         return rateL;
     }
-    public void setRateL(String rateL) {
+    public void setRateL(int rateL) {
         this.rateL = rateL;
     }
-    public String getValueH() {
+    public int getValueH() {
         return valueH;
     }
-    public void setValueH(String valueH) {
+    public void setValueH(int valueH) {
         this.valueH = valueH;
     }
-    public String getValueL() {
+    public int getValueL() {
         return valueL;
     }
-    public void setValueL(String valueL) {
+    public void setValueL(int valueL) {
         this.valueL = valueL;
     }
-
-    private long patientId;
-    private String familyName;
-    private String givenNames;
-    private String address;
-    private String phoneEmail;
-    private String birthday;
-    private String sex;
-    private String patientNotes;
-    private String bestValueType;
-    private String bestValueTarget;
-    private String rateH;
-    private String rateL;
-    private String valueH;
-    private String valueL;    
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Patient && birthday.equals(((Patient)obj).birthday);
+    }
+    @Override
+    public int hashCode() {
+        return birthday.hashCode();
+    }
 }
-
-
