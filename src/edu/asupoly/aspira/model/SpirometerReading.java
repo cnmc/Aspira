@@ -14,7 +14,7 @@ public class SpirometerReading implements java.io.Serializable {
     private static final long serialVersionUID = 9002395112333017198L;
     private String pid;
     private int    measureID;
-    private DateFormat df = new SimpleDateFormat("yyyy/mm/ddThh:mm-mm:ss");
+    private DateFormat df = new SimpleDateFormat("yyyy-mm-ddThh:mm:ss-mm:ss");
     private Date   measureDateTime;
     private int    pefValue;
     private float  fev1Value;
@@ -72,6 +72,7 @@ public class SpirometerReading implements java.io.Serializable {
     public int hashCode() {
         return measureDateTime.hashCode();
     }
+    
     public SpirometerReading(String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
         try{
             this.pid = id + '\0';
