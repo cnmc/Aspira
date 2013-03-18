@@ -10,19 +10,19 @@
     <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
 
     <link href="/pages/readingPage/readingPage.css" rel="stylesheet" />
-    <script src="readingPage.js"></script>
+    <script src="/pages/readingPage/readingPage.js"></script>
 </head>
 <body>
     <div class="readingPage fragment">
         <header aria-label="Header content" role="banner">
             <button class="win-backbutton" aria-label="Back" disabled type="button"></button>
             <h1 class="titlearea win-type-ellipsis">
-                <span class="pagetitle">PEF Reading</span>
+                <span class="pagetitle" id="headingText">PEF Reading</span>
             </h1>
         </header>
         <section aria-label="Main content" role="main">
             <div class="mainDivision">
-                <div class="middleContent">
+                <div class="middleContent" id="middleContent">
                     <input id="PEFValue" type="text"/>
                 </div>
             </div>

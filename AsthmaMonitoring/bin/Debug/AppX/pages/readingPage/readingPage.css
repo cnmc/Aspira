@@ -3,6 +3,10 @@
 }
 .mainDivision {
     text-align: center;
+    
+	position:relative;
+	left: 652px;
+	top: 256px;
 }
 .middleContent {
     display: inline-block;
