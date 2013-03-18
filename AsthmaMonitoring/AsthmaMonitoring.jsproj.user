@@ -4,6 +4,9 @@
     <ReferenceCachePath>C:\Users\vasu\AppData\Local\Temp\AsthmaMonitoring_refcache</ReferenceCachePath>
     <AutoRefresh>true</AutoRefresh>
     <ShowAllFiles>true</ShowAllFiles>
+    <AppxPackageIsForStore>False</AppxPackageIsForStore>
+    <AppxShowAllApps>False</AppxShowAllApps>
+    <AppxBuildConfigurationSelection>neutral</AppxBuildConfigurationSelection>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>AppHostSimulatorDebugger</DebuggerFlavor>

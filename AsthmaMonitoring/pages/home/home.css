@@ -1,5 +1,5 @@
 ﻿.homepage section[role=main] {
-    margin-left: 555.78px;
+    margin-left: 511.78px;
 }
 
 @media screen and (-ms-view-state: snapped) {
@@ -12,4 +12,9 @@
     .homepage section[role=main] {
         margin-left: 100px;
     }
+}
+#takeReading{
+	position:relative; 
+	left: auto;
+	top: auto;
 }
