@@ -54,17 +54,23 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="css\default.css" />
-    <Content Include="css\home.css" />
+    <Content Include="images\adminPage.png" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
     <Content Include="js\default.js" />
-    <Content Include="js\home.js" />
     <Content Include="js\navigator.js" />
+    <Content Include="pages\adminPage\adminPage.css" />
+    <Content Include="pages\adminPage\adminPage.html" />
+    <Content Include="pages\adminPage\adminPage.js" />
+    <Content Include="pages\home\home.css" />
     <Content Include="pages\home\home.html" />
     <Content Include="default.html" />
-    <Content Include="pages\ReadingPage.html" />
+    <Content Include="pages\home\home.js" />
+    <Content Include="pages\readingPage\readingPage.css" />
+    <Content Include="pages\readingPage\readingPage.html" />
+    <Content Include="pages\readingPage\readingPage.js" />
     <None Include="AsthmaMonitoring_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

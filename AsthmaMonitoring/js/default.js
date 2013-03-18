@@ -10,7 +10,7 @@
     var nav = WinJS.Navigation;
     var displayPage = [
            { url: "/pages/home/home.html", title: "Welcome, standby, debriefing page" },
-           { url: "/html/pefReading.html", title: "PEF reading Page" },
+           { url: "/pages/readingPage/readingPage.html", title: "PEF reading Page" },
            { url: "/html/fevReading.html", title: "FEV reading Page" }
     ];
     app.addEventListener("activated", function (eventObject) {

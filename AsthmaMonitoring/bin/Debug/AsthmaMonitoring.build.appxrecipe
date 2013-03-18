@@ -1,59 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Machine>VASU-GUPTA</Machine>
+    <Machine>VASUDEV2</Machine>
     <WindowsUser>vasu</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\css\default.css">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\css\home.css">
-      <PackagePath>css\home.css</PackagePath>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.css">
+      <PackagePath>pages\adminPage\adminPage.css</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\images\logo.png">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.css">
+      <PackagePath>pages\home\home.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.css">
+      <PackagePath>pages\readingPage\readingPage.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
+      <PackagePath>images\adminPage.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\logo.png">
       <PackagePath>images\logo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\images\smalllogo.png">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\smalllogo.png">
       <PackagePath>images\smalllogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\images\splashscreen.png">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\splashscreen.png">
       <PackagePath>images\splashscreen.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\images\storelogo.png">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\storelogo.png">
       <PackagePath>images\storelogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\js\default.js">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\default.js">
       <PackagePath>js\default.js</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\js\home.js">
-      <PackagePath>js\home.js</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\js\navigator.js">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\navigator.js">
       <PackagePath>js\navigator.js</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\pages\home\home.html">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
+      <PackagePath>pages\adminPage\adminPage.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
+      <PackagePath>pages\home\home.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
+      <PackagePath>pages\readingPage\readingPage.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
+      <PackagePath>pages\adminPage\adminPage.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.html">
       <PackagePath>pages\home\home.html</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\default.html">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\default.html">
       <PackagePath>default.html</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\pages\ReadingPage.html">
-      <PackagePath>pages\ReadingPage.html</PackagePath>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
+      <PackagePath>pages\readingPage\readingPage.html</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bin\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
     </AppxPackagedFile>
   </ItemGroup>

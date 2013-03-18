@@ -1,0 +1,14 @@
+﻿.readingPage p {
+    margin-left: 120px;
+}
+.mainDivision {
+    text-align: center;
+    
+	position:relative;
+	left: 652px;
+	top: 256px;
+}
+.middleContent {
+    display: inline-block;
+   text-align: left;
+}
