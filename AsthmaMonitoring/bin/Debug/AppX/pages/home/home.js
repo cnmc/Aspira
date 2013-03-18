@@ -7,6 +7,8 @@
         ready: function (element, options) {
             // TODO: Initialize the page here.
             WinJS.Utilities.id("takeReading").listen("click", this.takeReading, false);
+            WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
+            
         },
         
         takeReading: function (eventInfo) {
@@ -15,6 +17,9 @@
             // now get the link from the anchor tag
             //var link = eventInfo.target;
             WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
+        },
+        adminLogin: function (eventInfo) { 
+            WinJS.Navigation.navigate("/pages/adminPage/adminPage.html");
         }
     });
 })();

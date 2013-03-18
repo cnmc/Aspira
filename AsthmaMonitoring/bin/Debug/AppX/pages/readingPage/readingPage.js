@@ -29,19 +29,14 @@
 
         unload: function () {
             // TODO: Respond to navigations away from this page.
-        },
-        goHome: function () {
-            WinJS.Navigation.navigate("/pages/home/home.html");
-        },
+        }, 
         changeScreenFev: function(){
             document.getElementById("headingText").innerHTML = "FEV Reading";
             document.getElementById("confirmButton").removeNode(true);
             var confirmBtnFEVMarkup = document.createElement("button");
             confirmBtnFEVMarkup.id = "confirmButton";
-            confirmBtnFEVMarkup.innerHTML = "Confirm1";
-            confirmBtnFEVMarkup.onclick = function () {
-                WinJS.Navigation.navigate("/pages/home/home.html");
-            };
+            confirmBtnFEVMarkup.innerHTML = "Confirm";
+            confirmBtnFEVMarkup.onclick = function () {WinJS.Navigation.navigate("/pages/home/home.html");};
             document.getElementById('middleContent').appendChild(confirmBtnFEVMarkup);
         },
         

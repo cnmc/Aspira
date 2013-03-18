@@ -16,13 +16,17 @@
     <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-17T23:01:44.412</Modified>
+      <Modified>2013-03-18T08:38:31.993</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
       <Modified>2013-03-17T02:07:38.703</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.css">
+      <PackagePath>pages\adminPage\adminPage.css</PackagePath>
+      <Modified>2013-03-18T08:34:17.373</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.css">
       <PackagePath>pages\home\home.css</PackagePath>
@@ -31,6 +35,10 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.css">
       <PackagePath>pages\readingPage\readingPage.css</PackagePath>
       <Modified>2013-03-17T23:31:54.251</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
+      <PackagePath>images\adminPage.png</PackagePath>
+      <Modified>2013-03-18T08:23:28.195</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\logo.png">
       <PackagePath>images\logo.png</PackagePath>
@@ -60,21 +68,29 @@
       <PackagePath>js\navigator.js</PackagePath>
       <Modified>2013-03-17T02:07:38.720</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
+      <PackagePath>pages\adminPage\adminPage.js</PackagePath>
+      <Modified>2013-03-18T08:34:17.069</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-03-17T22:56:25.592</Modified>
+      <Modified>2013-03-18T08:30:49.278</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
-      <Modified>2013-03-18T08:09:44.700</Modified>
+      <Modified>2013-03-18T08:10:31.995</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
+      <PackagePath>pages\adminPage\adminPage.html</PackagePath>
+      <Modified>2013-03-18T08:40:55.659</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.html">
       <PackagePath>pages\home\home.html</PackagePath>
-      <Modified>2013-03-17T23:06:32.433</Modified>
+      <Modified>2013-03-18T08:40:58.807</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\default.html">
       <PackagePath>default.html</PackagePath>
-      <Modified>2013-03-17T23:31:54.245</Modified>
+      <Modified>2013-03-18T08:27:33.114</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
       <PackagePath>pages\readingPage\readingPage.html</PackagePath>
@@ -82,7 +98,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-03-17T23:01:44.182</Modified>
+      <Modified>2013-03-18T08:38:31.870</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
