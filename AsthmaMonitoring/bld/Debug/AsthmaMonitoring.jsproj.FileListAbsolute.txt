@@ -11,3 +11,16 @@ C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonit
 C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\layout.resfiles.intermediate
 C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\resources.resfiles.intermediate
 C:\Users\vasu\Documents\Visual Studio 2012\Projects\AsthmaMonitoring\AsthmaMonitoring\bld\Debug\pri.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AsthmaMonitoring.build.appxrecipe
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\priconfig.xml.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\layout.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\resources.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\pri.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\priconfig.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\layout.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\resources.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\pri.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\LanguageQualifiers.txt
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Debug\ProjectArchitectures.txt
