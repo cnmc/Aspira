@@ -36,17 +36,17 @@ public class DylosLogParser
             finput = br.readLine().trim();
             while (finput != null && !finput.isEmpty() && !finput.contains("---------"))
             {
-		st = new StringTokenizer(finput, ",", false);     
-		dt = st.nextToken();
-		_dt = new StringTokenizer(dt, " ");
-		
-		date = _dt.nextToken().trim();
-		time = _dt.nextToken().trim();
-		small = st.nextToken().trim();
-		large = st.nextToken().trim();
+                st = new StringTokenizer(finput, ",", false);     
+                dt = st.nextToken();
+                _dt = new StringTokenizer(dt, " ");
 
-		ParticleReading pr = new ParticleReading(date, time, small, large);
-		_dyloslog.add(pr);
+                date = _dt.nextToken().trim();
+                time = _dt.nextToken().trim();
+                small = st.nextToken().trim();
+                large = st.nextToken().trim();
+
+                ParticleReading pr = new ParticleReading(date, time, small, large);
+                _dyloslog.add(pr);
 
                 finput = br.readLine(); 
             }

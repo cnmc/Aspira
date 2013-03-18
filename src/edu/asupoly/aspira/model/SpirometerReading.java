@@ -9,6 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
+
 public class SpirometerReading implements java.io.Serializable {
     
     private static final long serialVersionUID = 9002395112333017198L;

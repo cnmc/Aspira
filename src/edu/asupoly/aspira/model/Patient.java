@@ -7,19 +7,20 @@
 
 package edu.asupoly.aspira.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 
+/**
+ * KGDJ: For now we aren't worrying about the Patient model as we
+ * are not using it for anything. We can construct a partial one
+ * from the Spirometer reading header, but the clinician's also 
+ * want to keep some stuff from their interviews.
+ * Main thing is NO PII!
+ * @author kevinagary
+ *
+ */
 public class Patient {
     
     private String patientId;
-    private String familyName;
-    private String givenNames;
-    private String address;
-    private String phoneEmail;
-    private DateFormat df = new SimpleDateFormat("yyyy/mm/ddThh:mm-mm:ss");
-    private Date birthday;
     private String sex;
     private String patientNotes;
     private String bestValueType;
@@ -29,15 +30,11 @@ public class Patient {
     private int valueH;
     private int valueL;
     
-    public Patient(String anonId, String fname, String name, String address, String pe, String bday, String sex, String rH, String rL, String vH, String vL, String pN, String btype, String bvalue) throws DeviceLogException
+    public Patient(String anonId, String sex, String rH, String rL, 
+                   String vH, String vL, String pN, String btype, String bvalue) throws DeviceLogException
     {
-        try{
+        try {
             this.patientId = anonId;
-            this.familyName = fname;
-            this.givenNames = name;
-            this.address = address;
-            this.phoneEmail = pe;
-            this.birthday = df.parse(bday);
             this.sex = sex;
             this.patientNotes = pN;
             this.bestValueType = btype;
@@ -46,7 +43,7 @@ public class Patient {
             this.rateL = Integer.parseInt(rL);
             this.valueH = Integer.parseInt(vH);
             this.valueL = Integer.parseInt(vL);
-        }catch (Throwable th) {
+        } catch (Throwable th) {
             throw new DeviceLogException(th);
         }
     }
@@ -56,36 +53,6 @@ public class Patient {
     }
     public void setPatientId(String patientId) {
         this.patientId = patientId;
-    }
-    public String getFamilyName() {
-        return familyName;
-    }
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-    public String getGivenNames() {
-        return givenNames;
-    }
-    public void setGivenNames(String givenNames) {
-        this.givenNames = givenNames;
-    }
-    public String getAddress() {
-        return address;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public String getPhoneEmail() {
-        return phoneEmail;
-    }
-    public void setPhoneEmail(String phoneEmail) {
-        this.phoneEmail = phoneEmail;
-    }
-    public Date getBirthday() {
-        return birthday;
-    }
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
     }
     public String getSex() {
         return sex;
@@ -137,10 +104,10 @@ public class Patient {
     }
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Patient && birthday.equals(((Patient)obj).birthday);
+        return obj instanceof Patient && patientId.equals(((Patient)obj).patientId);
     }
     @Override
     public int hashCode() {
-        return birthday.hashCode();
+        return patientId.hashCode();
     }
 }

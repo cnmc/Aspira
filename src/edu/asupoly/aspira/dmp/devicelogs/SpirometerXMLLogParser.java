@@ -5,29 +5,27 @@
  */
 package edu.asupoly.aspira.dmp.devicelogs;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import edu.asupoly.aspira.model.SpirometerReading;
 
-public class SpirometerLogParser
+/*
+ * KGDJ: We still need to parse the Patient element
+ */
+public class SpirometerXMLLogParser
 {
     List<SpirometerReading> _readings= new ArrayList<SpirometerReading>();
-    void parseLog(String filename)
+    public boolean parseLog(String filename)
     {
         try
         {
@@ -38,21 +36,19 @@ public class SpirometerLogParser
             factory.setValidating(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(source);
-            System.out.println("Successfully Completed Parsing");
+            Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, "Successfully Completed Parsing");
             populateReadings(doc);
-            System.out.println("Printing Patient Reading -");
-            printReadings();
+            //Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, "Printing Patient Reading -");
+            //printReadings();
+            return true;
         }
-        catch (ParserConfigurationException ex) {
-            Logger.getLogger(SpirometerLogParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(SpirometerLogParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SpirometerLogParser.class.getName()).log(Level.SEVERE, null, ex);
+        catch (Throwable t) {
+            Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, null, t);
         }
+        return false;
     }
     
-    void populateReadings(Document doc)
+    private void populateReadings(Document doc) throws DeviceLogException
     {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
@@ -72,7 +68,8 @@ public class SpirometerLogParser
         }
     }
     
-    void printReadings()
+    @SuppressWarnings("unused")
+    private void printReadings()
     {
         System.out.println("ID\tMeasureId\tMeasureDate\t\t\tPEFValue\tFEV1Value");
         for(SpirometerReading pr:_readings)
@@ -81,7 +78,7 @@ public class SpirometerLogParser
         }
     }
     
-    String getFirstChildNodeValue(Node node, String name)
+    private String getFirstChildNodeValue(Node node, String name)
     {
         Element e = (Element)node;
         NodeList list = e.getElementsByTagName(name);
@@ -92,14 +89,5 @@ public class SpirometerLogParser
         }
         return st;
     }
-    public static void main (String args[]) throws FileNotFoundException, TransformerConfigurationException {
-        
-        if(args.length < 1)
-        {
-            System.out.println("No log file passed as argument passed");
-            return;
-        }
-        SpirometerLogParser _parser = new SpirometerLogParser();
-        _parser.parseLog(args[0]);
-    }
+
 }
