@@ -7,16 +7,21 @@ package edu.asupoly.aspira.dmp.devicelogs;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer; 
 
+import edu.asupoly.aspira.model.AirQualityReadings;
+import edu.asupoly.aspira.model.AirQualityReadingsFactory;
 import edu.asupoly.aspira.model.ParticleReading;
 
-public class DylosLogParser 
-{
-    public static List<ParticleReading> parseLog(String filename) throws DeviceLogException {          
-        List<ParticleReading> _dyloslog = new ArrayList<ParticleReading>();
+public class DylosLogParser implements AirQualityReadingsFactory  {
+    
+    public DylosLogParser() {}
+    
+    @Override
+    public AirQualityReadings createAirQualityReadings(Properties props) throws Exception {          
+        AirQualityReadings dyloslog = new AirQualityReadings(props.getProperty("deviceid"),
+                                                              props.getProperty("patientid"));
         BufferedReader br = null;
         String date;
         String time;
@@ -26,7 +31,7 @@ public class DylosLogParser
         String dt;
 
         try {
-            br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new FileReader(props.getProperty("aqlogfile")));
 
             String finput = br.readLine();
             while (finput.indexOf("Date/Time, Small, Large") == -1)
@@ -45,8 +50,7 @@ public class DylosLogParser
                 small = st.nextToken().trim();
                 large = st.nextToken().trim();
 
-                ParticleReading pr = new ParticleReading(date, time, small, large);
-                _dyloslog.add(pr);
+                dyloslog.addReading(new ParticleReading(date, time, small, large));
 
                 finput = br.readLine(); 
             }
@@ -63,6 +67,6 @@ public class DylosLogParser
                 }
             }
         }
-        return _dyloslog;
+        return dyloslog;
     }
 }
