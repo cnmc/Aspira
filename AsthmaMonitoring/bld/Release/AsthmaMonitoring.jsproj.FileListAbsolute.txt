@@ -1,0 +1,13 @@
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Release\resources.pri
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Release\AppxManifest.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Release\AsthmaMonitoring.build.appxrecipe
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\priconfig.xml.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\layout.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\resources.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\pri.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\priconfig.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\layout.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\resources.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\pri.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\LanguageQualifiers.txt
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\Release\ProjectArchitectures.txt

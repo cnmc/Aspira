@@ -1,0 +1,13 @@
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\x64\Release\resources.pri
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\x64\Release\AppxManifest.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\x64\Release\AsthmaMonitoring.build.appxrecipe
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\priconfig.xml.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\layout.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\resources.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\pri.resfiles.intermediate
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\priconfig.xml
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\layout.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\resources.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\pri.resfiles
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\LanguageQualifiers.txt
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bld\x64\Release\ProjectArchitectures.txt
