@@ -18,3 +18,19 @@
 	left: auto;
 	top: auto;
 }
+.rightItem {
+    float:right;
+}
+.leftItem {
+    top:250px;
+	margin-left:100px;
+    float:left;
+    position:relative;
+}
+.trafficSignal {
+    width:175px;
+    height:300px;
+}
+.peripheralContent {
+    margin-top:50px;
+}

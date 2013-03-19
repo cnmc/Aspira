@@ -7,9 +7,11 @@
         // This function is called whenever a user navigates to this page. It
         // populates the page elements with the app's data.
         ready: function (element, options) {
-            // TODO: Initialize the page here.
-           // WinJS.Utilities.id("PEFValue").listen("click", this.currReadingMonitor, false);
-         //   WinJS.Utilities.id("PEFValue").o
+             WinJS.Utilities.id("leftHelpItem1").listen("click", this.navHelpPage, false);
+            WinJS.Utilities.id("leftHelpItem2").listen("click", this.navHelpPage, false);
+            WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
+            WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false); 
+
             document.getElementById('middleContent').onkeypress = this.currReadingMonitor.bind(this);
             var confirmBtnMarkup = document.createElement("button");
             confirmBtnMarkup.id = "confirmButton";
@@ -19,13 +21,13 @@
         },
 
         currReadingMonitor: function (eventInfo) {
-            // validate input 
-           // if (validateInput("PEFValue")) {
-                
-           // }
+            // TODO: do validation stuff for readings here
+        },
 
-           
-        }, 
+        navHelpPage: function (eventInfo) {
+            var invokingHelpIcon = eventInfo.currentTarget.id;
+            WinJS.Navigation.navigate("/pages/helpDisplay/helpDisplay.html", {"displayContent" : invokingHelpIcon});
+        },
 
         unload: function () {
             // TODO: Respond to navigations away from this page.

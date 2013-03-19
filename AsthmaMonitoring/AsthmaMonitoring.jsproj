@@ -36,6 +36,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>99d9a641-35c0-46a2-8473-11baca999bd1</ProjectGuid>
+    <ExpressionBlendVersion>5.0.30709.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0'">
     <VisualStudioVersion>11.0</VisualStudioVersion>
@@ -55,9 +56,20 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="css\default.css" />
-    <Content Include="dogAnimation.mp4" />
+    <Content Include="images\16391609-illustration-of-cartoon-traffic-light.jpg" />
+    <Content Include="images\aspira_spiro.jpg" />
+    <Content Include="images\third.jpg" />
     <Content Include="images\adminPage.png" />
+    <Content Include="images\dog+open+arms+cartoon.gif" />
+    <Content Include="images\first.jpg" />
+    <Content Include="images\happy.png" />
+    <Content Include="images\holdSpiroBothHands.jpg" />
+    <Content Include="images\images.jpg" />
+    <Content Include="images\lifealbum1.png" />
     <Content Include="images\logo.png" />
+    <Content Include="images\NextReadingv1.jpg" />
+    <Content Include="images\sad.png" />
+    <Content Include="images\second.jpg" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
@@ -66,6 +78,9 @@
     <Content Include="pages\adminPage\adminPage.css" />
     <Content Include="pages\adminPage\adminPage.html" />
     <Content Include="pages\adminPage\adminPage.js" />
+    <Content Include="pages\helpDisplay\helpDisplay.css" />
+    <Content Include="pages\helpDisplay\helpDisplay.html" />
+    <Content Include="pages\helpDisplay\helpDisplay.js" />
     <Content Include="pages\home\home.css" />
     <Content Include="pages\home\home.html" />
     <Content Include="default.html" />
@@ -73,6 +88,9 @@
     <Content Include="pages\readingPage\readingPage.css" />
     <Content Include="pages\readingPage\readingPage.html" />
     <Content Include="pages\readingPage\readingPage.js" />
+    <Content Include="video\dogAnimation.mp4" />
+    <Content Include="video\steps3_6.mp4" />
+    <Content Include="video\Steps7_8.mp4" />
     <None Include="AsthmaMonitoring_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

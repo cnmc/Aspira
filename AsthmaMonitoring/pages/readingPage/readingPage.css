@@ -12,3 +12,24 @@
     display: inline-block;
    text-align: left;
 }
+.allHelp {
+    position:relative;
+    margin-top:150px;
+}
+.leftHelpPanel {
+    float:left;
+}
+.rightHelpPanel {
+    float: right;
+}
+.leftHelpPanelItem {
+float:left;
+}
+.rightHelpPanelItem {
+float:left;
+}
+.helpThumbnail {
+ width:100px;
+ height:100px;
+ padding:20px;
+}

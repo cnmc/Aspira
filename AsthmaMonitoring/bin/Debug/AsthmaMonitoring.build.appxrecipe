@@ -19,21 +19,54 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.css">
       <PackagePath>pages\adminPage\adminPage.css</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.css">
+      <PackagePath>pages\helpDisplay\helpDisplay.css</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.css">
       <PackagePath>pages\home\home.css</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.css">
       <PackagePath>pages\readingPage\readingPage.css</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\dogAnimation.mp4">
-      <PackagePath>dogAnimation.mp4</PackagePath>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\16391609-illustration-of-cartoon-traffic-light.jpg">
+      <PackagePath>images\16391609-illustration-of-cartoon-traffic-light.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\aspira_spiro.jpg">
+      <PackagePath>images\aspira_spiro.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\third.jpg">
+      <PackagePath>images\third.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\first.jpg">
+      <PackagePath>images\first.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\holdSpiroBothHands.jpg">
+      <PackagePath>images\holdSpiroBothHands.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\images.jpg">
+      <PackagePath>images\images.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\NextReadingv1.jpg">
+      <PackagePath>images\NextReadingv1.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\second.jpg">
+      <PackagePath>images\second.jpg</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\happy.png">
+      <PackagePath>images\happy.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\lifealbum1.png">
+      <PackagePath>images\lifealbum1.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\logo.png">
       <PackagePath>images\logo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\sad.png">
+      <PackagePath>images\sad.png</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\smalllogo.png">
       <PackagePath>images\smalllogo.png</PackagePath>
@@ -47,6 +80,9 @@
       <PackagePath>images\storelogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\dog+open+arms+cartoon.gif">
+      <PackagePath>images\dog+open+arms+cartoon.gif</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\default.js">
       <PackagePath>js\default.js</PackagePath>
     </AppxPackagedFile>
@@ -55,6 +91,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
       <PackagePath>pages\adminPage\adminPage.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.js">
+      <PackagePath>pages\helpDisplay\helpDisplay.js</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
@@ -65,6 +104,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
       <PackagePath>pages\adminPage\adminPage.html</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.html">
+      <PackagePath>pages\helpDisplay\helpDisplay.html</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.html">
       <PackagePath>pages\home\home.html</PackagePath>
     </AppxPackagedFile>
@@ -73,6 +115,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
       <PackagePath>pages\readingPage\readingPage.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\dogAnimation.mp4">
+      <PackagePath>video\dogAnimation.mp4</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\steps3_6.mp4">
+      <PackagePath>video\steps3_6.mp4</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\Steps7_8.mp4">
+      <PackagePath>video\Steps7_8.mp4</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
