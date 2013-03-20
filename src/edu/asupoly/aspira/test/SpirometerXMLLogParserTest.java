@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.asupoly.aspira.dmp.devicelogs;
+package edu.asupoly.aspira.test;
 
+import edu.asupoly.aspira.dmp.devicelogs.SpirometerXMLLogParser;
 import edu.asupoly.aspira.model.SpirometerXMLReadings;
 import java.util.Properties;
 import org.junit.Before;
@@ -12,7 +13,6 @@ import static org.junit.Assert.*;
 
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
-import java.util.Properties;
 
 /**
  *
@@ -28,9 +28,6 @@ public class SpirometerXMLLogParserTest {
 
     @Before
     public void setUp() throws Exception {
-        p.put("deviceid", "device_one");
-        p.put("patientid", "patient_one");
-        p.put("splogfile", "/Users/DJ/Desktop/Aspira/devicelogsamples/2388.datAA3XML"); 
         __benchmarkReadings.addReading(new SpirometerReading("2388", "2013-01-25T14:40:00-07:00", "0", "459", "3.17", "0", "503"));
         __benchmarkReadings.addReading(new SpirometerReading("2388", "2013-01-29T11:32:00-07:00", "1", "410", "2.97", "0", "503"));
         __benchmarkReadings.addReading(new SpirometerReading("2388", "2013-01-31T14:13:00-07:00", "2", "503", "3.11", "0", "503"));
