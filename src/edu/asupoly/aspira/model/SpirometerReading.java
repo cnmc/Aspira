@@ -5,19 +5,18 @@
  * author djawle
  */
 package edu.asupoly.aspira.model;
+import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
+import java.util.StringTokenizer;
 
 public class SpirometerReading implements java.io.Serializable {
     
     private static final long serialVersionUID = 9002395112333017198L;
     private String pid;
     private int    measureID;
-    private DateFormat df = new SimpleDateFormat("yyyy-mm-ddThh:mm:ss-mm:ss");
-    private Date   measureDateTime;
+    private Date   measureDate;
     private int    pefValue;
     private float  fev1Value;
     private int    error;
@@ -35,11 +34,11 @@ public class SpirometerReading implements java.io.Serializable {
     public void setMeasureID(int measureID) {
         this.measureID = measureID;
     }
-    public Date getMeasureDateTime() {
-        return measureDateTime;
+    public Date getMeasureDate() {
+        return measureDate;
     }
-    public void setMeasureDate(Date measureDateTime) {
-        this.measureDateTime = measureDateTime;
+    public void setMeasureDate(Date measureDate) {
+        this.measureDate = measureDate;
     }
     public int getPEFValue() {
         return pefValue;
@@ -67,19 +66,22 @@ public class SpirometerReading implements java.io.Serializable {
     }
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof SpirometerReading && measureDateTime.equals(((SpirometerReading)obj).measureDateTime);
+        return obj instanceof SpirometerReading && measureDate.equals(((SpirometerReading)obj).measureDate);
     }
     
     @Override
     public int hashCode() {
-        return measureDateTime.hashCode();
+        return measureDate.hashCode();
     }
     
     public SpirometerReading(String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
-        try{
+        try{ 
             this.pid = id + '\0';
             this.measureID = Integer.parseInt(mid);
-            this.measureDateTime = df.parse(mdate);
+             StringTokenizer st = new StringTokenizer(mdate, "T", false);     
+             mdate = st.nextToken() + " " +  st.nextToken();
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss-MM:SS");
+            this.measureDate = df.parse(mdate);           
             pefValue = Integer.parseInt(pef);
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
@@ -87,7 +89,7 @@ public class SpirometerReading implements java.io.Serializable {
         }
         catch(Throwable th)
         {
-            throw new DeviceLogException(th);
+             throw new DeviceLogException(th);
         }
     }
 }

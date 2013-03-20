@@ -31,7 +31,7 @@ public class Patient {
     private int valueL;
     
     public Patient(String anonId, String sex, String rH, String rL, 
-                   String vH, String vL, String pN, String btype, String bvalue) throws DeviceLogException
+                   String vH, String vL,  String btype, String bvalue, String pN) throws DeviceLogException
     {
         try {
             this.patientId = anonId;

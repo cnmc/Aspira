@@ -5,9 +5,12 @@
  */
 package edu.asupoly.aspira.dmp.devicelogs;
 
+import edu.asupoly.aspira.model.Patient;
+import edu.asupoly.aspira.model.SpirometerReading;
+import edu.asupoly.aspira.model.SpirometerXMLReadings;
+import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -17,38 +20,57 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import edu.asupoly.aspira.model.SpirometerReading;
 
-/*
- * KGDJ: We still need to parse the Patient element
- */
-public class SpirometerXMLLogParser
+public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
 {
-    List<SpirometerReading> _readings= new ArrayList<SpirometerReading>();
-    public boolean parseLog(String filename)
-    {
+        public SpirometerXMLLogParser() {}
+    
+    @Override
+    public SpirometerXMLReadings createSpirometerXMLReadings(Properties props) throws Exception
+    {         
+            SpirometerXMLReadings _spReadings = new SpirometerXMLReadings(props.getProperty("deviceid"),
+                                                              props.getProperty("patientid"));
         try
         {
-            InputSource source = new InputSource(new FileReader(filename));
+            InputSource source = new InputSource(new FileReader(props.getProperty("splogfile")));
             Document doc = null;
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setIgnoringElementContentWhitespace(true);
             factory.setValidating(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(source);
-            Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, "Successfully Completed Parsing");
-            populateReadings(doc);
-            //Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, "Printing Patient Reading -");
-            //printReadings();
-            return true;
+            buildpatientinfo(doc);
+            populateReadings(doc, _spReadings);
         }
         catch (Throwable t) {
             Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, null, t);
         }
-        return false;
+        
+        return _spReadings;
     }
     
-    private void populateReadings(Document doc) throws DeviceLogException
+    private void buildpatientinfo(Document doc) throws DeviceLogException   
+    {
+        NodeList nodeList = doc.getElementsByTagName("Patient");
+        int len = nodeList.getLength();
+        for (int i = 0; i < len; i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String id = getFirstChildNodeValue(node, "ID");
+                String Sex = getFirstChildNodeValue(node, "Sex");
+                String ValueH= getFirstChildNodeValue(node, "ValueH");
+                String ValueL = getFirstChildNodeValue(node, "ValueL");
+                String RateH= getFirstChildNodeValue(node, "RateH");
+                String RateL = getFirstChildNodeValue(node, "RateL");
+                String BestValueTarget= getFirstChildNodeValue(node, "BestValueTarget");
+                String BestValueType = getFirstChildNodeValue(node, "BestValueType");
+                String PatientNotes =getFirstChildNodeValue(node, "PatientNotes");
+                Patient pInfo = new Patient(id, Sex, RateH, RateL, ValueH, ValueL, BestValueType, BestValueTarget, PatientNotes);
+            }
+        }
+    }
+   
+    private void populateReadings(Document doc, SpirometerXMLReadings _spReadings) throws DeviceLogException
     {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
@@ -62,19 +84,9 @@ public class SpirometerXMLLogParser
                 String fev = getFirstChildNodeValue(node, "FEV1Value");
                 String err = getFirstChildNodeValue(node, "Error");
                 String bvalue = getFirstChildNodeValue(node, "BestValue");
-                SpirometerReading pr = new SpirometerReading(id, mid, dt, pef, fev, err, bvalue);
-                _readings.add(pr);
+                SpirometerReading pr = new SpirometerReading(id,  dt, mid,  pef, fev, err, bvalue);
+                boolean addReading = _spReadings.addReading(pr);
             }
-        }
-    }
-    
-    @SuppressWarnings("unused")
-    private void printReadings()
-    {
-        System.out.println("ID\tMeasureId\tMeasureDate\t\t\tPEFValue\tFEV1Value");
-        for(SpirometerReading pr:_readings)
-        {
-            System.out.println(pr.getPid()+"\t" + pr.getMeasureID()+"\t\t"+pr.getMeasureDateTime()+"\t"+pr.getPEFValue()+"\t\t"+pr.getFEV1Value());
         }
     }
     
@@ -89,5 +101,5 @@ public class SpirometerXMLLogParser
         }
         return st;
     }
-
+   
 }
