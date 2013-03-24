@@ -14,8 +14,7 @@
 
             document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
             //Initialize the awesome stuff
-            createAnimationDiv();
-            fishFloat();
+            initializeAnimation();
 
         },
 
@@ -28,12 +27,19 @@
                     confirmBtnMarkup.innerHTML = "Confirm";
                     if (document.getElementById("PEFValue")) {
                         confirmBtnMarkup.onclick = this.changeScreenFev;
-                    } else if (document.getElementById("FEVValue")) {
-                        confirmBtnMarkup.onclick = function () { WinJS.Navigation.navigate("/pages/home/home.html"); };
+                    }
+                    else if (document.getElementById("FEVValue")) {
+                        confirmBtnMarkup.onclick = function () {
+                            //change the mood of the fish to happy
+                            AsthmaGlobals.fileConfig.config.animation.currMood = "happy";
+                            setProperties();
+                            WinJS.Navigation.navigate("/pages/home/home.html");
+                        };
                     }
                     document.getElementById('middleContent').appendChild(confirmBtnMarkup);
                 }
-            } else {
+
+             } else {
                 if (document.getElementById('confirmButton')) {
                     document.getElementById('confirmButton').removeNode(true);
                 }
