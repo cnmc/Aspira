@@ -12,16 +12,32 @@
             WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false); 
 
-            document.getElementById('middleContent').onkeypress = this.currReadingMonitor.bind(this);
-            var confirmBtnMarkup = document.createElement("button");
-            confirmBtnMarkup.id = "confirmButton";
-            confirmBtnMarkup.innerHTML = "Confirm";
-            confirmBtnMarkup.onclick = this.changeScreenFev;
-            document.getElementById('middleContent').appendChild(confirmBtnMarkup);
+            document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
+            //Initialize the awesome stuff
+            createAnimationDiv();
+            fishFloat();
+
         },
 
         currReadingMonitor: function (eventInfo) {
-            // TODO: do validation stuff for readings here
+            if (validateInput(eventInfo.currentTarget.id)) {
+                
+                if (!document.getElementById('confirmButton')) {
+                    var confirmBtnMarkup = document.createElement("button");
+                    confirmBtnMarkup.id = "confirmButton";
+                    confirmBtnMarkup.innerHTML = "Confirm";
+                    if (document.getElementById("PEFValue")) {
+                        confirmBtnMarkup.onclick = this.changeScreenFev;
+                    } else if (document.getElementById("FEVValue")) {
+                        confirmBtnMarkup.onclick = function () { WinJS.Navigation.navigate("/pages/home/home.html"); };
+                    }
+                    document.getElementById('middleContent').appendChild(confirmBtnMarkup);
+                }
+            } else {
+                if (document.getElementById('confirmButton')) {
+                    document.getElementById('confirmButton').removeNode(true);
+                }
+            }
         },
 
         navHelpPage: function (eventInfo) {
@@ -32,14 +48,18 @@
         unload: function () {
             // TODO: Respond to navigations away from this page.
         }, 
-        changeScreenFev: function(){
-            document.getElementById("headingText").innerHTML = "FEV Reading";
-            document.getElementById("confirmButton").removeNode(true);
-            var confirmBtnFEVMarkup = document.createElement("button");
-            confirmBtnFEVMarkup.id = "confirmButton";
-            confirmBtnFEVMarkup.innerHTML = "Confirm";
-            confirmBtnFEVMarkup.onclick = function () {WinJS.Navigation.navigate("/pages/home/home.html");};
-            document.getElementById('middleContent').appendChild(confirmBtnFEVMarkup);
+        changeScreenFev: function () {
+            
+                document.getElementById("headingText").innerHTML = "FEV Reading";
+                document.getElementById("PEFValue").id = "FEVValue"
+                document.getElementById("FEVValue").value = "";
+                document.getElementById("confirmButton").removeNode(true);
+           
+           // var confirmBtnFEVMarkup = document.createElement("button");
+           // confirmBtnFEVMarkup.id = "confirmButton";
+            //confirmBtnFEVMarkup.innerHTML = "Confirm";
+            //confirmBtnFEVMarkup.onclick = function () {WinJS.Navigation.navigate("/pages/home/home.html");};
+            //document.getElementById('middleContent').appendChild(confirmBtnFEVMarkup);
         },
         
         updateLayout: function (element, viewState, lastViewState) {
@@ -50,15 +70,33 @@
     });
 
     function validateInput(feildName) {
-        var currValueEntered = document.getElementById(feildName).value;
-        var re = new RegExp("\d+(\.\d{1,2})?");
+        var currValueEntered = document.getElementById(feildName).value.trim();
+        var re = /^\d{3}\.\d{1}$/g;
         var result = re.exec(currValueEntered);
-        if (result == null)
+        if (result == null) {
             return false;
-        else
-            return true;
+        }
+        else {
+            return rangeCheck(feildName, currValueEntered); 
+        }
     }
 
-   
+    function rangeCheck(feildName, currValueEntered) {
+        var upperBound;
+        var lowerBound;
+        if (feildName == "PEFValue") {
+            upperBound = AsthmaGlobals.fileConfig.config.maxValues.PEFValue;
+            lowerBound = AsthmaGlobals.fileConfig.config.minValues.PEFValue;
+        }
+        else if (feildName == "FEVValue") {
+            upperBound = AsthmaGlobals.fileConfig.config.maxValues.FEVValue;
+            lowerBound = AsthmaGlobals.fileConfig.config.minValues.FEVValue;
+        }
+
+        if (currValueEntered > upperBound || currValueEntered < lowerBound) {
+            return false;
+        }
+        return true;
+    }
     
 })();

@@ -13,8 +13,14 @@
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
+      <PackagePath>config.json</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\fishAnimation.css">
+      <PackagePath>css\fishAnimation.css</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.css">
       <PackagePath>pages\adminPage\adminPage.css</PackagePath>
@@ -52,6 +58,39 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\second.jpg">
       <PackagePath>images\second.jpg</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fishBowl.png">
+      <PackagePath>images\fishAnimation\fishBowl.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_1.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_10.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_10.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_2.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_2.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_3.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_3.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_4.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_4.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_5.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_5.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_6.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_6.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_7.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_7.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_8.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_8.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_9.png">
+      <PackagePath>images\fishAnimation\fish_normal_stage_9.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
     </AppxPackagedFile>
@@ -86,8 +125,17 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\default.js">
       <PackagePath>js\default.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\fishAnimation.js">
+      <PackagePath>js\fishAnimation.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\jquery1.8.js">
+      <PackagePath>js\jquery1.8.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\navigator.js">
       <PackagePath>js\navigator.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\configurationProperties.js">
+      <PackagePath>js\configurationProperties.js</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
       <PackagePath>pages\adminPage\adminPage.js</PackagePath>

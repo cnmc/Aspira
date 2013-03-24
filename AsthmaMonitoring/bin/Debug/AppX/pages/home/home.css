@@ -21,11 +21,30 @@
 .rightItem {
     float:right;
 }
-.leftItem {
-    top:250px;
+.nextReadingCard {
+    top:180px;
 	margin-left:100px;
     float:left;
     position:relative;
+    border: thick solid green;
+    border-radius: 20px;
+    width:200px;
+    height:100px;
+    text-align:center;
+}
+.nextReadingHeading {
+    border-bottom:thick solid green;
+    border-top-left-radius:14px;
+    border-top-right-radius:14px;
+    font-weight:900;
+    color:white;
+    background-color:#376fe2;
+    text-align:center;
+}
+.nextReadingContent { 
+    margin-top:3%;
+    font-weight:900;
+    font-size:x-large;
 }
 .trafficSignal {
     width:175px;

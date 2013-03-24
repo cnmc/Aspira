@@ -9,36 +9,42 @@
     <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
     <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
 
+	<link href="/css/fishAnimation.css" rel="stylesheet" />
     <link href="/pages/readingPage/readingPage.css" rel="stylesheet" />
     <script src="/pages/readingPage/readingPage.js"></script>
 </head>
 <body>
     <div class="readingPage fragment">
         <header aria-label="Header content" role="banner">
-            <button class="win-backbutton" aria-label="Back" disabled type="button"></button>
-            <h1 class="titlearea win-type-ellipsis">
-                <span class="pagetitle" id="headingText">PEF Reading</span>
+             <h1 class="titlearea win-type-ellipsis">
+                <span class="pagetitle">Asthma Monitoring!</span>
             </h1>
+           
         </header>
        <div class="allHelp">
             <div class="leftHelpPanel">
               <div class="leftHelpPanelItem" id="leftHelpItem1"> <img class="helpThumbnail" src="/images/first.jpg" /> </div>
               <div class="leftHelpPanelItem" id="leftHelpItem2"> <img class="helpThumbnail" src="/images/second.jpg" /></div>
+             <div class="leftHelpPanelItem" id="rightHelpItem3">  <img class="helpThumbnail" src="/images/third.jpg" /></div>
+              <div class="leftHelpPanelItem" id="rightHelpItem4">  <img class="helpThumbnail" src="/images/holdSpiroBothHands.jpg" /></div>
+           
             </div>
             <div class="rightHelpPanel">
-               <div class="rightHelpPanelItem" id="rightHelpItem3">  <img class="helpThumbnail" src="/images/third.jpg" /></div>
-              <div class="rightHelpPanelItem" id="rightHelpItem4">  <img class="helpThumbnail" src="/images/holdSpiroBothHands.jpg" /></div>
-            </div>
+                 <div id="takeReading" class="readingPageAnimationDiv"></div>
+               </div>
         </div>
-        <section aria-label="Main content" role="main">
+        
            
             <div class="mainDivision">
                   
                 <div class="middleContent" id="middleContent">
+                    <h1 class="titlearea win-type-ellipsis">
+                <span class="pagetitle" id="headingText">PEF Reading</span>
+             </h1>
                     <input id="PEFValue" type="text"/>
                 </div>
             </div>
-        </section>
+        
     </div>
 </body>
 </html>

@@ -1,0 +1,11 @@
+{"config" : {
+	"animation" : {
+		"totalStages" : 20,
+		"currStage"   : 8,
+		"currMood"    : "happy"
+	},
+	"alertInfo" : {
+		"airQualityStatus" : "normal",
+		"nextReading" : 300
+	}
+}}

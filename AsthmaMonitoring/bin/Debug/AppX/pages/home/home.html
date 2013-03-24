@@ -8,14 +8,19 @@
     <link href="//Microsoft.WinJS.1.0/css/ui-light.css" rel="stylesheet" />
     <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
     <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
-
+       <script src="/js/configurationProperties.js"></script>
+  
     <link href="/css/default.css" rel="stylesheet" />
     <link href="/pages/home/home.css" rel="stylesheet" />
+    <link href="/css/fishAnimation.css" rel="stylesheet" />
     <script src="/pages/home/home.js"></script>
+     <script src="/js/fishAnimation.js"></script>
+  
+
 </head>
 <body>
     <!-- The content that will be loaded and displayed. -->
-    <div class="fragment homepage">
+    <div class="fragment homepage" id="homepageMain">
         <div style="float:left">
        <h1 class="titlearea win-type-ellipsis">
                 <span class="pagetitle">Asthma Monitoring!</span>
@@ -23,8 +28,15 @@
        </div>
         
         <div class="peripheralContent">
-            <div class="leftPanel">
-              <div class="leftItem" id="leftItem"> <img class="nextReading" src="/images/NextReadingv1.jpg" /> </div> 
+            <div class="leftPanel" id="leftPanel">
+              <div class="nextReadingCard" id="nextReadingCard">
+                  <div class="nextReadingHeading">
+                    <h2>  Next Reading</h2>
+                  </div>
+                  <div class="nextReadingContent" id ="nextReadingContent">
+                      3:00 pm
+                  </div>
+              </div> 
             </div>
             <div class="rightPanel">
                 <div style="float:right">
@@ -37,8 +49,8 @@
             </div>
         </div>
         <section aria-label="Main content" role="main" style="margin-top:49.2px; margin-right: 428.03px; margin-bottom: 134.23px; -ms-grid-row-span: 1;">
-           <video id="takeReading" src="/video/dogAnimation.mp4" autoplay="autoplay" width="450" ></video>
-             
+           <div id="takeReading">
+          </div>
         </section>
     </div>
 </body>

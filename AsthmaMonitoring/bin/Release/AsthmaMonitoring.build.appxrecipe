@@ -52,6 +52,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\second.jpg">
       <PackagePath>images\second.jpg</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishBowl.png">
+      <PackagePath>images\fishBowl.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
     </AppxPackagedFile>

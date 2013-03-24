@@ -13,11 +13,17 @@
            { url: "/pages/readingPage/readingPage.html", title: "PEF reading Page" },
            { url: "/html/fevReading.html", title: "FEV reading Page" }
     ];
+    WinJS.Namespace.define("AsthmaGlobals", {
+        "fileConfig": null
+    });
+   
     app.addEventListener("activated", function (eventObject) {
         if (eventObject.detail.kind === activation.ActivationKind.launch) {
             // Unlike other windows applications our app would never be suspended so we do not check 
             //the previous state of the app : Vasu 
             eventObject.setPromise(WinJS.UI.processAll().then(function () {
+                getProperties();
+
                 return nav.navigate(displayPage[0].url);
             }));
         }
