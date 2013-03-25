@@ -144,8 +144,12 @@ function calculateNextReadingTimeout() {
 
     nextReadingObj.setHours(nextReadingHour.substr(0, 2), nextReadingHour.substr(2, 2), 00, 00);
     var displayHours = nextReadingObj.getHours();
+    if (displayHours == 0) {
+        displayHours = "00";
+    }
     var ampm = "am";
-    if (displayHours > 12) {
+    if (displayHours >= 12) {
+        if (displayHours > 12)
         displayHours -= 12;
         ampm = "pm";
     }
