@@ -12,9 +12,9 @@ function createAnimationDiv() {
         AsthmaGlobals.fileConfig.config.animation.totalStages) {
         currentStage = 1;
     } 
-    var mood = "normal";
+    var mood = AsthmaGlobals.fileConfig.config.animation.currMood;
     var imgSrc= "/images/fishAnimation/fish_"+mood+"_stage_"+currentStage+".png";
-    var content = " <div class='animationMainContainer' >";
+    var content = " <div class='animationMainContainer' id='animationMainContainer'>";
     content += "<div class='fishImage' id='fishImage'>";
     content += "<img id='fish_normal_stage_1' src='" + imgSrc + "'  alt='Fish' />";
     content += "</div>";
@@ -25,7 +25,13 @@ function createAnimationDiv() {
     calculateImageToShow();
     $("#takeReading").append(content);
 }
-
+function initializeAnimation() {
+    if (document.getElementById("animationMainContainer")) {
+        document.getElementById("animationMainContainer").removeNode(true);
+    }
+    createAnimationDiv();
+    fishFloat()
+}
 //boring stuff
 function calculateImageToShow() {
     var todaysDate = new Date();

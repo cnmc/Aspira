@@ -29,10 +29,14 @@
                         confirmBtnMarkup.onclick = this.changeScreenFev;
                     }
                     else if (document.getElementById("FEVValue")) {
+                        //it is in the fev sreen now and appending onclick event according to that
                         confirmBtnMarkup.onclick = function () {
                             //change the mood of the fish to happy
                             AsthmaGlobals.fileConfig.config.animation.currMood = "happy";
                             setProperties();
+                            Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"] =
+                                document.getElementById("FEVValue").value;
+                            createSpirometerLog();
                             WinJS.Navigation.navigate("/pages/home/home.html");
                         };
                     }
@@ -55,17 +59,13 @@
             // TODO: Respond to navigations away from this page.
         }, 
         changeScreenFev: function () {
-            
+            Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] =
+                document.getElementById("PEFValue").value;
+
                 document.getElementById("headingText").innerHTML = "FEV Reading";
                 document.getElementById("PEFValue").id = "FEVValue"
                 document.getElementById("FEVValue").value = "";
                 document.getElementById("confirmButton").removeNode(true);
-           
-           // var confirmBtnFEVMarkup = document.createElement("button");
-           // confirmBtnFEVMarkup.id = "confirmButton";
-            //confirmBtnFEVMarkup.innerHTML = "Confirm";
-            //confirmBtnFEVMarkup.onclick = function () {WinJS.Navigation.navigate("/pages/home/home.html");};
-            //document.getElementById('middleContent').appendChild(confirmBtnFEVMarkup);
         },
         
         updateLayout: function (element, viewState, lastViewState) {

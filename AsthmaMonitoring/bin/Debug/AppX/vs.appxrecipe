@@ -5,24 +5,24 @@
     <WindowsUser>vasu</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
-    <RegisteredManifestChecksum>E88CA617049DECF989A798A146B53BE02A8D44C57D585DEE546A78E96C37BDDB</RegisteredManifestChecksum>
-    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd3_0.1.0.8_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
+    <RegisteredManifestChecksum>778E99FCEC50A69E737B20C1377799C24B1B041BC820C097120834756017F73C</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd3_0.0.0.9_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>99d9a641-35c0-46a2-8473-11baca999bd3_qrw6ghay3f4aj!App</RegisteredUserModeAppID>
     <RegisteredPackageID>99d9a641-35c0-46a2-8473-11baca999bd3</RegisteredPackageID>
     <RegisteredPackagePublisher>CN=vasu</RegisteredPackagePublisher>
-    <RegisteredVersion>0.1.0.8</RegisteredVersion>
+    <RegisteredVersion>0.0.0.9</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-24T06:08:15.016</Modified>
+      <Modified>2013-03-24T23:52:14.089</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
       <PackagePath>config.json</PackagePath>
-      <Modified>2013-03-22T19:31:53.752</Modified>
+      <Modified>2013-03-24T21:54:07.505</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
@@ -84,6 +84,10 @@
       <PackagePath>images\fishAnimation\fishBowl.png</PackagePath>
       <Modified>2013-03-20T19:40:54.057</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_happy_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_happy_stage_1.png</PackagePath>
+      <Modified>2013-03-24T20:04:34.905</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_1.png">
       <PackagePath>images\fishAnimation\fish_normal_stage_1.png</PackagePath>
       <Modified>2013-03-24T00:00:02.738</Modified>
@@ -123,6 +127,10 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_9.png">
       <PackagePath>images\fishAnimation\fish_normal_stage_9.png</PackagePath>
       <Modified>2013-03-24T06:06:48.358</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_sad_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_sad_stage_1.png</PackagePath>
+      <Modified>2013-03-24T20:03:02.717</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
@@ -170,11 +178,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\fishAnimation.js">
       <PackagePath>js\fishAnimation.js</PackagePath>
-      <Modified>2013-03-24T07:18:20.818</Modified>
+      <Modified>2013-03-24T20:05:28.333</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\jquery1.8.js">
       <PackagePath>js\jquery1.8.js</PackagePath>
-      <Modified>2013-03-23T23:27:10.582</Modified>
+      <Modified>2013-03-24T23:51:03.740</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\logSpirometerReading.js">
+      <PackagePath>js\logSpirometerReading.js</PackagePath>
+      <Modified>2013-03-24T23:18:02.442</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\navigator.js">
       <PackagePath>js\navigator.js</PackagePath>
@@ -194,11 +206,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-03-24T11:03:55.803</Modified>
+      <Modified>2013-03-24T23:09:17.786</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
-      <Modified>2013-03-24T01:33:10.958</Modified>
+      <Modified>2013-03-24T22:20:35.991</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
       <PackagePath>pages\adminPage\adminPage.html</PackagePath>
@@ -218,7 +230,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
       <PackagePath>pages\readingPage\readingPage.html</PackagePath>
-      <Modified>2013-03-24T02:51:22.331</Modified>
+      <Modified>2013-03-24T22:19:46.436</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\dogAnimation.mp4">
       <PackagePath>video\dogAnimation.mp4</PackagePath>
@@ -234,7 +246,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-03-24T06:08:13.555</Modified>
+      <Modified>2013-03-24T23:52:13.879</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -31,7 +31,9 @@
         },
         
         takeReading: function (eventInfo) { 
-           disableAllTimers();
+            disableAllTimers();
+            Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
+                 new Date().toString();
             WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
         },
         adminLogin: function (eventInfo) { 

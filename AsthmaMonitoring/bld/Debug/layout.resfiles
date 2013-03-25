@@ -7,6 +7,7 @@ images\adminPage.png
 images\aspira_spiro.jpg
 images\dog+open+arms+cartoon.gif
 images\first.jpg
+images\fishAnimation\fish_happy_stage_1.png
 images\fishAnimation\fish_normal_stage_1.png
 images\fishAnimation\fish_normal_stage_10.png
 images\fishAnimation\fish_normal_stage_2.png
@@ -17,6 +18,7 @@ images\fishAnimation\fish_normal_stage_6.png
 images\fishAnimation\fish_normal_stage_7.png
 images\fishAnimation\fish_normal_stage_8.png
 images\fishAnimation\fish_normal_stage_9.png
+images\fishAnimation\fish_sad_stage_1.png
 images\fishAnimation\fishBowl.png
 images\happy.png
 images\holdSpiroBothHands.jpg
@@ -34,6 +36,7 @@ js\configurationProperties.js
 js\default.js
 js\fishAnimation.js
 js\jquery1.8.js
+js\logSpirometerReading.js
 js\navigator.js
 pages\adminPage\adminPage.css
 pages\adminPage\adminPage.html

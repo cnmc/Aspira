@@ -16,22 +16,34 @@
             Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setInterval(
               this.checkAirQuality, 3000);//check air qulity regularly
             //Now Animating ;D
-            createAnimationDiv();
-            fishFloat();
-           
+
+            //1. if user just completed the reading then show the fish happy but 
+                //2. change mood back to normal in some time
+                
+            if (AsthmaGlobals.fileConfig.config.animation.currMood == "happy") {
+                changeFishMood("happy");
+                Windows.Storage.ApplicationData.current.localSettings.values["changeMoodNormalTimeoutId"] =
+                setTimeout(changeFishMood, 60000);
+                //TO DO: //3. disable the fish tank until next reading
+            } else {
+                initializeAnimation();
+            }
         },
         
         takeReading: function (eventInfo) { 
-           disableAllTimers();
+            disableAllTimers();
+            Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
+                 new Date().toString();
             WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
         },
         adminLogin: function (eventInfo) { 
             WinJS.Navigation.navigate("/pages/adminPage/adminPage.html");
         },
         nextReadingAlert: function () {
-            // Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
-          //  setTimeout(this.readingNotTaken, 1000);// set next reading not taken timer
-            setTimeout(this.readingNotTaken, 1110);
+            // User doesnt take readings, so set a timer but clear it if you leave the page
+          Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
+          setTimeout(readingNotTaken, 60000);// set next reading not taken timer
+            //2. 
             AsthmaGlobals.nextReadingCardMarkup = document.getElementById("leftPanel").children;
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]=
             setInterval((function () {
@@ -45,18 +57,9 @@
             }), 1000);
 
         },
-        readingNotTaken: function () {
-            // stop alert that says take reading
-            clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
-            // go set new time for reading
-            Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
-                   this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
-            // change text of the card
-           // document.getElementById("nextReadingContent").innerHTML =
-           //   Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
-        },
+       
         checkAirQuality: function () {
-            getProperties();// update config file
+            getProperties();// update config from a fresh config file
             
             if (AsthmaGlobals.fileConfig.config.alertInfo.airQualityStatus != "normal" && AsthmaGlobals.intervalOn == false) {
                 Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"] = setInterval((function () {
@@ -79,12 +82,39 @@
     });
 })();
 
+function readingNotTaken  () {
+    // stop alert that says take reading
+    clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
+    // go set new time for reading
+    Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
+           this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
+    // change text of the card: put next time for reading 
+     document.getElementById("nextReadingContent").innerHTML =
+       Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
+     if (document.getElementById("nextReadingCard").style.display == "none") {
+         document.getElementById("nextReadingCard").style.display = "block";
+     }
+    //change the mood of the fish
+     changeFishMood("sad");
+     
+}
+function changeFishMood(mood) {
+    if (mood != undefined) {
+        AsthmaGlobals.fileConfig.config.animation.currMood = mood;
+    } else {
+        AsthmaGlobals.fileConfig.config.animation.currMood = "normal";
+    }
+    setProperties();
+    initializeAnimation();
 
+}
 function disableAllTimers() {
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"]);
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"]);
     clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"]);
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
+    clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"]);
+    clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["changeMoodNormalTimeoutId"]);
 }
 function calculateNextReadingTimeout() {
     var spiroReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.spiroReadingTime;

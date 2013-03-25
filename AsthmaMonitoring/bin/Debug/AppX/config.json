@@ -1,11 +1,30 @@
-{"config" : {
-	"animation" : {
-		"totalStages" : 20,
-		"currStage"   : 8,
-		"currMood"    : "happy"
-	},
-	"alertInfo" : {
-		"airQualityStatus" : "normal",
-		"nextReading" : 300
-	}
-}}
+{
+   "config":{
+      "animation":{
+         "totalStages":3,
+         "totalDays":3,
+         "startDateMilliSec":1363760353383,
+         "currMood":"normal"
+      },
+      "alertInfo":{
+         "airQualityStatus":"normal", 
+         "stopAlertAfter":6000,
+         "spiroReadingTime":[
+            "1215",
+            "1216",
+            "1315",
+            "1316",
+            "1317",
+            "1318"
+         ]
+      },
+      "maxValues":{
+         "PEFValue":600,
+         "FEVValue":200
+      },
+      "minValues":{
+         "PEFValue":200,
+         "FEVValue":100
+      }
+   }
+}
