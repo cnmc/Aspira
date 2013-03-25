@@ -4,6 +4,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,11 +27,18 @@ public class ReadingRecords {
 		currentRow.createCell(0).setCellValue("Particle readings:");
 		currentRow.createCell(1).setCellValue("Small particles");
 		currentRow.createCell(2).setCellValue("Large particles");
+		CreationHelper createHelper = wb.getCreationHelper();
+		
+		CellStyle cellStyle = wb.createCellStyle();
+	    cellStyle.setDataFormat(
+	        createHelper.createDataFormat().getFormat("MM/dd/yy HH:mm"));
 		
 		for(int i = 0; i < part.length; i++ )
 		{
 			currentRow = mySheet.createRow((short)rowNumb);
-			currentRow.createCell(0).setCellValue(part[i].getDateTime());
+			Cell cell = currentRow.createCell(0);
+			cell.setCellValue(part[i].getDateTime());
+			cell.setCellStyle(cellStyle);
 			currentRow.createCell(1).setCellValue(part[i].getSmallParticleCount());
 			currentRow.createCell(2).setCellValue(part[i].getLargeParticleCount());
 			rowNumb++;
@@ -43,10 +53,17 @@ public class ReadingRecords {
 		currentRow.createCell(5).setCellValue("Error");
 		currentRow.createCell(6).setCellValue("Best value");
 		
+		rowNumb++;
+		
+		cellStyle.setDataFormat(
+		        createHelper.createDataFormat().getFormat("yyyy-mm-dd hh:mm:ss-MM:SS"));
+		
 		for(int i = 0; i < spiro.length; i++)
 		{
 			currentRow = mySheet.createRow((short)rowNumb);
-			currentRow.createCell(0).setCellValue(spiro[i].getMeasureDate());
+			Cell cell = currentRow.createCell(0);
+			cell.setCellValue(spiro[i].getMeasureDate());
+			cell.setCellStyle(cellStyle);
 			currentRow.createCell(1).setCellValue(spiro[i].getPid());
 			currentRow.createCell(2).setCellValue(spiro[i].getMeasureID());
 			currentRow.createCell(3).setCellValue(spiro[i].getPEFValue());

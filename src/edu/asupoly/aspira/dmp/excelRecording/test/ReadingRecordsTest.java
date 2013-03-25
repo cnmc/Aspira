@@ -33,8 +33,8 @@ public class ReadingRecordsTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		testCase = WorkbookFactory.create(new File("ExcelTest.xls"));
-		testCaseSheet = testCase.getSheetAt(0);
+		//testCase = WorkbookFactory.create(new File("ExcelTest.xls"));
+		//testCaseSheet = testCase.getSheetAt(0);
 		
 	}
 
@@ -54,10 +54,19 @@ public class ReadingRecordsTest {
 		ArrayList<Date> testedDateCells = new ArrayList<Date>();
 		ArrayList<Boolean> testedBooleanCells = new ArrayList<Boolean>();
 		
-		ParticleReading testParticles = new ParticleReading("01/01/01", "12:01", "3.0", "1.5");
-		SpirometerReading testSpiro = new SpirometerReading("pid", "01/01/01", "1", "2", "3.5", "6", "2");
+		ParticleReading[] testParticles = new ParticleReading[2];
+		testParticles[0] = new ParticleReading("01/01/01", "12:01", "3", "6");
+		testParticles[1] = new ParticleReading("01/01/02", "12:01", "1", "0");
+		SpirometerReading[] testSpiro = new SpirometerReading[2];
+		testSpiro[0] = new SpirometerReading("pid", "2001-01-01T01:01:01-02:02", "1", "2", "3.5", "6", "2");
+		testSpiro[1] = new SpirometerReading("pid", "2001-01-02T01:01:01-02:02", "2", "4", "4.2", "12", "1");
 		
-		ReadingRecords.ParticleandSpirometer(testParticles, testSpiro, new File("WriteTest.xls"));
+		try {
+			ReadingRecords.ParticleandSpirometer(testParticles, testSpiro, "WriteTest.xls");
+		} catch (IOException e1) {
+			System.out.println("Save Failed");
+			e1.printStackTrace();
+		}
 		
 		try {
 			test = WorkbookFactory.create(new File("WriteTest.xls"));
