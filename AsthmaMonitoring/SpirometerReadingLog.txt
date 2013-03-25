@@ -1,0 +1,14 @@
+Sun Mar 24 16:16:49 MST 2013
+PEF Value : 555.5
+FEV Value : 111.1
+Sun Mar 24 16:17:15 MST 2013
+PEF Value : 444.4
+FEV Value : 141.2
+Sun Mar 24 16:52:20 MST 2013
+PEF Value : 555.5
+FEV Value : 171.2
+
+Sun Mar 24 17:26:00 MST 2013
+PEF Value : 488.2
+FEV Value : 145.3
+
