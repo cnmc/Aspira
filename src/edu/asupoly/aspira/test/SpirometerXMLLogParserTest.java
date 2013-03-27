@@ -5,7 +5,7 @@
 package edu.asupoly.aspira.test;
 
 import edu.asupoly.aspira.dmp.devicelogs.SpirometerXMLLogParser;
-import edu.asupoly.aspira.model.SpirometerXMLReadings;
+import edu.asupoly.aspira.model.SpirometerReadings;
 import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class SpirometerXMLLogParserTest {
     public SpirometerXMLLogParserTest() {
     }
     
-    private SpirometerXMLReadings __benchmarkReadings = new SpirometerXMLReadings("device_one", "patient_one");
+    private SpirometerReadings __benchmarkReadings = new SpirometerReadings("device_one", "patient_one");
     Properties p = new Properties();
 
     @Before
@@ -57,7 +57,7 @@ public class SpirometerXMLLogParserTest {
     @Test
     public void testCreateSpirometerXMLReadings() throws Exception {
             SpirometerXMLReadingsFactory factory = new SpirometerXMLLogParser();
-            SpirometerXMLReadings readings = factory.createSpirometerXMLReadings(p);
+            SpirometerReadings readings = factory.createSpirometerXMLReadings(p);
             assertEquals(readings, __benchmarkReadings); 
             
     }

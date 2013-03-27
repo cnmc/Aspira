@@ -15,9 +15,7 @@ import java.util.TreeMap;
 public class AirQualityReadings {
 
     private class KeyTuple implements Comparable<KeyTuple> {
-        @SuppressWarnings("unused")
         String deviceId;
-        @SuppressWarnings("unused")
         String patientId;
         Date   readingDate;
         
@@ -32,10 +30,11 @@ public class AirQualityReadings {
             return readingDate.compareTo(other.readingDate);
         }
     }
-    private SortedMap<KeyTuple, ParticleReading> __readings;
+    private TreeMap<KeyTuple, ParticleReading> __readings;
     
     private String __deviceId;
     private String __patientId;
+    private KeyTuple __forQuerying;
     
     /*
      * To create one you have to know the device taking the readings
@@ -44,10 +43,64 @@ public class AirQualityReadings {
     public AirQualityReadings(String deviceId, String patientId) {
         __deviceId = deviceId;
         __patientId = patientId;
-        
+        __forQuerying = new KeyTuple(__deviceId, __patientId, null);
         __readings = new TreeMap<KeyTuple, ParticleReading>();
     }
 
+    /**
+     * Get the AirQuality particle reading at a specific minute
+     * @param d
+     * @return a ParticleReading or null if no reading at that minute
+     */
+    public ParticleReading getAirQualityAt(Date d) {
+        __forQuerying.readingDate = d;
+        return __readings.get(__forQuerying);
+    }
+    
+    /**
+     * Get all Air Quality particle readings before a given minute
+     * @param d
+     * @param inclusive true if you want the given minute included in the result
+     * @return an Iterator that preserves the sorted ordering of dates in ascending order
+     */
+    public Iterator<ParticleReading> getAirQualityBefore(Date d, boolean inclusive) {
+        __forQuerying.readingDate = d;
+        SortedMap<KeyTuple, ParticleReading> sm = __readings.headMap(__forQuerying, inclusive);
+        if (sm != null) {
+            return sm.values().iterator();
+        }
+        return null;
+    }
+    
+    public Iterator<ParticleReading> getAirQualityAfter(Date d, boolean inclusive) {
+        __forQuerying.readingDate = d;
+        SortedMap<KeyTuple, ParticleReading> sm = __readings.tailMap(__forQuerying, inclusive);
+        if (sm != null) {
+            return sm.values().iterator();
+        }
+        return null;
+    }    
+    
+    public Iterator<ParticleReading> getAirQualityBetween(Date start, boolean inclstart,
+                                                          Date end,   boolean inclend) {
+        if (__readings != null) {
+            __forQuerying.readingDate = start;
+            KeyTuple forQ2 = new KeyTuple(__forQuerying.deviceId, __forQuerying.patientId, end);
+            return __readings.subMap(__forQuerying, inclstart, forQ2, inclend).values().iterator();
+        }
+        return null;
+    }
+    /**
+     * Gets all values as a iterator in ascending order
+     * @return an Iterator with all values in ascending order or null
+     */
+    public Iterator<ParticleReading> iterator() {
+        if (__readings != null) {
+            return __readings.values().iterator();
+        }
+        return null;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -129,13 +182,6 @@ public class AirQualityReadings {
         return false;
     }
     
-    // KGDJ: Now here are a bunch of methods I'd like implemented:
-    public AirQualityReadings getReadingsForDate(Date d) {
-        return null;
-    }
-    public AirQualityReadings getReadingsForDateRange(Date d1, Date d2) {
-        return null;
-    }
     // Presumably gaps by the minute but we could add a flag
     // Might do better returning pairs of start/end of gap
     public Date[] getGaps() {

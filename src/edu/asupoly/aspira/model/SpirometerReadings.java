@@ -12,12 +12,10 @@ import java.util.TreeMap;
  * tuple <DeviceId, PatientId, measureDateTime> and the stored object
  * is a SpirometerReading.
  */
-public class SpirometerXMLReadings {
+public class SpirometerReadings {
 
     private class ReadingTuple implements Comparable<ReadingTuple> {
-        @SuppressWarnings("unused")
         String _deviceId;
-        @SuppressWarnings("unused")
         String _patientId;
         Date    _measureDate;
 
@@ -33,16 +31,17 @@ public class SpirometerXMLReadings {
         }
     }
 
-    private SortedMap<ReadingTuple, SpirometerReading> __readings;
+    private TreeMap<ReadingTuple, SpirometerReading> __readings;
 
     private String __deviceId;
     private String __patientId;
-
+    private ReadingTuple __forQuerying;
+    
     /*
      * To create one you have to know the device taking the readings
      * and the id of the patient to which the device is assigned
      */
-    public SpirometerXMLReadings(String deviceId, String patientId) {
+    public SpirometerReadings(String deviceId, String patientId) {
         __deviceId = deviceId;
         __patientId = patientId;
         __readings = new TreeMap<ReadingTuple, SpirometerReading>();
@@ -69,7 +68,7 @@ public class SpirometerXMLReadings {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        SpirometerXMLReadings other = (SpirometerXMLReadings) obj;
+        SpirometerReadings other = (SpirometerReadings) obj;
         if (__deviceId == null) {
             if (other.__deviceId != null)
                 return false;
@@ -102,6 +101,70 @@ public class SpirometerXMLReadings {
     public String getDeviceId()     { return __deviceId; }
     public String getPatientId()    { return __patientId; }
 
+    /**
+     * Get the Spirometer reading at a specific minute
+     * @param d
+     * @return a SpirometerReading or null if no reading at that minute
+     */
+    public SpirometerReading getSpirometerReadingAt(Date d) {
+        __forQuerying._measureDate = d;
+        return __readings.get(__forQuerying);
+    }
+    
+    /**
+     * Get all Spirometer readings before a given minute
+     * @param d
+     * @return an Iterator that preserves the sorted ordering of dates in ascending order
+     */
+    public Iterator<SpirometerReading> getSpirometerReadingsBefore(Date d) {
+        __forQuerying._measureDate = d;
+        SortedMap<ReadingTuple, SpirometerReading> sm = __readings.headMap(__forQuerying, true);
+        if (sm != null) {
+            return sm.values().iterator();
+        }
+        return null;
+    }
+     
+    /**
+     * Get all Spirometer readings after a given minute
+     * @param d
+     * @return an Iterator that preserves the sorted ordering of dates in ascending order
+     */
+    public Iterator<SpirometerReading> getSpirometerReadingsAfter(Date d) {
+        __forQuerying._measureDate = d;
+        SortedMap<ReadingTuple, SpirometerReading> sm = __readings.tailMap(__forQuerying, true);
+        if (sm != null) {
+            return sm.values().iterator();
+        }
+        return null;
+    }    
+    
+    /**
+     * Get all Spirometer readings between 2 given minutes
+     * @param start the begin date and time, inclusive
+     * @param end the ending date and time, inclusive
+     * @return an Iterator that preserves the sorted ordering of dates in ascending order
+     */
+    public Iterator<SpirometerReading> getSpirometerReadingsBetween(Date start, Date end) {
+        if (__readings != null) {
+            __forQuerying._measureDate = start;
+            ReadingTuple forQ2 = new ReadingTuple(__forQuerying._deviceId, __forQuerying._patientId, end);
+            return __readings.subMap(__forQuerying, true, forQ2, true).values().iterator();
+        }
+        return null;
+    }
+    
+    /**
+     * Gets all values as a iterator in ascending order
+     * @return an Iterator with all values in ascending order or null
+     */
+    public Iterator<SpirometerReading> iterator() {
+        if (__readings != null) {
+            return __readings.values().iterator();
+        }
+        return null;
+    }
+    
     /*
      * This is a bit loose as we haven't done anything to verify
      * the Spirometer Reading is from the same device and patient
@@ -121,7 +184,7 @@ public class SpirometerXMLReadings {
      * This is useful for merging maps but note the "other" maps readings could overwrite
      * your own.
      */
-    public boolean addReadings(SpirometerXMLReadings other) {
+    public boolean addReadings(SpirometerReadings other) {
         if (other.__deviceId.equals(__deviceId) && other.__patientId.equals(__patientId)) {
             __readings.putAll(other.__readings);
             return true;
@@ -129,17 +192,9 @@ public class SpirometerXMLReadings {
         return false;
     }
 
-    // KGDJ: Now here are a bunch of methods I'd like implemented:
-    public SpirometerXMLReadings getReadingsForDate(Date d) {
-        return null;
-    }
-    public SpirometerXMLReadings getReadingsForDateRange(Date d1, Date d2) {
-        return null;
-    }
-
     // Overlap means intersection here, which we need to know before
     // pushing a collection to the underlying database
-    public SpirometerXMLReadings getOverlap(SpirometerXMLReadings other) {
+    public SpirometerReadings getOverlap(SpirometerReadings other) {
         return null;
     }
     // We may need additional operations like Union or Minus when we

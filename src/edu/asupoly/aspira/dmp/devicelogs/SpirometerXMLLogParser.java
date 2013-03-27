@@ -7,7 +7,7 @@ package edu.asupoly.aspira.dmp.devicelogs;
 
 import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.SpirometerReading;
-import edu.asupoly.aspira.model.SpirometerXMLReadings;
+import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
 import java.io.FileReader;
 import java.util.Properties;
@@ -26,9 +26,9 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
         public SpirometerXMLLogParser() {}
     
     @Override
-    public SpirometerXMLReadings createSpirometerXMLReadings(Properties props) throws Exception
+    public SpirometerReadings createSpirometerXMLReadings(Properties props) throws Exception
     {         
-            SpirometerXMLReadings _spReadings = new SpirometerXMLReadings(props.getProperty("deviceid"),
+            SpirometerReadings _spReadings = new SpirometerReadings(props.getProperty("deviceid"),
                                                               props.getProperty("patientid"));
         try
         {
@@ -70,7 +70,7 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
         }
     }
    
-    private void populateReadings(Document doc, SpirometerXMLReadings _spReadings) throws DeviceLogException
+    private void populateReadings(Document doc, SpirometerReadings _spReadings) throws DeviceLogException
     {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
