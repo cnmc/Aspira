@@ -23,13 +23,15 @@ import org.xml.sax.InputSource;
 
 public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
 {
-        public SpirometerXMLLogParser() {}
-    
+    public SpirometerXMLLogParser() {}
+
     @Override
     public SpirometerReadings createSpirometerXMLReadings(Properties props) throws Exception
-    {         
-            SpirometerReadings _spReadings = new SpirometerReadings(props.getProperty("deviceid"),
-                                                              props.getProperty("patientid"));
+    {
+        String deviceId  = props.getProperty("deviceid");
+        String patientId = props.getProperty("patientid");
+        SpirometerReadings _spReadings = new SpirometerReadings(deviceId, patientId);
+
         try
         {
             InputSource source = new InputSource(new FileReader(props.getProperty("splogfile")));
@@ -39,16 +41,16 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
             factory.setValidating(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(source);
-            buildpatientinfo(doc);
+            //buildpatientinfo(doc);  // KGDJ: this method does not do anything?
             populateReadings(doc, _spReadings);
         }
         catch (Throwable t) {
             Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, null, t);
         }
-        
+
         return _spReadings;
     }
-    
+
     private void buildpatientinfo(Document doc) throws DeviceLogException   
     {
         NodeList nodeList = doc.getElementsByTagName("Patient");
@@ -56,6 +58,8 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
         for (int i = 0; i < len; i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
+                // KGDJ: Why do we create objects we will never use?
+                /*
                 String id = getFirstChildNodeValue(node, "ID");
                 String Sex = getFirstChildNodeValue(node, "Sex");
                 String ValueH= getFirstChildNodeValue(node, "ValueH");
@@ -66,10 +70,11 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String BestValueType = getFirstChildNodeValue(node, "BestValueType");
                 String PatientNotes =getFirstChildNodeValue(node, "PatientNotes");
                 Patient pInfo = new Patient(id, Sex, RateH, RateL, ValueH, ValueL, BestValueType, BestValueTarget, PatientNotes);
+                 */
             }
         }
     }
-   
+
     private void populateReadings(Document doc, SpirometerReadings _spReadings) throws DeviceLogException
     {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
@@ -85,11 +90,11 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String err = getFirstChildNodeValue(node, "Error");
                 String bvalue = getFirstChildNodeValue(node, "BestValue");
                 SpirometerReading pr = new SpirometerReading(id,  dt, mid,  pef, fev, err, bvalue);
-                boolean addReading = _spReadings.addReading(pr);
+                _spReadings.addReading(pr);
             }
         }
     }
-    
+
     private String getFirstChildNodeValue(Node node, String name)
     {
         Element e = (Element)node;
@@ -101,5 +106,5 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
         }
         return st;
     }
-   
+
 }

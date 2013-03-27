@@ -12,12 +12,13 @@ import java.util.TreeMap;
  * tuple <DeviceId, PatientId, measureDateTime> and the stored object
  * is a SpirometerReading.
  */
-public class SpirometerReadings {
+public class SpirometerReadings implements java.io.Serializable {
+    private static final long serialVersionUID = 3310136226572039162L;
 
     private class ReadingTuple implements Comparable<ReadingTuple> {
         String _deviceId;
         String _patientId;
-        Date    _measureDate;
+        Date   _measureDate;
 
         ReadingTuple(String did, String pid, Date dt) {
             _deviceId  = did;
@@ -197,6 +198,12 @@ public class SpirometerReadings {
     public SpirometerReadings getOverlap(SpirometerReadings other) {
         return null;
     }
+    
+    public int size() {
+        if (__readings == null)  return 0;
+        return __readings.size();
+    }
+    
     // We may need additional operations like Union or Minus when we
     // write the persistence code.
 }

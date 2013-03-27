@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class SpirometerReading implements java.io.Serializable {
-    
     private static final long serialVersionUID = 9002395112333017198L;
+    
     private String pid;
     private int    measureID;
     private Date   measureDate;
@@ -25,44 +25,23 @@ public class SpirometerReading implements java.io.Serializable {
     public String getPid() {
         return pid;
     }
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
     public int getMeasureID() {
         return measureID;
-    }
-    public void setMeasureID(int measureID) {
-        this.measureID = measureID;
     }
     public Date getMeasureDate() {
         return measureDate;
     }
-    public void setMeasureDate(Date measureDate) {
-        this.measureDate = measureDate;
-    }
     public int getPEFValue() {
         return pefValue;
-    }
-    public void setPEFValue(int pefValue) {
-        this.pefValue = pefValue;
     }
     public float getFEV1Value() {
         return fev1Value;
     }
-    public void setFEV1Value(float fev1Value) {
-        this.fev1Value = fev1Value;
-    }
     public int getError() {
         return error;
     }
-    public void setError(int error) {
-        this.error = error;
-    }
     public int getBestValue() {
         return bestValue;
-    }
-    public void setBestValue(int bestValue) {
-        this.bestValue = bestValue;
     }
     @Override
     public boolean equals(Object obj) {

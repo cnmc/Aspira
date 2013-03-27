@@ -12,24 +12,34 @@ import java.util.Date;
 import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 
 public class ParticleReading implements java.io.Serializable  {
-    /**
-     *
-     */
     private static final long serialVersionUID = 9002395112333017198L;
     
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy HH:mm");
     private Date dateTime;
     private int smallParticleCount;
     private int largeParticleCount;
+
+    private String deviceId;
+    private String patientId;
     
-    public ParticleReading(String d, String t, String s, String l) throws DeviceLogException {
+    public ParticleReading(String deviceId, String patientId, String d, String t, String s, String l) throws DeviceLogException {
         try {
+            this.deviceId  = deviceId;
+            this.patientId = patientId;
             dateTime = ParticleReading.formatter.parse(d + " " + t);
             smallParticleCount = Integer.parseInt(s);
             largeParticleCount = Integer.parseInt(l);
         } catch (Throwable th) {
             throw new DeviceLogException(th);
         }
+    }
+    
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public String getPatientId() {
+        return patientId;
     }
     
     public Date getDateTime() {

@@ -12,8 +12,9 @@ import java.util.TreeMap;
  * tuple <DeviceId, PatientId, Date> and the stored object
  * is a ParticleReading.
  */
-public class AirQualityReadings {
-
+public class AirQualityReadings implements java.io.Serializable {
+    private static final long serialVersionUID = -1349373435898119224L;
+    
     private class KeyTuple implements Comparable<KeyTuple> {
         String deviceId;
         String patientId;
@@ -192,6 +193,12 @@ public class AirQualityReadings {
     public AirQualityReadings getOverlap(AirQualityReadings other) {
         return null;
     }
+    
+    public int size() {
+        if (__readings == null)  return 0;
+        return __readings.size();
+    }
+    
     // We may need additional operations like Union or Minus when we
     // write the persistence code.
 }

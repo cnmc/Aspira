@@ -19,9 +19,11 @@ public class DylosLogParser implements AirQualityReadingsFactory  {
     public DylosLogParser() {}
     
     @Override
-    public AirQualityReadings createAirQualityReadings(Properties props) throws Exception {          
-        AirQualityReadings dyloslog = new AirQualityReadings(props.getProperty("deviceid"),
-                                                              props.getProperty("patientid"));
+    public AirQualityReadings createAirQualityReadings(Properties props) throws Exception {    
+        String deviceId =  props.getProperty("deviceid");
+        String patientId = props.getProperty("patientid");
+        AirQualityReadings dyloslog = new AirQualityReadings(deviceId, patientId);
+        
         BufferedReader br = null;
         String date;
         String time;
@@ -50,7 +52,7 @@ public class DylosLogParser implements AirQualityReadingsFactory  {
                 small = st.nextToken().trim();
                 large = st.nextToken().trim();
 
-                dyloslog.addReading(new ParticleReading(date, time, small, large));
+                dyloslog.addReading(new ParticleReading(deviceId, patientId, date, time, small, large));
 
                 finput = br.readLine(); 
             }
