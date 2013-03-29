@@ -32,8 +32,8 @@
                         //it is in the fev sreen now and appending onclick event according to that
                         confirmBtnMarkup.onclick = function () {
                             //change the mood of the fish to happy
-                            AsthmaGlobals.fileConfig.config.animation.currMood = "happy";
-                            setProperties();
+                            Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = "happy";
+                           // setProperties();
                             Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"] =
                                 document.getElementById("FEVValue").value;
                             createSpirometerLog();

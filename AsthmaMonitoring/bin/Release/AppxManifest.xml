@@ -7,7 +7,7 @@
 
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
-  <Identity Name="99d9a641-35c0-46a2-8473-11baca999bd3" Version="0.0.0.10" Publisher="CN=vasu" ProcessorArchitecture="neutral" />
+  <Identity Name="99d9a641-35c0-46a2-8473-11baca999bd4" Version="0.0.0.11" Publisher="CN=vasu" ProcessorArchitecture="neutral" />
   <Properties>
     <DisplayName>AsthmaMonitoring</DisplayName>
     <PublisherDisplayName>vasu</PublisherDisplayName>

@@ -7,8 +7,6 @@
          "currMood":"normal"
       },
       "alertInfo":{
-         "airQualityStatus":"normal", 
-         "stopAlertAfter":6000,
          "spiroReadingTime":[
             "0910",
             "0920",

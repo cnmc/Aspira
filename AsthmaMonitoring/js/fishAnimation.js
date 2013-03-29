@@ -12,7 +12,10 @@ function createAnimationDiv() {
         AsthmaGlobals.fileConfig.config.animation.totalStages) {
         currentStage = 1;
     } 
-    var mood = AsthmaGlobals.fileConfig.config.animation.currMood;
+    var mood = "normal";
+    if ( Windows.Storage.ApplicationData.current.localSettings.values["currMood"] != undefined){
+        mood =  Windows.Storage.ApplicationData.current.localSettings.values["currMood"];
+    }
     var imgSrc= "/images/fishAnimation/fish_"+mood+"_stage_"+currentStage+".png";
     var content = " <div class='animationMainContainer' id='animationMainContainer'>";
     content += "<div class='fishImage' id='fishImage'>";
@@ -31,6 +34,16 @@ function initializeAnimation() {
     }
     createAnimationDiv();
     fishFloat()
+}
+function changeFishMood(mood) {
+    if (mood != undefined) {
+        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = mood;
+    } else {
+        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = "normal";
+    }
+    setProperties();
+    initializeAnimation();
+
 }
 //boring stuff
 function calculateImageToShow() {

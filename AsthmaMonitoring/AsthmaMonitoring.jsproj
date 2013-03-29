@@ -55,6 +55,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="airQualityStatus.json" />
     <Content Include="config.json" />
     <Content Include="css\default.css" />
     <Content Include="css\fishAnimation.css" />
@@ -92,6 +93,8 @@
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
+    <Content Include="images\traffic_signal_green.png" />
+    <Content Include="images\traffic_signal_red.png" />
     <Content Include="js\default.js" />
     <Content Include="js\fishAnimation.js" />
     <Content Include="js\jquery1.8.js" />

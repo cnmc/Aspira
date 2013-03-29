@@ -14,7 +14,9 @@
            { url: "/html/fevReading.html", title: "FEV reading Page" }
     ];
     WinJS.Namespace.define("AsthmaGlobals", {
-        "fileConfig": null
+        "fileConfig": null,
+        "airQualityConfig": null,
+        "dynamicAlertDisplay" : false
     });
    
     app.addEventListener("activated", function (eventObject) {

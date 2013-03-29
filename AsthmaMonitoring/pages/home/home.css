@@ -21,10 +21,17 @@
 .rightItem {
     float:right;
 }
+.leftPanel{
+	margin-left:100px; 
+    width:360px;
+    position:relative;
+    float : left;
+}
+.rightPanel {
+float: right;
+}
 .nextReadingCard {
-    top:180px;
-	margin-left:100px;
-    float:left;
+    margin-left:50px;
     position:relative;
     border: thick solid green;
     border-radius: 20px;
@@ -51,5 +58,25 @@
     height:300px;
 }
 .peripheralContent {
-    margin-top:50px;
+    margin-top:150px; 
+}
+.dynamicAlertBox {
+    margin-top:20px;
+    position:relative;
+    padding:20px;
+     font-weight:700;
+    font-size:large;
+border: 2px solid red;
+height:auto;
+}
+.buttonPanel {
+    position:relative;
+    height:auto;
+    padding:20px;
+}
+.button-left {
+float:left;
+}
+.button-right {
+float:right;
 }

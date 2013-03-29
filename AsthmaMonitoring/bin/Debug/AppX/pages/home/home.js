@@ -6,7 +6,7 @@
         // populates the page elements with the app's data.
         
         ready: function (element, options) {  
-            WinJS.Utilities.id("takeReading").listen("click", this.takeReading, false);
+            
             WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
            this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
@@ -20,7 +20,7 @@
             //1. if user just completed the reading then show the fish happy but 
                 //2. change mood back to normal in some time
                 
-            if (AsthmaGlobals.fileConfig.config.animation.currMood == "happy") {
+            if (Windows.Storage.ApplicationData.current.localSettings.values["currMood"] == "happy") {
                 changeFishMood("happy");
                 Windows.Storage.ApplicationData.current.localSettings.values["changeMoodNormalTimeoutId"] =
                 setTimeout(changeFishMood, 60000);
@@ -30,16 +30,13 @@
             }
         },
         
-        takeReading: function (eventInfo) { 
-            disableAllTimers();
-            Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
-                 new Date().toString();
-            WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
-        },
+       
         adminLogin: function (eventInfo) { 
             WinJS.Navigation.navigate("/pages/adminPage/adminPage.html");
         },
         nextReadingAlert: function () {
+            //enable user going into the flow when its time for new reading
+            WinJS.Utilities.id("takeReading").listen("click", takeReading, false);
             // User doesnt take readings, so set a timer but clear it if you leave the page
           Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
           setTimeout(readingNotTaken, 60000);// set next reading not taken timer
@@ -59,29 +56,39 @@
         },
        
         checkAirQuality: function () {
-            getProperties();// update config from a fresh config file
+            getAirQualityProperties();// update config from a fresh config file
             
-            if (AsthmaGlobals.fileConfig.config.alertInfo.airQualityStatus != "normal" && AsthmaGlobals.intervalOn == false) {
-                Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"] = setInterval((function () {
-                    if (document.getElementById("rightItem").style.display == "none") {
-                        document.getElementById("rightItem").style.display = "block";
-                    }
-                    else if (document.getElementById("rightItem").style.display == "block" ||
-                        document.getElementById("rightItem").style.display == "") {
-                        document.getElementById("rightItem").style.display = "none";
-                    }
-                }), 700);
-                AsthmaGlobals.intervalOn = true;
+            if (AsthmaGlobals.airQualityConfig.airQualityMeter.isAirQualityMonitorWorking == "red" /*&& AsthmaGlobals.intervalOn == false*/) {
+                document.getElementById("trafficSignal").setAttribute("src","/images/traffic_signal_red.png");
+                //Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"] = setInterval((function () {
+                //    if (document.getElementById("rightItem").style.display == "none") {
+                //        document.getElementById("rightItem").style.display = "block";
+                //    }
+                //    else if (document.getElementById("rightItem").style.display == "block" ||
+                //        document.getElementById("rightItem").style.display == "") {
+                //        document.getElementById("rightItem").style.display = "none";
+                //    }
+                //}), 700);
+                //AsthmaGlobals.intervalOn = true;
             }
-            else if (AsthmaGlobals.fileConfig.config.alertInfo.airQualityStatus == "normal" && AsthmaGlobals.intervalOn == true) {
-                clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"]);
-                document.getElementById("rightItem").style.display = "block";
-                AsthmaGlobals.intervalOn = false;
+            else if (AsthmaGlobals.airQualityConfig.airQualityMeter.isAirQualityMonitorWorking == "green" /* && AsthmaGlobals.intervalOn == true*/) {
+                document.getElementById("trafficSignal").setAttribute("src", "/images/traffic_signal_green.png");
+                //clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"]);
+               // document.getElementById("rightItem").style.display = "block";
+               // AsthmaGlobals.intervalOn = false;
+            }
+            if (AsthmaGlobals.airQualityConfig.airQualityMeter.dynamicReadingRequired != "false") {
+                initateDynamicAlert();
             }
         }
     });
 })();
-
+function takeReading (eventInfo) { 
+    disableAllTimers();
+    Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
+         new Date().toString();
+    WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
+}
 function readingNotTaken  () {
     // stop alert that says take reading
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
@@ -98,16 +105,7 @@ function readingNotTaken  () {
      changeFishMood("sad");
      
 }
-function changeFishMood(mood) {
-    if (mood != undefined) {
-        AsthmaGlobals.fileConfig.config.animation.currMood = mood;
-    } else {
-        AsthmaGlobals.fileConfig.config.animation.currMood = "normal";
-    }
-    setProperties();
-    initializeAnimation();
 
-}
 function disableAllTimers() {
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"]);
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"]);
@@ -144,14 +142,31 @@ function calculateNextReadingTimeout() {
 
     nextReadingObj.setHours(nextReadingHour.substr(0, 2), nextReadingHour.substr(2, 2), 00, 00);
     var displayHours = nextReadingObj.getHours();
+    if (displayHours == 0) {
+        displayHours = "00";
+    }
     var ampm = "am";
-    if (displayHours > 12) {
+    if (displayHours >= 12) {
+        if (displayHours > 12)
         displayHours -= 12;
         ampm = "pm";
     }
     Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"] =
         displayHours + ":" + nextReadingHour.substr(2, 2)+" " + ampm;
     return nextReadingObj.getTime() - new Date().getTime();
+} 
+function initateDynamicAlert() {
+    var content = "<div id='dynamicAlertBox' class='dynamicAlertBox' >"
+    content += "<div class='dynamicContent'>";
+    content += "Hey, Air Quality doesn't seem right! <br> ";
+    content += "Take a reading NOW!!";
+    content += "</div>";
+    content += "<div class='buttonPanel'>";
+    content += "<button id='dismiss' class='button-left'>Dismiss</button>";
+    content += "<button id='done' class='button-right'>Done</button>";
+    content += "</div>";
+    content += "</div>";
+    $("#dynamicInfoBox").append(content);
 }
 /*
 function getAdjacentReadingTimeouts() {

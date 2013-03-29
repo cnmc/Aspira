@@ -12,7 +12,10 @@ function createAnimationDiv() {
         AsthmaGlobals.fileConfig.config.animation.totalStages) {
         currentStage = 1;
     } 
-    var mood = AsthmaGlobals.fileConfig.config.animation.currMood;
+    var mood = "normal";
+    if ( Windows.Storage.ApplicationData.current.localSettings.values["currMood"] != undefined){
+        mood =  Windows.Storage.ApplicationData.current.localSettings.values["currMood"];
+    }
     var imgSrc= "/images/fishAnimation/fish_"+mood+"_stage_"+currentStage+".png";
     var content = " <div class='animationMainContainer' id='animationMainContainer'>";
     content += "<div class='fishImage' id='fishImage'>";
@@ -32,13 +35,23 @@ function initializeAnimation() {
     createAnimationDiv();
     fishFloat()
 }
+function changeFishMood(mood) {
+    if (mood != undefined) {
+        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = mood;
+    } else {
+        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = "normal";
+    }
+    setProperties();
+    initializeAnimation();
+
+}
 //boring stuff
 function calculateImageToShow() {
     var todaysDate = new Date();
     var startDate = new Date(AsthmaGlobals.fileConfig.config.animation.startDateMilliSec); 
     var totalDays = AsthmaGlobals.fileConfig.config.animation.totalDays;
     var totalStages = AsthmaGlobals.fileConfig.config.animation.totalStages;
-    var daysElasped = Math.round((todaysDate - startDate) / (1000 * 60 * 60 * 24));
+    var daysElasped = (todaysDate - startDate) / (1000 * 60 * 60 * 24);
     var nextStageDayCount =Math.round( totalDays / totalStages);
     for (var i = 0; i <= totalDays; i += nextStageDayCount) {
         if (daysElasped <= i) {

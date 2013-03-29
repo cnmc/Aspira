@@ -7,15 +7,13 @@
          "currMood":"normal"
       },
       "alertInfo":{
-         "airQualityStatus":"normal", 
-         "stopAlertAfter":6000,
          "spiroReadingTime":[
-            "1215",
-            "1216",
-            "1315",
-            "1316",
-            "1317",
-            "1318"
+            "0910",
+            "0920",
+            "0930",
+            "0940",
+            "0945",
+            "1000"
          ]
       },
       "maxValues":{
