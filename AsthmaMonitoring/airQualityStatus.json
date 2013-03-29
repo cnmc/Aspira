@@ -1,0 +1,6 @@
+{
+   "airQualityMeter":{
+      "isAirQualityMonitorWorking":"green", 
+	   "dynamicReadingRequired":"false"
+	 }
+}      
