@@ -101,7 +101,10 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
     @Override
     public Spirometer findSpirometerForPatient(String patientId)
             throws DMPException {
-        // TODO Auto-generated method stub
+        // We're storing the assignedToPatient on the Spirometer so we have to go that way
+        for (Spirometer s : __spirometers.values()) {
+            if (s.getAssignedToPatient() != null && s.getAssignedToPatient().equals(patientId)) return s;
+        }
         return null;
     }
 
@@ -128,9 +131,13 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
             throws DMPException {
         
         if (patientId != null) {
-            for (Patient p : __patients.values()) {
-                // We haven't associated these 2 yet
-                //if (patientId.equals(p.getPatientId())) return p.getClinicianId();
+            for (Clinician c : __clinicians.values()) {
+                // Currently storing Patient IDs on the Clinician side which is awkward
+                // as it is the many, but don't want to pollute Patient
+                String[] patientIds = c.getPatientIds();
+                for (String s : patientIds) {
+                    if (__patients.containsKey(s)) return c;
+                }
             }
         }
         return null;
@@ -224,7 +231,6 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
                     }
                 }
             }
-            // XXX Need to write a save operation
             return rval;
         } catch (Throwable t) {
             throw new DMPException(t);
@@ -254,7 +260,7 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
                     }
                 }
             }
-            // XXX Need to write a save operation
+            // Need to write a save operation
             return rval;
         } catch (Throwable t) {
             throw new DMPException(t);
@@ -267,8 +273,10 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
     @Override
     public boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) 
             throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+        // In a real persistence store we have to wrap this in a transaction
+        importAirQualityReadings(aqImport, overwrite);
+        importSpirometerReadings(spImport, overwrite);
+        return true;
     }
 
     /* (non-Javadoc)
@@ -276,8 +284,24 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
      */
     @Override
     public boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+        boolean rval = false;
+        boolean saveTheReading = true;
+        
+        SpirometerReadings readings = findSpirometerReadingsForPatient(sr.getPid());
+        if (readings == null) {
+            readings = new SpirometerReadings("", "");
+            __spReadings.put(sr.getPid(), readings);
+        } else {
+            // patient had readings
+            SpirometerReading preExist = readings.getSpirometerReadingAt(sr.getMeasureDate());
+            saveTheReading = (preExist == null) || (overwrite);
+        }
+        
+        if (saveTheReading) {
+            rval = readings.addReading(sr);
+        }
+        
+        return rval;
     }
     
     /* (non-Javadoc)
