@@ -64,33 +64,45 @@ public class AirQualityReadings implements java.io.Serializable {
      * @param inclusive true if you want the given minute included in the result
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
-    public Iterator<ParticleReading> getAirQualityBefore(Date d, boolean inclusive) {
+    public AirQualityReadings getAirQualityBefore(Date d, boolean inclusive) {
         __forQuerying.readingDate = d;
         SortedMap<KeyTuple, ParticleReading> sm = __readings.headMap(__forQuerying, inclusive);
         if (sm != null) {
-            return sm.values().iterator();
-        }
+            return __constructAQR(sm.values().iterator());  
+         }
         return null;
     }
     
-    public Iterator<ParticleReading> getAirQualityAfter(Date d, boolean inclusive) {
+    public AirQualityReadings getAirQualityAfter(Date d, boolean inclusive) {
         __forQuerying.readingDate = d;
         SortedMap<KeyTuple, ParticleReading> sm = __readings.tailMap(__forQuerying, inclusive);
         if (sm != null) {
-            return sm.values().iterator();
+            return __constructAQR(sm.values().iterator());
         }
         return null;
     }    
     
-    public Iterator<ParticleReading> getAirQualityBetween(Date start, boolean inclstart,
-                                                          Date end,   boolean inclend) {
+    public AirQualityReadings getAirQualityBetween(Date start, boolean inclstart,
+                                                   Date end,   boolean inclend) {
         if (__readings != null) {
             __forQuerying.readingDate = start;
             KeyTuple forQ2 = new KeyTuple(__forQuerying.deviceId, __forQuerying.patientId, end);
-            return __readings.subMap(__forQuerying, inclstart, forQ2, inclend).values().iterator();
+            return __constructAQR(__readings.subMap(__forQuerying, inclstart, forQ2, inclend).values().iterator());
         }
         return null;
     }
+
+    private AirQualityReadings __constructAQR(Iterator<ParticleReading> ipr) {
+        AirQualityReadings aqr = null;
+        if (ipr != null) {
+            aqr = new AirQualityReadings(__deviceId, __patientId);
+            while (ipr.hasNext()) {
+                aqr.addReading(ipr.next());
+            }
+        }
+        return aqr;
+    }
+    
     /**
      * Gets all values as a iterator in ascending order
      * @return an Iterator with all values in ascending order or null
