@@ -4,17 +4,26 @@
          "totalStages":3,
          "totalDays":3,
          "startDateMilliSec":1363760353383,
-         "currMood":"normal"
+         "currMood":"normal",
+		 "switchMoodSleepy":60000
       },
       "alertInfo":{
          "spiroReadingTime":[
-            "0910",
-            "0920",
-            "0930",
-            "0940",
-            "0945",
-            "1000"
-         ]
+            "0111",
+            "1745",
+            "1728",
+            "1727",
+            "1914",
+            "1312"
+         ],
+		 "medicationAlertTime":[
+			"0125",
+            "0128",
+            "1230"
+         ],
+		 "medicationAlertText":"You should take the prescribed medication now.",
+		 "dynamicReadingAlertText" : "The air quality doesn't seem good, please take a reading.",
+		 "intervalInTwoReadings" : 60000
       },
       "maxValues":{
          "PEFValue":600,
@@ -24,6 +33,6 @@
          "PEFValue":200,
          "FEVValue":100
       },
-	  "logFileWriteFrequency":10000
+      "logFileWriteFrequency":10000
    }
 }

@@ -46,6 +46,7 @@
         },
         nextReadingAlert: function () {
             //enable user going into the flow when its time for new reading
+            dismissAlert();
             changeFishMood("attentive");
 
            // Windows.Storage.ApplicationData.current.localSettings.values["bowlClickListener"] = 
@@ -55,17 +56,9 @@
           Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
           setTimeout(readingNotTaken, 60000);// set next reading not taken timer
             //2. 
-            AsthmaGlobals.nextReadingCardMarkup = document.getElementById("leftPanel").children;
-            Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]=
-            setInterval((function () {
-                if (document.getElementById("nextReadingCard").style.display == "none") {
-                    document.getElementById("nextReadingCard").style.display="block";
-                }
-                else if (document.getElementById("nextReadingCard").style.display == "block" ||
-                    document.getElementById("nextReadingCard").style.display == "") { 
-                    document.getElementById("nextReadingCard").style.display= "none";
-                }
-            }), 1000);
+
+          animateNextReading();
+            
 
         },
        
@@ -91,6 +84,12 @@
         }
     });
 })();
+// animate reading box
+function animateNextReading() {
+
+    $("#nextReadingCard").animate({ marginLeft: "+=50px"}, 1000, "swing");
+    $("#nextReadingCard").animate({ marginLeft: "-=50px" }, 1000, "swing", animateNextReading);
+}
 // subsequent reading in X mins
 function enableSubsequentReading() {
     setTimeout((function () {
@@ -116,7 +115,11 @@ function takeDynamicReading(eventInfo) {
 
 function readingNotTaken  () {
     // stop alert that says take reading
-    clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
+
+    $("#nextReadingCard").stop();
+    $("#nextReadingCard").stop();
+    AsthmaGlobals.canTakeReading == true;
+    //clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
     // go set new time for reading
     Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
            this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
@@ -216,6 +219,7 @@ function initateDynamicAlert(type, description) {
 function dismissAlert() {
     changeFishMood("sleepy");
     appendLog("User Dismissed the alert");
+    if (document.getElementById("dynamicAlertBox") != null || document.getElementById("dynamicAlertBox") != undefined)
     document.getElementById("dynamicAlertBox").removeNode(true);
 }
 

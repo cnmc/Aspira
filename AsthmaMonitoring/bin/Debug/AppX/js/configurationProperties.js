@@ -11,6 +11,9 @@ function getProperties() {
             Windows.Storage.FileIO.readTextAsync(datafile).done(function (fileContent) {
                 try {
                     AsthmaGlobals.fileConfig = JSON.parse(fileContent);
+                    if (AsthmaGlobals.fileConfig == null) {
+                        getProperties();
+                    }
                 } catch (e) {
                     // e.message;
                     console.log(e.message);
