@@ -5,7 +5,6 @@
  */
 package edu.asupoly.aspira.dmp.devicelogs;
 
-import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
@@ -51,6 +50,7 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
         return _spReadings;
     }
 
+    /*
     private void buildpatientinfo(Document doc) throws DeviceLogException   
     {
         NodeList nodeList = doc.getElementsByTagName("Patient");
@@ -59,7 +59,6 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 // KGDJ: Why do we create objects we will never use?
-                /*
                 String id = getFirstChildNodeValue(node, "ID");
                 String Sex = getFirstChildNodeValue(node, "Sex");
                 String ValueH= getFirstChildNodeValue(node, "ValueH");
@@ -70,10 +69,10 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String BestValueType = getFirstChildNodeValue(node, "BestValueType");
                 String PatientNotes =getFirstChildNodeValue(node, "PatientNotes");
                 Patient pInfo = new Patient(id, Sex, RateH, RateL, ValueH, ValueL, BestValueType, BestValueTarget, PatientNotes);
-                 */
             }
         }
     }
+    */
 
     private void populateReadings(Document doc, SpirometerReadings _spReadings) throws DeviceLogException
     {

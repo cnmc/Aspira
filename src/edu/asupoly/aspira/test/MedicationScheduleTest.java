@@ -1,8 +1,10 @@
-package edu.asupoly.aspira.gui;
+package edu.asupoly.aspira.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import edu.asupoly.aspira.gui.MedicationSchedule;
 
 public class MedicationScheduleTest {
 
