@@ -16,17 +16,21 @@
     <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-29T09:12:51.446</Modified>
+      <Modified>2013-03-31T03:02:38.869</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\asthmaMonitoringLog.json">
+      <PackagePath>asthmaMonitoringLog.json</PackagePath>
+      <Modified>2013-03-29T18:43:46.912</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\airQualityStatus.json">
       <PackagePath>airQualityStatus.json</PackagePath>
-      <Modified>2013-03-29T07:56:21.016</Modified>
+      <Modified>2013-03-30T03:27:01.655</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
       <PackagePath>config.json</PackagePath>
-      <Modified>2013-03-29T07:55:03.462</Modified>
+      <Modified>2013-03-30T08:26:09.811</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
@@ -88,6 +92,18 @@
       <PackagePath>images\fishAnimation\fishBowl.png</PackagePath>
       <Modified>2013-03-20T19:40:54.057</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_attentive_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_attentive_stage_1.png</PackagePath>
+      <Modified>2013-03-25T06:27:01.301</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_attentive_stage_2.png">
+      <PackagePath>images\fishAnimation\fish_attentive_stage_2.png</PackagePath>
+      <Modified>2013-03-25T06:27:04.254</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_attentive_stage_3.png">
+      <PackagePath>images\fishAnimation\fish_attentive_stage_3.png</PackagePath>
+      <Modified>2013-03-25T06:27:02.804</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_happy_stage_1.png">
       <PackagePath>images\fishAnimation\fish_happy_stage_1.png</PackagePath>
       <Modified>2013-03-25T06:27:01.611</Modified>
@@ -100,29 +116,9 @@
       <PackagePath>images\fishAnimation\fish_happy_stage_3.png</PackagePath>
       <Modified>2013-03-25T06:27:03.127</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_1.png">
-      <PackagePath>images\fishAnimation\fish_normal_stage_1.png</PackagePath>
-      <Modified>2013-03-25T06:27:01.301</Modified>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_10.png">
       <PackagePath>images\fishAnimation\fish_normal_stage_10.png</PackagePath>
       <Modified>2013-03-24T06:06:59.620</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_2.png">
-      <PackagePath>images\fishAnimation\fish_normal_stage_2.png</PackagePath>
-      <Modified>2013-03-25T06:27:04.254</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_3.png">
-      <PackagePath>images\fishAnimation\fish_normal_stage_3.png</PackagePath>
-      <Modified>2013-03-25T06:27:02.804</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_4.png">
-      <PackagePath>images\fishAnimation\fish_normal_stage_4.png</PackagePath>
-      <Modified>2013-03-24T06:05:30.911</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_5.png">
-      <PackagePath>images\fishAnimation\fish_normal_stage_5.png</PackagePath>
-      <Modified>2013-03-24T06:05:43.121</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_normal_stage_6.png">
       <PackagePath>images\fishAnimation\fish_normal_stage_6.png</PackagePath>
@@ -151,6 +147,26 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_sad_stage_3.png">
       <PackagePath>images\fishAnimation\fish_sad_stage_3.png</PackagePath>
       <Modified>2013-03-25T06:27:03.607</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_sleepy_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_sleepy_stage_1.png</PackagePath>
+      <Modified>2013-03-25T06:27:02.540</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_sleepy_stage_2.png">
+      <PackagePath>images\fishAnimation\fish_sleepy_stage_2.png</PackagePath>
+      <Modified>2013-03-25T06:27:05.323</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_sleepy_stage_3.png">
+      <PackagePath>images\fishAnimation\fish_sleepy_stage_3.png</PackagePath>
+      <Modified>2013-03-25T06:27:03.912</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_tease_1_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_tease_1_stage_1.png</PackagePath>
+      <Modified>2013-03-24T06:05:30.911</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fish_tease_2_stage_1.png">
+      <PackagePath>images\fishAnimation\fish_tease_2_stage_1.png</PackagePath>
+      <Modified>2013-03-24T06:05:43.121</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
@@ -188,6 +204,10 @@
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2013-03-17T02:07:38.720</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\traffic_signal_disconnected.png">
+      <PackagePath>images\traffic_signal_disconnected.png</PackagePath>
+      <Modified>2013-03-29T07:42:55.467</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\traffic_signal_green.png">
       <PackagePath>images\traffic_signal_green.png</PackagePath>
       <Modified>2013-03-29T07:42:55.431</Modified>
@@ -196,17 +216,25 @@
       <PackagePath>images\traffic_signal_red.png</PackagePath>
       <Modified>2013-03-29T07:42:55.506</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\traffic_signal_yellow.png">
+      <PackagePath>images\traffic_signal_yellow.png</PackagePath>
+      <Modified>2013-03-29T07:42:55.395</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\dog+open+arms+cartoon.gif">
       <PackagePath>images\dog+open+arms+cartoon.gif</PackagePath>
       <Modified>2013-03-18T21:47:59.682</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\asthmaLogging.js">
+      <PackagePath>js\asthmaLogging.js</PackagePath>
+      <Modified>2013-03-30T12:14:08.820</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\default.js">
       <PackagePath>js\default.js</PackagePath>
-      <Modified>2013-03-29T08:03:53.473</Modified>
+      <Modified>2013-03-31T03:11:53.423</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\fishAnimation.js">
       <PackagePath>js\fishAnimation.js</PackagePath>
-      <Modified>2013-03-29T08:16:46.986</Modified>
+      <Modified>2013-03-31T03:13:35.910</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\jquery1.8.js">
       <PackagePath>js\jquery1.8.js</PackagePath>
@@ -234,11 +262,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-03-29T09:24:43.998</Modified>
+      <Modified>2013-03-31T03:14:34.046</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
-      <Modified>2013-03-29T07:10:48.579</Modified>
+      <Modified>2013-03-31T02:02:02.672</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
       <PackagePath>pages\adminPage\adminPage.html</PackagePath>
@@ -254,7 +282,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\default.html">
       <PackagePath>default.html</PackagePath>
-      <Modified>2013-03-24T00:34:49.657</Modified>
+      <Modified>2013-03-29T18:38:55.766</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
       <PackagePath>pages\readingPage\readingPage.html</PackagePath>
@@ -274,7 +302,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-03-29T09:12:50.109</Modified>
+      <Modified>2013-03-31T03:02:38.592</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

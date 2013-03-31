@@ -1,6 +1,9 @@
 {
-   "airQualityMeter":{
-      "isAirQualityMonitorWorking":"green", 
-	   "dynamicReadingRequired":"false"
-	 }
+	"airQualityMeter":{
+		"isConnected": "true", 
+		"readingZone":"green",
+		"takeDynamicReadingOn" : "yellow",
+		"frequencyReadingThisFile": 300000,
+		"lastDynamicReadingTakenAt" : 0
+	}
 }      

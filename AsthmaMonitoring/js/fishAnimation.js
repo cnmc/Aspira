@@ -7,19 +7,26 @@ function fishFloat() {
 
 
 function createAnimationDiv() {
+    
     var currentStage = calculateImageToShow();
     if (currentStage == 0 || currentStage == undefined || currentStage > 
         AsthmaGlobals.fileConfig.config.animation.totalStages) {
         currentStage = 1;
-    } 
-    var mood = "normal";
-    if ( Windows.Storage.ApplicationData.current.localSettings.values["currMood"] != undefined){
-        mood =  Windows.Storage.ApplicationData.current.localSettings.values["currMood"];
+    }
+    //create tease array
+    var allTeaseImgSrc = new Array(); 
+    allTeaseImgSrc[0] = "/images/fishAnimation/fish_attentive_stage_" + currentStage + ".png";
+    allTeaseImgSrc[1] = "/images/fishAnimation/fish_tease_1_stage_" + currentStage + ".png";
+    allTeaseImgSrc[2] = "/images/fishAnimation/fish_tease_2_stage_" + currentStage + ".png";
+    AsthmaGlobals.allTeaseImgArray = allTeaseImgSrc;
+    var mood = "sleepy";
+    if (AsthmaGlobals.currMood != undefined){
+        mood = AsthmaGlobals.currMood;
     }
     var imgSrc= "/images/fishAnimation/fish_"+mood+"_stage_"+currentStage+".png";
     var content = " <div class='animationMainContainer' id='animationMainContainer'>";
     content += "<div class='fishImage' id='fishImage'>";
-    content += "<img id='fish_normal_stage_1' src='" + imgSrc + "'  alt='Fish' />";
+    content += "<img id='fishImageID' src='" + imgSrc + "'  alt='Fish' />";
     content += "</div>";
     content += "<div class='bowlImage'>";
     content += "<img src='/images/fishAnimation/fishBowl.png' alt='bowl' />";
@@ -37,11 +44,15 @@ function initializeAnimation() {
 }
 function changeFishMood(mood) {
     if (mood != undefined) {
-        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = mood;
-    } else {
-        Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = "normal";
+       AsthmaGlobals.currMood = mood;
     }
-    setProperties();
+    //else if (mood == "sleepy") {
+    //    AsthmaGlobals.changeMoodSleepyTimeoutId = null;
+    //}
+    else {
+       AsthmaGlobals.currMood = "sleepy";
+    }
+    //setProperties();
     initializeAnimation();
 
 }

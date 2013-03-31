@@ -55,6 +55,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="asthmaMonitoringLog.json" />
     <Content Include="airQualityStatus.json" />
     <Content Include="config.json" />
     <Content Include="css\default.css" />
@@ -62,15 +63,13 @@
     <Content Include="images\16391609-illustration-of-cartoon-traffic-light.jpg" />
     <Content Include="images\aspira_spiro.jpg" />
     <Content Include="images\fishAnimation\fishBowl.png" />
+    <Content Include="images\fishAnimation\fish_attentive_stage_1.png" />
+    <Content Include="images\fishAnimation\fish_attentive_stage_2.png" />
+    <Content Include="images\fishAnimation\fish_attentive_stage_3.png" />
     <Content Include="images\fishAnimation\fish_happy_stage_1.png" />
     <Content Include="images\fishAnimation\fish_happy_stage_2.png" />
     <Content Include="images\fishAnimation\fish_happy_stage_3.png" />
-    <Content Include="images\fishAnimation\fish_normal_stage_1.png" />
     <Content Include="images\fishAnimation\fish_normal_stage_10.png" />
-    <Content Include="images\fishAnimation\fish_normal_stage_2.png" />
-    <Content Include="images\fishAnimation\fish_normal_stage_3.png" />
-    <Content Include="images\fishAnimation\fish_normal_stage_4.png" />
-    <Content Include="images\fishAnimation\fish_normal_stage_5.png" />
     <Content Include="images\fishAnimation\fish_normal_stage_6.png" />
     <Content Include="images\fishAnimation\fish_normal_stage_7.png" />
     <Content Include="images\fishAnimation\fish_normal_stage_8.png" />
@@ -78,6 +77,11 @@
     <Content Include="images\fishAnimation\fish_sad_stage_1.png" />
     <Content Include="images\fishAnimation\fish_sad_stage_2.png" />
     <Content Include="images\fishAnimation\fish_sad_stage_3.png" />
+    <Content Include="images\fishAnimation\fish_sleepy_stage_1.png" />
+    <Content Include="images\fishAnimation\fish_sleepy_stage_2.png" />
+    <Content Include="images\fishAnimation\fish_sleepy_stage_3.png" />
+    <Content Include="images\fishAnimation\fish_tease_1_stage_1.png" />
+    <Content Include="images\fishAnimation\fish_tease_2_stage_1.png" />
     <Content Include="images\third.jpg" />
     <Content Include="images\adminPage.png" />
     <Content Include="images\dog+open+arms+cartoon.gif" />
@@ -93,8 +97,11 @@
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
+    <Content Include="images\traffic_signal_disconnected.png" />
     <Content Include="images\traffic_signal_green.png" />
     <Content Include="images\traffic_signal_red.png" />
+    <Content Include="images\traffic_signal_yellow.png" />
+    <Content Include="js\asthmaLogging.js" />
     <Content Include="js\default.js" />
     <Content Include="js\fishAnimation.js" />
     <Content Include="js\jquery1.8.js" />

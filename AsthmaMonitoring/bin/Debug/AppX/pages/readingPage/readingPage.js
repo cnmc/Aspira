@@ -32,11 +32,12 @@
                         //it is in the fev sreen now and appending onclick event according to that
                         confirmBtnMarkup.onclick = function () {
                             //change the mood of the fish to happy
-                            Windows.Storage.ApplicationData.current.localSettings.values["currMood"] = "happy";
+                           AsthmaGlobals.currMood = "happy";
                            // setProperties();
                             Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"] =
                                 document.getElementById("FEVValue").value;
                             createSpirometerLog();
+                            AsthmaGlobals.canTakeReading = false;
                             WinJS.Navigation.navigate("/pages/home/home.html");
                         };
                     }
@@ -59,6 +60,7 @@
             // TODO: Respond to navigations away from this page.
         }, 
         changeScreenFev: function () {
+            appendLog("User completed PEF reading");
             Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] =
                 document.getElementById("PEFValue").value;
 
@@ -77,6 +79,7 @@
 
     function validateInput(feildName) {
         var currValueEntered = document.getElementById(feildName).value.trim();
+        appendLog("in " + feildName + " text box, user entered " + currValueEntered);
         var re = /^\d{3}\.\d{1}$/g;
         var result = re.exec(currValueEntered);
         if (result == null) {
@@ -104,5 +107,6 @@
         }
         return true;
     }
-    
+
+  
 })();

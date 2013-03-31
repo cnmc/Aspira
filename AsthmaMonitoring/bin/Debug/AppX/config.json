@@ -23,6 +23,7 @@
       "minValues":{
          "PEFValue":200,
          "FEVValue":100
-      }
+      },
+	  "logFileWriteFrequency":10000
    }
 }

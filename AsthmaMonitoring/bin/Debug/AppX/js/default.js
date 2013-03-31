@@ -15,7 +15,14 @@
     ];
     WinJS.Namespace.define("AsthmaGlobals", {
         "fileConfig": null,
-        "airQualityConfig":null
+        "airQualityConfig": null,
+        "logString":null,
+        "dynamicAlertDisplay": false,
+        "currMood": "sleepy",
+        "canTakeReading": true,
+        "teaseIndex": 0,
+        "allTeaseImgArray": null,
+        "changeMoodSleepyTimeoutId":null
     });
    
     app.addEventListener("activated", function (eventObject) {
