@@ -1,9 +1,8 @@
 {
 	"airQualityMeter":{
 		"isConnected": "true", 
-		"readingZone":"green",
+		"readingZone":"yellow",
 		"takeDynamicReadingOn" : "yellow",
-		"frequencyReadingThisFile": 300000,
-		"lastDynamicReadingTakenAt" : 0
+		"frequencyReadingThisFile": 300000
 	}
-}      
+}
