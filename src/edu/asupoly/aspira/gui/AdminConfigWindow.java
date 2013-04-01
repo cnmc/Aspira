@@ -56,7 +56,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         read3TimeField = new javax.swing.JTextField();
         read3TimeCB = new javax.swing.JComboBox<String>();
         savePatientInfo = new javax.swing.JButton();
-        cancelPatientInfo = new javax.swing.JButton();
+        resetPatientInfo = new javax.swing.JButton();
         configPanel = new javax.swing.JPanel();
         alarmTypeLabel = new javax.swing.JLabel();
         soundTypeCheck = new javax.swing.JCheckBox();
@@ -122,7 +122,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         userDateTimeHeader = new javax.swing.JLabel();
         MedicationPanel = new javax.swing.JPanel();
         medPannelSaveButton = new javax.swing.JButton();
-        medPanelClearButton = new javax.swing.JButton();
+        medResetClearButton = new javax.swing.JButton();
         albuInhaleCB = new javax.swing.JCheckBox();
         albuNebCB = new javax.swing.JCheckBox();
         floDiskCB = new javax.swing.JCheckBox();
@@ -223,7 +223,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             }
         });
 
-        cancelPatientInfo.setText("Cancel");
+        resetPatientInfo.setText("Reset");
 
         javax.swing.GroupLayout PatientPanelLayout = new javax.swing.GroupLayout(PatientPanel);
         PatientPanel.setLayout(PatientPanelLayout);
@@ -259,7 +259,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cancelPatientInfo)
+                .addComponent(resetPatientInfo)
                 .addContainerGap(353, Short.MAX_VALUE))
         );
         PatientPanelLayout.setVerticalGroup(
@@ -289,7 +289,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
                 .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(savePatientInfo)
-                    .addComponent(cancelPatientInfo))
+                    .addComponent(resetPatientInfo))
                 .addContainerGap())
         );
 
@@ -370,7 +370,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         saveConfigButton.setText("Save");
 
-        resetConfigButton.setText("Cancel");
+        resetConfigButton.setText("Reset");
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanel.setLayout(configPanelLayout);
@@ -688,7 +688,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         medPannelSaveButton.setText("Save");
 
-        medPanelClearButton.setText("Clear");
+        medResetClearButton.setText("Reset");
 
         albuInhaleCB.setText("Albuteral (inhaler)");
 
@@ -757,7 +757,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         .addGap(258, 258, 258)
                         .addComponent(medPannelSaveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(medPanelClearButton)))
+                        .addComponent(medResetClearButton)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         MedicationPanelLayout.setVerticalGroup(
@@ -786,7 +786,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 308, Short.MAX_VALUE)
                 .addGroup(MedicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(medPannelSaveButton)
-                    .addComponent(medPanelClearButton))
+                    .addComponent(medResetClearButton))
                 .addContainerGap())
         );
 
@@ -913,7 +913,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel aqZonesLabel;
     private javax.swing.JCheckBox blinkTypeCheck;
     private javax.swing.JCheckBox budesonideCB;
-    private javax.swing.JButton cancelPatientInfo;
+    private javax.swing.JButton resetPatientInfo;
     private javax.swing.JPanel configPanel;
     private javax.swing.JTextField endDateField;
     private javax.swing.JLabel endDateLabel;
@@ -928,7 +928,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JPanel logPanel;
     private javax.swing.JTextField lowerRangeField;
     private javax.swing.JLabel lowerTextLabel;
-    private javax.swing.JButton medPanelClearButton;
+    private javax.swing.JButton medResetClearButton;
     private javax.swing.JButton medPannelSaveButton;
     private javax.swing.JCheckBox otherMedCheckbox;
     private javax.swing.JTextField otherMedField;
