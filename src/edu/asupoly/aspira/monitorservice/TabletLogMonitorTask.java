@@ -30,7 +30,7 @@ public class TabletLogMonitorTask extends AspiraTimerTask {
                 if(!(logfile.exists()))
                 {
                     logfile.createNewFile();
-                    String logtxt = "There are user interaction to log";
+                    String logtxt = "There are no user interaction to log";
                      FileWriter fw = new FileWriter(logfile);
                     fw.write(logtxt);
                     fw.close();
