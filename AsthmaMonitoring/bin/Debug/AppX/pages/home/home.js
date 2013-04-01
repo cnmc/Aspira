@@ -118,6 +118,7 @@ function readingNotTaken  () {
 
     $("#nextReadingCard").stop();
     $("#nextReadingCard").stop();
+    AsthmaGlobals.canTakeReading == true;
     //clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
     // go set new time for reading
     Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(

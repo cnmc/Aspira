@@ -15,15 +15,15 @@ function createAnimationDiv() {
     }
     //create tease array
     var allTeaseImgSrc = new Array(); 
-    allTeaseImgSrc[0] = "/images/fishAnimation/fish_attentive_stage_" + currentStage + ".png";
-    allTeaseImgSrc[1] = "/images/fishAnimation/fish_tease_1_stage_" + currentStage + ".png";
-    allTeaseImgSrc[2] = "/images/fishAnimation/fish_tease_2_stage_" + currentStage + ".png";
+    allTeaseImgSrc[0] = "/images/fishAnimation/" + currentStage + "attentive.png";
+    allTeaseImgSrc[1] = "/images/fishAnimation/" + currentStage + "scared.png";
+    allTeaseImgSrc[2] = "/images/fishAnimation/" + currentStage + "puffed.png";
     AsthmaGlobals.allTeaseImgArray = allTeaseImgSrc;
     var mood = "sleepy";
     if (AsthmaGlobals.currMood != undefined){
         mood = AsthmaGlobals.currMood;
     }
-    var imgSrc= "/images/fishAnimation/fish_"+mood+"_stage_"+currentStage+".png";
+    var imgSrc= "/images/fishAnimation/"+currentStage+mood+".png";
     var content = " <div class='animationMainContainer' id='animationMainContainer'>";
     content += "<div class='fishImage' id='fishImage'>";
     content += "<img id='fishImageID' src='" + imgSrc + "'  alt='Fish' />";
