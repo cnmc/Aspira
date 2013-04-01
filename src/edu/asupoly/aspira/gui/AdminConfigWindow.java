@@ -132,18 +132,21 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         pulmiNebCB = new javax.swing.JCheckBox();
         scheduleList = new ArrayList<MedicationSchedule>();
         
-        albuInhaleCB.addItemListener(new CheckBoxListener());
-        albuNebCB.addItemListener(new CheckBoxListener());
-        floDiskCB.addItemListener(new CheckBoxListener());
-        floInhaleCB.addItemListener(new CheckBoxListener());
-        qvarCB.addItemListener(new CheckBoxListener());
-        advairDiskCB.addItemListener(new CheckBoxListener());
-        advairInhaleCB.addItemListener(new CheckBoxListener());
-        budesonideCB.addItemListener(new CheckBoxListener());
-        pulmiTwistCB.addItemListener(new CheckBoxListener());
-        singulairCB.addItemListener(new CheckBoxListener());
-        otherMedCheckbox.addItemListener(new CheckBoxListener());
-        pulmiNebCB.addItemListener(new CheckBoxListener());
+        albuInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        albuNebCB.addItemListener(new MedicineCheckBoxListener());
+        floDiskCB.addItemListener(new MedicineCheckBoxListener());
+        floInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        qvarCB.addItemListener(new MedicineCheckBoxListener());
+        advairDiskCB.addItemListener(new MedicineCheckBoxListener());
+        advairInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        budesonideCB.addItemListener(new MedicineCheckBoxListener());
+        pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+        singulairCB.addItemListener(new MedicineCheckBoxListener());
+        otherMedCheckbox.addItemListener(new MedicineCheckBoxListener());
+        pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+        
+        blinkTypeCheck.addItemListener(new AlarmCheckBoxListener());
+        soundTypeCheck.addItemListener(new AlarmCheckBoxListener());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Administrator Config Window"); // NOI18N
@@ -981,7 +984,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static JFrame thisFrame;
     // End of variables declaration               
     
-    private class CheckBoxListener implements ItemListener{
+    private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
             JCheckBox source = (JCheckBox)e.getSource();
             String[] answers;
@@ -1040,5 +1043,19 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         		
         	}
          }
+    }
+    
+    private class AlarmCheckBoxListener implements ItemListener
+    {
+    	public void itemStateChanged(ItemEvent e)
+    	{
+    		JCheckBox source = (JCheckBox)e.getSource();
+    		if(!blinkTypeCheck.isSelected()&&!soundTypeCheck.isSelected())
+    		{
+    			source.setSelected(true);
+    			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
+    					"Error", JOptionPane.ERROR_MESSAGE);
+    		}
+    	}
     }
 }
