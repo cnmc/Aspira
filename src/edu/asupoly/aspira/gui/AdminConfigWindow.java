@@ -317,7 +317,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         urlToPushLabel.setText("URL to push readings: ");
 
-        urlField.setText("http:\\\\ineedtogetthedefaultfromDrgary.com");
+        urlField.setText("http://ineedtogetthedefaultfromDrgary.com");
 
         testURLButton.setText("Test");
 
