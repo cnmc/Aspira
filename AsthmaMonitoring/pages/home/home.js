@@ -196,26 +196,33 @@ function initateDynamicAlert(type, description) {
         content += AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertText;
     }
     content += "</div>";
+    if (type != "scheduledReading") {
     content += "<div class='buttonPanel'>";
     content += "<button id='dismiss' class='button-left'>Dismiss</button>";
-    if(type != "scheduledReading"){
+   
         if (type == "dynamicReading") {
             content += "<button id='done' class='button-right'>Take Reading</button>";
         } else {
             content += "<button id='done' class='button-right'>Done</button>";
         }
+    
+        content += "</div>";
     }
-    content += "</div>";
     content += "</div>";
     $("#dynamicInfoBox").append(content);
-    if (type == "dynamicReading") {
-        appendLog("User was shown dynamic reading alert");
-        document.getElementById("done").onclick = takeDynamicReading;
-    } else {
-        appendLog("User was shown medication reminder");
-        document.getElementById("done").onclick = alertActionComplete;
+    if (type != "scheduledReading") {
+        if (type == "dynamicReading") {
+            appendLog("User was shown dynamic reading alert");
+            document.getElementById("done").onclick = takeDynamicReading;
+        } else {
+            appendLog("User was shown medication reminder");
+
+            document.getElementById("done").onclick = alertActionComplete;
+
+        }
+    
+        document.getElementById("dismiss").onclick = dismissAlert;
     }
-    document.getElementById("dismiss").onclick = dismissAlert;
 }
 
 function dismissAlert() {

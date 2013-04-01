@@ -56,7 +56,7 @@
           Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
           setTimeout(readingNotTaken, 60000);// set next reading not taken timer
             //2. 
-
+          initateDynamicAlert("scheduledReading", "Tap on the bowl to take a reading !!")
           animateNextReading();
             
 
@@ -130,7 +130,7 @@ function readingNotTaken  () {
          document.getElementById("nextReadingCard").style.display = "block";
      }
     //change the mood of the fish
-     changeFishMood("sad");
+     changeFishMood("sick");
      
 }
 
@@ -196,24 +196,33 @@ function initateDynamicAlert(type, description) {
         content += AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertText;
     }
     content += "</div>";
+    if (type != "scheduledReading") {
     content += "<div class='buttonPanel'>";
     content += "<button id='dismiss' class='button-left'>Dismiss</button>";
-    if (type == "dynamicReading") {
-        content += "<button id='done' class='button-right'>Take Reading</button>";
-    } else {
-        content += "<button id='done' class='button-right'>Done</button>";
+   
+        if (type == "dynamicReading") {
+            content += "<button id='done' class='button-right'>Take Reading</button>";
+        } else {
+            content += "<button id='done' class='button-right'>Done</button>";
+        }
+    
+        content += "</div>";
     }
-    content += "</div>";
     content += "</div>";
     $("#dynamicInfoBox").append(content);
-    if (type == "dynamicReading") {
-        appendLog("User was shown dynamic reading alert");
-        document.getElementById("done").onclick = takeDynamicReading;
-    } else {
-        appendLog("User was shown medication reminder");
-        document.getElementById("done").onclick = alertActionComplete;
+    if (type != "scheduledReading") {
+        if (type == "dynamicReading") {
+            appendLog("User was shown dynamic reading alert");
+            document.getElementById("done").onclick = takeDynamicReading;
+        } else {
+            appendLog("User was shown medication reminder");
+
+            document.getElementById("done").onclick = alertActionComplete;
+
+        }
+    
+        document.getElementById("dismiss").onclick = dismissAlert;
     }
-    document.getElementById("dismiss").onclick = dismissAlert;
 }
 
 function dismissAlert() {
