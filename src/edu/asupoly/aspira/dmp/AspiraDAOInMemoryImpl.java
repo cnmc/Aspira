@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Properties;
 
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.Clinician;
-import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
@@ -21,7 +21,7 @@ import edu.asupoly.aspira.model.SpirometerReadings;
  * @author kevinagary
  *
  */
-public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
+public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializable {
 
     private static final long serialVersionUID = -4574092811303193281L;
 
@@ -38,7 +38,8 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
     /**
      * 
      */
-    public AspiraDAOSerializedImpl() {
+    public AspiraDAOInMemoryImpl() {
+        super();
         __patients    = new HashMap<String, Patient>();
         __clinicians  = new HashMap<String, Clinician>();
         __spirometers = new HashMap<String, Spirometer>();
@@ -47,6 +48,13 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
         __spReadings  = new HashMap<String, SpirometerReadings>();
     }
 
+    /**
+     * This implementation does not require anything from the properties
+     */
+    @Override
+    public void init(Properties p) throws DMPException {        
+    }
+    
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.AspiraDAO#getPatients()
      */
@@ -152,11 +160,7 @@ public class AspiraDAOSerializedImpl implements AspiraDAO, Serializable {
         
         AirQualityReadings rval = findAirQualityReadingsForPatient(patientId);
         if (rval != null) {
-            Iterator<ParticleReading> iter = rval.getAirQualityBetween(start, true, end, true);
-            rval = new AirQualityReadings(rval.getDeviceId(), rval.getPatientId());
-            while (iter.hasNext()) {
-                rval.addReading(iter.next());
-            }
+            rval = rval.getAirQualityBetween(start, true, end, true);
         }
         return rval;
     }

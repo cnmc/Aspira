@@ -35,7 +35,7 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
                     AirQualityReadings aqrAfter = aqr.getAirQualityAfter(__lastRead, true);
                     // Now we need to call DAOManager to get DAO
                     // XXX then call importAirQualityReadings(aqrAfter, true);
-                
+                }
             } catch (Throwable t) {
                 // XXX need some logging here
             }
