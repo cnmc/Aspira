@@ -11,7 +11,7 @@
          "spiroReadingTime":[
             "0111",
             "1745",
-            "1728",
+            "0108",
             "1727",
             "1914",
             "1312"
@@ -33,6 +33,12 @@
          "PEFValue":200,
          "FEVValue":100
       },
-      "logFileWriteFrequency":10000
+      "logFileWriteFrequency":10000,
+	  
+	  "airQualityConfig":{
+		"monitorServicePollingTime":100000,
+		"yellowZone": 456,
+		"redZone":679
+	  }
    }
 }
