@@ -1052,9 +1052,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     		JCheckBox source = (JCheckBox)e.getSource();
     		if(!blinkTypeCheck.isSelected()&&!soundTypeCheck.isSelected())
     		{
-    			source.setSelected(true);
     			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
     					"Error", JOptionPane.ERROR_MESSAGE);
+    			source.setSelected(true);
     		}
     	}
     }
