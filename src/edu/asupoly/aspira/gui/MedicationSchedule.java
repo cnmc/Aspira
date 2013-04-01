@@ -6,21 +6,21 @@ import java.util.ArrayList;
 public class MedicationSchedule {
 	
 	private String name;
-	private ArrayList<Time> schedule;
+	private String frequency;
 	private int doses;
 	
-	public MedicationSchedule(String name, ArrayList<Time> schedule, String doses)
+	public MedicationSchedule(String name, String frequency, String doses)
 	{
 		this.name = name;
-		this.schedule = schedule;
+		this.frequency = frequency;
 		this.doses = Integer.parseInt(doses);
 	}
 	
-	public MedicationSchedule(String name, String doses)
+	public MedicationSchedule(String name)
 	{
 		this.name = name;
-		schedule = new ArrayList<Time>();
-		this.doses = Integer.parseInt(doses);
+		frequency = null;
+		doses = 0;
 	}
 	
 	public String getName()
@@ -28,19 +28,14 @@ public class MedicationSchedule {
 		return name;
 	}
 	
-	public ArrayList<Time> getSchedule()
+	public String getFrequency()
 	{
-		return schedule;
+		return frequency;
 	}
 	
 	public int getDoses()
 	{
 		return doses;
-	}
-	
-	public void addTimeToSchedule(Time time)
-	{
-		schedule.add(time);
 	}
 	
 	public boolean equals(MedicationSchedule x)

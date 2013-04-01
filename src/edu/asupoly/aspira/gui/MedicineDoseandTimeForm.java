@@ -10,9 +10,18 @@ public class MedicineDoseandTimeForm extends javax.swing.JDialog {
     /**
      * Creates new form MedicineDoseandTimeForm
      */
-    public MedicineDoseandTimeForm(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public MedicineDoseandTimeForm(java.awt.Frame parent, String medName) {
+        super(parent, medName + " frequency information", true);
         initComponents();
+    }
+    
+    public void clearAndHide() {
+        setVisible(false);
+    }
+    
+    public String[] getAnswers()
+    {
+    	return answers;
     }
 
     /**
@@ -32,6 +41,7 @@ public class MedicineDoseandTimeForm extends javax.swing.JDialog {
         jTextField1 = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        answers = new String[2];
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -100,47 +110,6 @@ public class MedicineDoseandTimeForm extends javax.swing.JDialog {
         pack();
     }// </editor-fold>                        
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MedicineDoseandTimeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MedicineDoseandTimeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MedicineDoseandTimeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MedicineDoseandTimeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MedicineDoseandTimeForm dialog = new MedicineDoseandTimeForm(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify                     
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel dosesLabel;
@@ -151,5 +120,6 @@ public class MedicineDoseandTimeForm extends javax.swing.JDialog {
     private javax.swing.JComboBox presetOptionsComboBox;
     private javax.swing.JRadioButton presetOptionsRB;
     private javax.swing.JButton saveButton;
+    private String[] answers;
     // End of variables declaration                   
 }

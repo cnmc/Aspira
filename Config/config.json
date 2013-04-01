@@ -1,0 +1,38 @@
+{
+   "config":{
+      "animation":{
+         "totalStages":3,
+         "totalDays":3,
+         "startDateMilliSec":1363760353383,
+         "currMood":"normal",
+		 "switchMoodSleepy":60000
+      },
+      "alertInfo":{
+         "spiroReadingTime":[
+            "0111",
+            "1745",
+            "0108",
+            "1727",
+            "1914",
+            "1312"
+         ],
+		 "medicationAlertTime":[
+			"0125",
+            "0128",
+            "1230"
+         ],
+		 "medicationAlertText":"You should take the prescribed medication now.",
+		 "dynamicReadingAlertText" : "The air quality doesn't seem good, please take a reading.",
+		 "intervalInTwoReadings" : 60000
+      },
+      "maxValues":{
+         "PEFValue":600,
+         "FEVValue":200
+      },
+      "minValues":{
+         "PEFValue":200,
+         "FEVValue":100
+      },
+      "logFileWriteFrequency":10000
+   }
+}

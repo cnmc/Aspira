@@ -1,5 +1,13 @@
 package edu.asupoly.aspira.gui;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -115,13 +123,30 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         floInhaleCB = new javax.swing.JCheckBox();
         qvarCB = new javax.swing.JCheckBox();
         advairDiskCB = new javax.swing.JCheckBox();
-        advairInhailCB = new javax.swing.JCheckBox();
+        advairInhaleCB = new javax.swing.JCheckBox();
         budesonideCB = new javax.swing.JCheckBox();
         pulmiTwistCB = new javax.swing.JCheckBox();
         otherMedCheckbox = new javax.swing.JCheckBox();
         singulairCB = new javax.swing.JCheckBox();
         otherMedField = new javax.swing.JTextField();
         pulmiNebCB = new javax.swing.JCheckBox();
+        scheduleList = new ArrayList<MedicationSchedule>();
+        
+        albuInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        albuNebCB.addItemListener(new MedicineCheckBoxListener());
+        floDiskCB.addItemListener(new MedicineCheckBoxListener());
+        floInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        qvarCB.addItemListener(new MedicineCheckBoxListener());
+        advairDiskCB.addItemListener(new MedicineCheckBoxListener());
+        advairInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        budesonideCB.addItemListener(new MedicineCheckBoxListener());
+        pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+        singulairCB.addItemListener(new MedicineCheckBoxListener());
+        otherMedCheckbox.addItemListener(new MedicineCheckBoxListener());
+        pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+        
+        blinkTypeCheck.addItemListener(new AlarmCheckBoxListener());
+        soundTypeCheck.addItemListener(new AlarmCheckBoxListener());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Administrator Config Window"); // NOI18N
@@ -295,7 +320,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         urlToPushLabel.setText("URL to push readings: ");
 
-        urlField.setText("http:\\\\ineedtogetthedefaultfromDrgary.com");
+        urlField.setText("http://ineedtogetthedefaultfromDrgary.com");
 
         testURLButton.setText("Test");
 
@@ -670,7 +695,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         advairDiskCB.setText("Advair (diskus)");
 
-        advairInhailCB.setText("Advair (inhaler)");
+        advairInhaleCB.setText("Advair (inhaler)");
 
         budesonideCB.setText("Budesonide");
 
@@ -703,7 +728,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             .addGroup(MedicationPanelLayout.createSequentialGroup()
                                 .addComponent(advairDiskCB)
                                 .addGap(16, 16, 16)
-                                .addComponent(advairInhailCB)))
+                                .addComponent(advairInhaleCB)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(MedicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(floDiskCB)
@@ -741,7 +766,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(MedicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(advairDiskCB)
-                    .addComponent(advairInhailCB)
+                    .addComponent(advairInhaleCB)
                     .addComponent(budesonideCB)
                     .addComponent(pulmiTwistCB)
                     .addComponent(pulmiNebCB))
@@ -854,7 +879,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AdminConfigWindow().setVisible(true);
+               thisFrame = new AdminConfigWindow();
+               thisFrame.setVisible(true);
             }
         });
     }
@@ -871,7 +897,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JButton acPushButton;
     private javax.swing.JLabel acPushHeader;
     private javax.swing.JCheckBox advairDiskCB;
-    private javax.swing.JCheckBox advairInhailCB;
+    private javax.swing.JCheckBox advairInhaleCB;
     private javax.swing.JLabel alarmSoundPromptLabel;
     private javax.swing.JLabel alarmTimeUnitsLabel;
     private javax.swing.JLabel alarmTypeLabel;
@@ -954,5 +980,82 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel userPushHeader;
     private javax.swing.JTextField yellowQualityField;
     private javax.swing.JLabel yellowQualityLabel;
-    // End of variables declaration                   
+    private ArrayList<MedicationSchedule> scheduleList;
+    private static JFrame thisFrame;
+    // End of variables declaration               
+    
+    private class MedicineCheckBoxListener implements ItemListener{
+        public void itemStateChanged(ItemEvent e) {
+            JCheckBox source = (JCheckBox)e.getSource();
+            String[] answers;
+            String otherMed;
+            if(source.isSelected())
+            {
+            	if( source != otherMedCheckbox)
+            	{
+            		MedicineDoseandTimeForm thisForm = new MedicineDoseandTimeForm(thisFrame, source.getText());
+            		thisForm.setVisible(true);
+            		answers = thisForm.getAnswers();
+            		
+            		if(answers[0] != null && answers[1]!= null)
+            		{
+            			scheduleList.add(new MedicationSchedule(source.getText(), answers[1], answers[2]));
+            		}
+            		else
+            			source.setSelected(false);
+            	}
+            	else
+            	{
+            		try
+            		{
+            			otherMed = otherMedField.getText();
+            			MedicineDoseandTimeForm thisForm = new MedicineDoseandTimeForm(AdminConfigWindow.this, otherMed);
+            			thisForm.setVisible(true);
+            			answers = thisForm.getAnswers();
+                		
+                		if(answers[0] != null && answers[1]!= null)
+                		{
+                			scheduleList.add(new MedicationSchedule(source.getText(), answers[1], answers[2]));
+                			otherMedField.setEnabled(false);
+                		}
+                		else
+                			source.setSelected(false);
+                		
+            		}
+            		catch(NullPointerException npe)
+            		{
+            			source.setSelected(false);
+            		}
+            		
+            	}
+            	
+            		
+            }
+            else
+        	{
+        		if(source != otherMedCheckbox)
+        			scheduleList.remove(new MedicationSchedule(source.getText()));
+        		else
+        		{
+        			scheduleList.remove(new MedicationSchedule(otherMedField.getText()));
+        			otherMedField.setEnabled(true);
+        		}
+        		
+        	}
+         }
+    }
+    
+    private class AlarmCheckBoxListener implements ItemListener
+    {
+    	public void itemStateChanged(ItemEvent e)
+    	{
+    		JCheckBox source = (JCheckBox)e.getSource();
+    		if(!blinkTypeCheck.isSelected()&&!soundTypeCheck.isSelected())
+    		{
+    			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
+    					"Error", JOptionPane.ERROR_MESSAGE);
+    			source.setSelected(true);
+    		}
+    	}
+    }
 }
