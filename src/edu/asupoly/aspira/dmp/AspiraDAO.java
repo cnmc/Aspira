@@ -26,13 +26,12 @@ public final class AspiraDAO implements IAspiraDAO {
     
     private static String PROPERTY_FILENAME = "dao.properties";
     private static String DAO_CLASS_PROPERTY_KEY = "daoClassName";
+    private static final String PUSH_URL_PROPERTY_KEY = "push.url";
     
     private static AspiraDAO  __singletonDAOWrapper;
     private AspiraDAOBaseImpl __dao = null;
     private Properties        __daoProperties = null;
     private URL pushURL;
-    private static final String PUSH_URL_PROPERTY_KEY = "push.url";
-    
     
     /**
      * Singleton accessor
