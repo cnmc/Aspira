@@ -1,8 +1,14 @@
 package edu.asupoly.aspira.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -42,15 +48,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         rpdLabel = new javax.swing.JLabel();
         readOneTimeLabel = new javax.swing.JLabel();
         read1TimeField = new javax.swing.JTextField();
-        read1TimeCB = new javax.swing.JComboBox();
+        read1TimeCB = new javax.swing.JComboBox<String>();
         readTwoTimeLabel = new javax.swing.JLabel();
-        readTwoTimeField = new javax.swing.JTextField();
-        read2TimeCB = new javax.swing.JComboBox();
+        read2TimeField = new javax.swing.JTextField();
+        read2TimeCB = new javax.swing.JComboBox<String>();
         read3TimeLabel = new javax.swing.JLabel();
         read3TimeField = new javax.swing.JTextField();
-        read3TimeCB = new javax.swing.JComboBox();
+        read3TimeCB = new javax.swing.JComboBox<String>();
         savePatientInfo = new javax.swing.JButton();
-        cancelPatientInfo = new javax.swing.JButton();
+        resetPatientInfo = new javax.swing.JButton();
         configPanel = new javax.swing.JPanel();
         alarmTypeLabel = new javax.swing.JLabel();
         soundTypeCheck = new javax.swing.JCheckBox();
@@ -116,7 +122,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         userDateTimeHeader = new javax.swing.JLabel();
         MedicationPanel = new javax.swing.JPanel();
         medPannelSaveButton = new javax.swing.JButton();
-        medPanelClearButton = new javax.swing.JButton();
+        medResetClearButton = new javax.swing.JButton();
         albuInhaleCB = new javax.swing.JCheckBox();
         albuNebCB = new javax.swing.JCheckBox();
         floDiskCB = new javax.swing.JCheckBox();
@@ -132,18 +138,22 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         pulmiNebCB = new javax.swing.JCheckBox();
         scheduleList = new ArrayList<MedicationSchedule>();
         
-        albuInhaleCB.addItemListener(new CheckBoxListener());
-        albuNebCB.addItemListener(new CheckBoxListener());
-        floDiskCB.addItemListener(new CheckBoxListener());
-        floInhaleCB.addItemListener(new CheckBoxListener());
-        qvarCB.addItemListener(new CheckBoxListener());
-        advairDiskCB.addItemListener(new CheckBoxListener());
-        advairInhaleCB.addItemListener(new CheckBoxListener());
-        budesonideCB.addItemListener(new CheckBoxListener());
-        pulmiTwistCB.addItemListener(new CheckBoxListener());
-        singulairCB.addItemListener(new CheckBoxListener());
-        otherMedCheckbox.addItemListener(new CheckBoxListener());
-        pulmiNebCB.addItemListener(new CheckBoxListener());
+        albuInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        albuNebCB.addItemListener(new MedicineCheckBoxListener());
+        floDiskCB.addItemListener(new MedicineCheckBoxListener());
+        floInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        qvarCB.addItemListener(new MedicineCheckBoxListener());
+        advairDiskCB.addItemListener(new MedicineCheckBoxListener());
+        advairInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        budesonideCB.addItemListener(new MedicineCheckBoxListener());
+        pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+        singulairCB.addItemListener(new MedicineCheckBoxListener());
+        otherMedCheckbox.addItemListener(new MedicineCheckBoxListener());
+        pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+        
+        blinkTypeCheck.addItemListener(new AlarmCheckBoxListener());
+        soundTypeCheck.addItemListener(new AlarmCheckBoxListener());
+        savePatientInfo.addActionListener(new PatientSaveButtonHandler());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Administrator Config Window"); // NOI18N
@@ -172,9 +182,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         readTwoTimeLabel.setText("Reading 2 Time:");
 
-        readTwoTimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        readTwoTimeField.setText("4:00");
-        readTwoTimeField.addActionListener(new java.awt.event.ActionListener() {
+        read2TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        read2TimeField.setText("4:00");
+        read2TimeField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 readTwoTimeFieldActionPerformed(evt);
             }
@@ -213,7 +223,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             }
         });
 
-        cancelPatientInfo.setText("Cancel");
+        resetPatientInfo.setText("Reset");
 
         javax.swing.GroupLayout PatientPanelLayout = new javax.swing.GroupLayout(PatientPanel);
         PatientPanel.setLayout(PatientPanelLayout);
@@ -240,7 +250,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                     .addComponent(read3TimeLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(readTwoTimeField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(read2TimeField, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(read1TimeField)
                                     .addComponent(read3TimeField, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -249,7 +259,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cancelPatientInfo)
+                .addComponent(resetPatientInfo)
                 .addContainerGap(353, Short.MAX_VALUE))
         );
         PatientPanelLayout.setVerticalGroup(
@@ -269,7 +279,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(readTwoTimeField)
+                    .addComponent(read2TimeField)
                     .addComponent(readTwoTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -279,7 +289,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
                 .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(savePatientInfo)
-                    .addComponent(cancelPatientInfo))
+                    .addComponent(resetPatientInfo))
                 .addContainerGap())
         );
 
@@ -360,7 +370,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         saveConfigButton.setText("Save");
 
-        resetConfigButton.setText("Cancel");
+        resetConfigButton.setText("Reset");
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanel.setLayout(configPanelLayout);
@@ -678,7 +688,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         medPannelSaveButton.setText("Save");
 
-        medPanelClearButton.setText("Clear");
+        medResetClearButton.setText("Reset");
 
         albuInhaleCB.setText("Albuteral (inhaler)");
 
@@ -747,7 +757,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         .addGap(258, 258, 258)
                         .addComponent(medPannelSaveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(medPanelClearButton)))
+                        .addComponent(medResetClearButton)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         MedicationPanelLayout.setVerticalGroup(
@@ -776,7 +786,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 308, Short.MAX_VALUE)
                 .addGroup(MedicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(medPannelSaveButton)
-                    .addComponent(medPanelClearButton))
+                    .addComponent(medResetClearButton))
                 .addContainerGap())
         );
 
@@ -903,7 +913,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel aqZonesLabel;
     private javax.swing.JCheckBox blinkTypeCheck;
     private javax.swing.JCheckBox budesonideCB;
-    private javax.swing.JButton cancelPatientInfo;
+    private javax.swing.JButton resetPatientInfo;
     private javax.swing.JPanel configPanel;
     private javax.swing.JTextField endDateField;
     private javax.swing.JLabel endDateLabel;
@@ -918,7 +928,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JPanel logPanel;
     private javax.swing.JTextField lowerRangeField;
     private javax.swing.JLabel lowerTextLabel;
-    private javax.swing.JButton medPanelClearButton;
+    private javax.swing.JButton medResetClearButton;
     private javax.swing.JButton medPannelSaveButton;
     private javax.swing.JCheckBox otherMedCheckbox;
     private javax.swing.JTextField otherMedField;
@@ -937,7 +947,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JTextField read3TimeField;
     private javax.swing.JLabel read3TimeLabel;
     private javax.swing.JLabel readOneTimeLabel;
-    private javax.swing.JTextField readTwoTimeField;
+    private javax.swing.JTextField read2TimeField;
     private javax.swing.JLabel readTwoTimeLabel;
     private javax.swing.JTextField redQualityField;
     private javax.swing.JLabel redQualityLabel;
@@ -981,7 +991,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static JFrame thisFrame;
     // End of variables declaration               
     
-    private class CheckBoxListener implements ItemListener{
+    private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
             JCheckBox source = (JCheckBox)e.getSource();
             String[] answers;
@@ -1040,5 +1050,64 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         		
         	}
          }
+    }
+    
+    private class AlarmCheckBoxListener implements ItemListener{
+    	public void itemStateChanged(ItemEvent e){
+    		JCheckBox source = (JCheckBox)e.getSource();
+    		if(!blinkTypeCheck.isSelected()&&!soundTypeCheck.isSelected())
+    		{
+    			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
+    					"Error", JOptionPane.ERROR_MESSAGE);
+    			source.setSelected(true);
+    		}
+    	}
+    }
+    
+    private class PatientSaveButtonHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			Date reading1=null;
+			Date reading2=null;
+			Date reading3=null;
+			Boolean validInputs = true;
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+				try {
+					reading1 = sdf.parse(read1TimeField.getText() + " " + read1TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				try {
+					reading2 = sdf.parse(read2TimeField.getText() + " " + read2TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				try {
+					reading3 = sdf.parse(read3TimeField.getText() + " " + read3TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				if(validInputs)
+				{
+					if(reading1.compareTo(reading2)>0)
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 must occur after reading 1", 
+		    					"Error", JOptionPane.ERROR_MESSAGE);
+					else if(reading1.compareTo(reading3)>0)
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 1", 
+		    					"Error", JOptionPane.ERROR_MESSAGE);
+					else if(reading2.compareTo(reading3)>0)
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 2", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			
+		}
     }
 }

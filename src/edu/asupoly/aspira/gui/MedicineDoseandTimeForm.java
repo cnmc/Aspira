@@ -48,6 +48,7 @@ public class MedicineDoseandTimeForm extends javax.swing.JDialog {
         dosesLabel.setText("Doses: ");
 
         frequencySettingsGroup.add(presetOptionsRB);
+        frequencySettingsGroup.add(otherFrequencyRB);
 
         otherFrequencyRB.setText("Other:");
 
