@@ -48,13 +48,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         rpdLabel = new javax.swing.JLabel();
         readOneTimeLabel = new javax.swing.JLabel();
         read1TimeField = new javax.swing.JTextField();
-        read1TimeCB = new javax.swing.JComboBox<String>();
+        read1TimeCB = new javax.swing.JComboBox();
         readTwoTimeLabel = new javax.swing.JLabel();
         read2TimeField = new javax.swing.JTextField();
-        read2TimeCB = new javax.swing.JComboBox<String>();
+        read2TimeCB = new javax.swing.JComboBox();
         read3TimeLabel = new javax.swing.JLabel();
         read3TimeField = new javax.swing.JTextField();
-        read3TimeCB = new javax.swing.JComboBox<String>();
+        read3TimeCB = new javax.swing.JComboBox();
         savePatientInfo = new javax.swing.JButton();
         resetPatientInfo = new javax.swing.JButton();
         configPanel = new javax.swing.JPanel();
