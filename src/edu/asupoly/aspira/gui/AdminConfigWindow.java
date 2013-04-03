@@ -98,31 +98,31 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         MedicationPanel = new javax.swing.JPanel();
         medPannelSaveButton = new javax.swing.JButton();
         medResetClearButton = new javax.swing.JButton();
-        albuInhaleCB = new javax.swing.JCheckBox();
-        albuNebCB = new javax.swing.JCheckBox();
+        albInhalCB = new javax.swing.JCheckBox();
+        albNebCB = new javax.swing.JCheckBox();
         floDiskCB = new javax.swing.JCheckBox();
-        floInhaleCB = new javax.swing.JCheckBox();
+        floInhalCB = new javax.swing.JCheckBox();
         qvarCB = new javax.swing.JCheckBox();
-        advairDiskCB = new javax.swing.JCheckBox();
-        advairInhaleCB = new javax.swing.JCheckBox();
+        adDiskCB = new javax.swing.JCheckBox();
+        adInhalCB = new javax.swing.JCheckBox();
         budesonideCB = new javax.swing.JCheckBox();
         pulmiTwistCB = new javax.swing.JCheckBox();
-        otherMedCheckbox = new javax.swing.JCheckBox();
+        otherMedCB = new javax.swing.JCheckBox();
         singulairCB = new javax.swing.JCheckBox();
         otherMedField = new javax.swing.JTextField();
         pulmiNebCB = new javax.swing.JCheckBox();
         
-        albuInhaleCB.addItemListener(new MedicineCheckBoxListener());
-        albuNebCB.addItemListener(new MedicineCheckBoxListener());
+        albInhalCB.addItemListener(new MedicineCheckBoxListener());
+        albNebCB.addItemListener(new MedicineCheckBoxListener());
         floDiskCB.addItemListener(new MedicineCheckBoxListener());
-        floInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        floInhalCB.addItemListener(new MedicineCheckBoxListener());
         qvarCB.addItemListener(new MedicineCheckBoxListener());
-        advairDiskCB.addItemListener(new MedicineCheckBoxListener());
-        advairInhaleCB.addItemListener(new MedicineCheckBoxListener());
+        adDiskCB.addItemListener(new MedicineCheckBoxListener());
+        adInhalCB.addItemListener(new MedicineCheckBoxListener());
         budesonideCB.addItemListener(new MedicineCheckBoxListener());
         pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
         singulairCB.addItemListener(new MedicineCheckBoxListener());
-        otherMedCheckbox.addItemListener(new MedicineCheckBoxListener());
+        otherMedCB.addItemListener(new MedicineCheckBoxListener());
         pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
         savePatientInfo.addActionListener(new PatientSaveButtonHandler());
 
@@ -448,25 +448,25 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         medResetClearButton.setText("Reset");
 
-        albuInhaleCB.setText("Albuteral (inhaler)");
+        albInhalCB.setText("Albuteral (inhaler)");
 
-        albuNebCB.setText("Albuterol (nebulizer)");
+        albNebCB.setText("Albuterol (nebulizer)");
 
         floDiskCB.setText("Flovent (diskus)");
 
-        floInhaleCB.setText("Flovent (inhaler)");
+        floInhalCB.setText("Flovent (inhaler)");
 
         qvarCB.setText("Qvar");
 
-        advairDiskCB.setText("Advair (diskus)");
+        adDiskCB.setText("Advair (diskus)");
 
-        advairInhaleCB.setText("Advair (inhaler)");
+        adInhalCB.setText("Advair (inhaler)");
 
         budesonideCB.setText("Budesonide");
 
         pulmiTwistCB.setText("Pulmicort (twisthaler)");
 
-        otherMedCheckbox.setText("Other:");
+        otherMedCB.setText("Other:");
 
         singulairCB.setText("Singulair");
 
@@ -600,17 +600,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         albInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
         albInhalDoseField.setColumns(10);
         
-        albuNebDoseField = new JTextField();
-        albuNebDoseField.setEnabled(false);
-        albuNebDoseField.setText("1");
-        albuNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        albuNebDoseField.setColumns(10);
+        albNebDoseField = new JTextField();
+        albNebDoseField.setEnabled(false);
+        albNebDoseField.setText("1");
+        albNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+        albNebDoseField.setColumns(10);
         
-        floDiskDosesField = new JTextField();
-        floDiskDosesField.setEnabled(false);
-        floDiskDosesField.setText("1");
-        floDiskDosesField.setHorizontalAlignment(SwingConstants.TRAILING);
-        floDiskDosesField.setColumns(10);
+        floDiskDoseField = new JTextField();
+        floDiskDoseField.setEnabled(false);
+        floDiskDoseField.setText("1");
+        floDiskDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+        floDiskDoseField.setColumns(10);
         
         floInhalDoseField = new JTextField();
         floInhalDoseField.setEnabled(false);
@@ -678,16 +678,16 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         					.addContainerGap()
         					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
         						.addGroup(MedicationPanelLayout.createSequentialGroup()
-        							.addComponent(otherMedCheckbox)
+        							.addComponent(otherMedCB)
         							.addPreferredGap(ComponentPlacement.RELATED)
         							.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-        						.addComponent(albuInhaleCB)
-        						.addComponent(albuNebCB)
+        						.addComponent(albInhalCB)
+        						.addComponent(albNebCB)
         						.addComponent(floDiskCB)
-        						.addComponent(floInhaleCB)
+        						.addComponent(floInhalCB)
         						.addComponent(qvarCB)
-        						.addComponent(advairDiskCB)
-        						.addComponent(advairInhaleCB)
+        						.addComponent(adDiskCB)
+        						.addComponent(adInhalCB)
         						.addComponent(budesonideCB)
         						.addComponent(pulmiTwistCB)
         						.addComponent(pulmiNebCB)
@@ -752,7 +752,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         						.addGroup(MedicationPanelLayout.createSequentialGroup()
         							.addComponent(lblAlbuNebDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(albuNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+        							.addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
         						.addGroup(MedicationPanelLayout.createSequentialGroup()
         							.addComponent(lblAlbInhalDoses)
         							.addPreferredGap(ComponentPlacement.RELATED)
@@ -760,7 +760,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         						.addGroup(MedicationPanelLayout.createSequentialGroup()
         							.addComponent(lblFloDiskDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(floDiskDosesField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+        							.addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
         						.addGroup(MedicationPanelLayout.createSequentialGroup()
         							.addComponent(lblFloInhalDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
@@ -804,28 +804,28 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         		.addGroup(MedicationPanelLayout.createSequentialGroup()
         			.addContainerGap()
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(albuInhaleCB)
+        				.addComponent(albInhalCB)
         				.addComponent(albuInTimesLabel)
         				.addComponent(albuInhalFreField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblAlbInhalDoses)
         				.addComponent(albInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(albuNebCB)
+        				.addComponent(albNebCB)
         				.addComponent(albuNebTimesLabel)
         				.addComponent(albuNebFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblAlbuNebDoses)
-        				.addComponent(albuNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        				.addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(floDiskCB)
         				.addComponent(floDiskTimeLabel)
         				.addComponent(floDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblFloDiskDoses)
-        				.addComponent(floDiskDosesField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        				.addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(floInhaleCB)
+        				.addComponent(floInhalCB)
         				.addComponent(floInhalTimeLabel)
         				.addComponent(floInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblFloInhalDoses)
@@ -839,14 +839,14 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         				.addComponent(qvarDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(advairDiskCB)
+        				.addComponent(adDiskCB)
         				.addComponent(adDiskusTimeLabel)
         				.addComponent(adDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblAdvairDiskDoses)
         				.addComponent(adDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(advairInhaleCB)
+        				.addComponent(adInhalCB)
         				.addComponent(adInhalTimeLabel)
         				.addComponent(adInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lblAdvairInhaleDoses)
@@ -881,7 +881,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         				.addComponent(singDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(otherMedCheckbox)
+        				.addComponent(otherMedCB)
         				.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
         					.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         					.addComponent(lblOtherTimes)
@@ -1295,13 +1295,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel acPushArea;
     private javax.swing.JButton acPushButton;
     private javax.swing.JLabel acPushHeader;
-    private javax.swing.JCheckBox advairDiskCB;
-    private javax.swing.JCheckBox advairInhaleCB;
+    private javax.swing.JCheckBox adDiskCB;
+    private javax.swing.JCheckBox adInhalCB;
     private javax.swing.JLabel alarmSoundPromptLabel;
     private javax.swing.JLabel alarmTimeUnitsLabel;
     private javax.swing.JLabel alarmTypeLabel;
-    private javax.swing.JCheckBox albuInhaleCB;
-    private javax.swing.JCheckBox albuNebCB;
+    private javax.swing.JCheckBox albInhalCB;
+    private javax.swing.JCheckBox albNebCB;
     private javax.swing.JCheckBox blinkTypeCheck;
     private javax.swing.JCheckBox budesonideCB;
     private javax.swing.JButton resetPatientInfo;
@@ -1309,7 +1309,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JTextField endDateField;
     private javax.swing.JLabel endDateLabel;
     private javax.swing.JCheckBox floDiskCB;
-    private javax.swing.JCheckBox floInhaleCB;
+    private javax.swing.JCheckBox floInhalCB;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lastACLogArea;
@@ -1321,7 +1321,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel lowerTextLabel;
     private javax.swing.JButton medResetClearButton;
     private javax.swing.JButton medPannelSaveButton;
-    private javax.swing.JCheckBox otherMedCheckbox;
+    private javax.swing.JCheckBox otherMedCB;
     private javax.swing.JTextField otherMedField;
     private javax.swing.JTextField pidField;
     private javax.swing.JLabel pidLabel;
@@ -1414,8 +1414,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JLabel lblSingulairDoses;
     private JLabel lblOtherDoses;
     private JTextField albInhalDoseField;
-    private JTextField albuNebDoseField;
-    private JTextField floDiskDosesField;
+    private JTextField albNebDoseField;
+    private JTextField floDiskDoseField;
     private JTextField floInhalDoseField;
     private JTextField qvarDoseField;
     private JTextField adDiskDoseField;
@@ -1429,7 +1429,18 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
-            JCheckBox source = (JCheckBox)e.getSource();
+            otherDoseField.setEnabled(otherMedCB.isSelected());
+            singDoseField.setEnabled(singulairCB.isSelected());
+            pulmiNebDoseField.setEnabled(pulmiNebCB.isSelected());
+            pulmiTwistDoseField.setEnabled(pulmiTwistCB.isSelected());
+            budeDoseField.setEnabled(budesonideCB.isSelected());
+            floDiskDoseField.setEnabled(floDiskCB.isSelected());
+            floInhalDoseField.setEnabled(floInhalCB.isSelected());
+            qvarDoseField.setEnabled(qvarCB.isSelected());
+            adDiskDoseField.setEnabled(adDiskCB.isSelected());
+            adInhalDoseField.setEnabled(adInhalCB.isSelected());
+            albInhalDoseField.setEnabled(albInhalCB.isSelected());
+            albNebDoseField.setEnabled(albNebCB.isSelected());
          }
     }
     
