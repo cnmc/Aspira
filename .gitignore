@@ -1,5 +1,8 @@
 *.class
 classes/*
+build/*
+build_dmp/*
+build_config/*
 
 # Package Files #
 *.war

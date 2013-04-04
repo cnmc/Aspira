@@ -24,7 +24,7 @@ import edu.asupoly.aspira.model.SpirometerReadings;
  */
 public final class AspiraDAO implements IAspiraDAO {
     
-    private static String PROPERTY_FILENAME = "dao.properties";
+    private static String PROPERTY_FILENAME = "properties/dao.properties";
     private static String DAO_CLASS_PROPERTY_KEY = "daoClassName";
     private static final String PUSH_URL_PROPERTY_KEY = "push.url";
     
@@ -51,6 +51,7 @@ public final class AspiraDAO implements IAspiraDAO {
      * @throws DMPException if the DAO cannot be initialized
      */
     private AspiraDAO() throws DMPException {
+        __daoProperties = new Properties();
         try {
             InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             __daoProperties.load(isr);

@@ -24,13 +24,4 @@ public abstract class AspiraTimerTask extends TimerTask {
 
     // Init should read whatever properties it expects in the subclass
     public abstract boolean init(Properties props);
-    
-    /* (non-Javadoc)
-     * @see java.util.TimerTask#run()
-     */
-    @Override
-    public void run() {
-        return;
-    }
-
 }

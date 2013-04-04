@@ -2,6 +2,7 @@ package edu.asupoly.aspira.model;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -54,6 +55,7 @@ public class AirQualityReadings implements java.io.Serializable {
      * @return a ParticleReading or null if no reading at that minute
      */
     public ParticleReading getAirQualityAt(Date d) {
+        if (d == null) return null;
         __forQuerying.readingDate = d;
         return __readings.get(__forQuerying);
     }
@@ -65,6 +67,7 @@ public class AirQualityReadings implements java.io.Serializable {
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
     public AirQualityReadings getAirQualityBefore(Date d, boolean inclusive) {
+        if (d == null) return null;
         __forQuerying.readingDate = d;
         SortedMap<KeyTuple, ParticleReading> sm = __readings.headMap(__forQuerying, inclusive);
         if (sm != null) {
@@ -74,6 +77,7 @@ public class AirQualityReadings implements java.io.Serializable {
     }
     
     public AirQualityReadings getAirQualityAfter(Date d, boolean inclusive) {
+        if (d == null) return null;
         __forQuerying.readingDate = d;
         SortedMap<KeyTuple, ParticleReading> sm = __readings.tailMap(__forQuerying, inclusive);
         if (sm != null) {
@@ -84,6 +88,7 @@ public class AirQualityReadings implements java.io.Serializable {
     
     public AirQualityReadings getAirQualityBetween(Date start, boolean inclstart,
                                                    Date end,   boolean inclend) {
+        if (start == null || end == null) return null;
         if (__readings != null) {
             __forQuerying.readingDate = start;
             KeyTuple forQ2 = new KeyTuple(__forQuerying.deviceId, __forQuerying.patientId, end);
@@ -92,6 +97,24 @@ public class AirQualityReadings implements java.io.Serializable {
         return null;
     }
 
+    public ParticleReading getFirstReading() {
+        ParticleReading rval = null;
+        if (__readings != null) {
+            Map.Entry<KeyTuple, ParticleReading> firstEntry = __readings.firstEntry();
+            rval = firstEntry.getValue();
+        }
+        return rval;
+    }
+    
+    public ParticleReading getLastReading() {
+        ParticleReading rval = null;
+        if (__readings != null) {
+            Map.Entry<KeyTuple, ParticleReading> lastEntry = __readings.lastEntry();
+            rval = lastEntry.getValue();
+        }
+        return rval;
+    }
+    
     private AirQualityReadings __constructAQR(Iterator<ParticleReading> ipr) {
         AirQualityReadings aqr = null;
         if (ipr != null) {

@@ -33,7 +33,9 @@ public class DylosLogParser implements AirQualityReadingsFactory  {
         String dt;
 
         try {
-            br = new BufferedReader(new FileReader(props.getProperty("aqlogfile")));
+            String filename = props.getProperty("aqlogfile");
+            FileReader fr = new FileReader(filename);
+            br = new BufferedReader(fr);
 
             String finput = br.readLine();
             while (finput.indexOf("Date/Time, Small, Large") == -1)
