@@ -16,7 +16,9 @@ import java.util.TreeMap;
 public class AirQualityReadings implements java.io.Serializable {
     private static final long serialVersionUID = -1349373435898119224L;
     
-    private class KeyTuple implements Comparable<KeyTuple> {
+    private class KeyTuple implements java.io.Serializable, Comparable<KeyTuple> {
+        private static final long serialVersionUID = -6691043384650709035L;
+        
         String deviceId;
         String patientId;
         Date   readingDate;

@@ -62,6 +62,7 @@ public final class AspiraDAO implements IAspiraDAO {
             __dao.init(__daoProperties);
         } catch (Throwable t1) {
             // XXX log
+            t1.printStackTrace();
             throw new DMPException(t1);
         }
         // all impls need to figure out if they need to push
@@ -150,14 +151,14 @@ public final class AspiraDAO implements IAspiraDAO {
     // XXX The writes are more interesting as we want to push if we have a URL to push to
     
     @Override
-    public int importAirQualityReadings(AirQualityReadings toImport,
+    public boolean importAirQualityReadings(AirQualityReadings toImport,
             boolean overwrite) throws DMPException {
         // TODO Auto-generated method stub
         return __dao.importAirQualityReadings(toImport, overwrite);
     }
 
     @Override
-    public int importSpirometerReadings(SpirometerReadings toImport,
+    public boolean importSpirometerReadings(SpirometerReadings toImport,
             boolean overwrite) throws DMPException {
         // TODO Auto-generated method stub
         return __dao.importSpirometerReadings(toImport, overwrite);

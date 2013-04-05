@@ -1,7 +1,6 @@
 package edu.asupoly.aspira.monitorservice;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Properties;
 
 import edu.asupoly.aspira.dmp.AspiraDAO;
@@ -47,7 +46,7 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
                     }
                     // Now we need to call DAOManager to get DAO
                     IAspiraDAO dao = AspiraDAO.getDAO();
-                    int count = dao.importAirQualityReadings(aqrAfter, true);
+                    dao.importAirQualityReadings(aqrAfter, true); // return a boolean if we need it
                     // XXX Log how many we imported here
                 }
             } catch (Throwable t) {

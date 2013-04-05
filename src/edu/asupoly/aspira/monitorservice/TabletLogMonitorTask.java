@@ -41,7 +41,7 @@ public class TabletLogMonitorTask extends AspiraTimerTask {
                 // Remote Database URL can found using __props.getProperty("URL")
                 //
             } catch (Throwable t) {
-                Logger.getLogger(MonitorDylosLog.class.getName()).log(Level.SEVERE, null, t);
+                Logger.getLogger(TabletLogMonitorTask.class.getName()).log(Level.SEVERE, null, t);
             }
         }
     }

@@ -15,7 +15,9 @@ import java.util.TreeMap;
 public class SpirometerReadings implements java.io.Serializable {
     private static final long serialVersionUID = 3310136226572039162L;
 
-    private class ReadingTuple implements Comparable<ReadingTuple> {
+    private class ReadingTuple implements java.io.Serializable, Comparable<ReadingTuple> {
+        private static final long serialVersionUID = -7301658677561597086L;
+        
         String _deviceId;
         String _patientId;
         Date   _measureDate;

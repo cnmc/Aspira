@@ -33,8 +33,8 @@ public interface IAspiraDAO {
     SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
     
     // CUD operations
-    int importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;
-    int importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException;
+    boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;
+    boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException;
     // We only have this one so we can do in the context of a single transaction and rollback if needed
     boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) throws DMPException;
     // This is for the manual readings we can get via data entry

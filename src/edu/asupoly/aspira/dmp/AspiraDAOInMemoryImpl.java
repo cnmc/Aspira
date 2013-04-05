@@ -27,13 +27,13 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
 
     // This object just keeps everything in memory inside itself.
     // After each CUD it writes itself out to disk
-    HashMap<String, Patient>    __patients;
-    HashMap<String, Clinician>  __clinicians;
-    HashMap<String, Spirometer> __spirometers;
-    HashMap<String, AirQualityMonitor> __aqMonitors;
+    protected HashMap<String, Patient>    __patients;
+    protected HashMap<String, Clinician>  __clinicians;
+    protected HashMap<String, Spirometer> __spirometers;
+    protected HashMap<String, AirQualityMonitor> __aqMonitors;
 
-    HashMap<String, AirQualityReadings> __aqReadings;  // key is patientId
-    HashMap<String, SpirometerReadings> __spReadings;  // key is patientId
+    protected HashMap<String, AirQualityReadings> __aqReadings;  // key is patientId
+    protected HashMap<String, SpirometerReadings> __spReadings;  // key is patientId
     
     /**
      * 
@@ -216,13 +216,11 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
      * @see edu.asupoly.aspira.dmp.AspiraDAO#importAirQualityReadings(edu.asupoly.aspira.model.AirQualityReadings, boolean)
      */
     @Override
-    public int importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException {
+    public boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException {
         // we are disregarding overwrite now and just always overwriting
         try {
-            int rval = 0;
+            boolean rval = true;
             if (toImport != null) {
-                rval = toImport.size();
-
                 if (__aqReadings == null) {
                     __aqReadings = new HashMap<String, AirQualityReadings>();
                     __aqReadings.put(toImport.getPatientId(), toImport);
@@ -231,12 +229,13 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
                     if (aqr == null) {
                         __aqReadings.put(toImport.getPatientId(), toImport);
                     } else {
-                        aqr.addReadings(toImport);
+                        rval = aqr.addReadings(toImport);
                     }
                 }
-            }
+            } else rval = false;   // if trying to import null
             return rval;
         } catch (Throwable t) {
+            // XXX log
             throw new DMPException(t);
         }
     }
@@ -245,12 +244,11 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
      * @see edu.asupoly.aspira.dmp.AspiraDAO#importSpirometerReadings(edu.asupoly.aspira.model.SpirometerReadings, boolean)
      */
     @Override
-    public int importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException {
+    public boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException {
         // we are disregarding overwrite now and just always overwriting
         try {
-            int rval = 0;
+            boolean rval = true;
             if (toImport != null) {
-                rval = toImport.size();
 
                 if (__spReadings == null) {
                     __spReadings = new HashMap<String, SpirometerReadings>();
@@ -260,10 +258,10 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
                     if (spr == null) {
                         __spReadings.put(toImport.getPatientId(), toImport);
                     } else {
-                        spr.addReadings(toImport);
+                        rval = spr.addReadings(toImport);
                     }
                 }
-            }
+            } else rval = false;  // try to import null
             // Need to write a save operation
             return rval;
         } catch (Throwable t) {

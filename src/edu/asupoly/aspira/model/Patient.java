@@ -18,8 +18,12 @@ import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
  * @author kevinagary
  *
  */
-public class Patient {
+public class Patient implements java.io.Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8773132732758941072L;
     private String patientId;
     private String sex;
     private String patientNotes;
