@@ -44,6 +44,26 @@ public final class MonitoringService {
         return __theMonitoringService;
     }
     
+    public boolean cancelTask(String taskName) {
+        boolean rval = false;
+        TimerTask tt = __tasks.get(taskName);
+        if (tt != null && tt.cancel()) {
+            // clear it out of our Map and the Timer task Queue
+            __tasks.remove(taskName);
+            __timer.purge();
+            rval = true;
+        }
+        return rval;
+    }
+    
+    public void shutdownService() throws DMPException {
+        // Canceling the Timer gets rid of all tasks, allowing
+        // the current one to complete.
+        __timer.cancel();
+        // If the singleton accessor is called again it will fire up another Timer
+        MonitoringService.__theMonitoringService = null;
+    }
+    
     /**
      * 
      */

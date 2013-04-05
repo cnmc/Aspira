@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 public class SpirometerReading implements java.io.Serializable {
     private static final long serialVersionUID = 9002395112333017198L;
     
+    private String deviceId;
     private String pid;
     private int    measureID;
     private Date   measureDate;
@@ -22,6 +23,9 @@ public class SpirometerReading implements java.io.Serializable {
     private int    error;
     private int    bestValue;
     
+    public String getDeviceId() {
+        return deviceId;
+    }
     public String getPid() {
         return pid;
     }
@@ -53,8 +57,9 @@ public class SpirometerReading implements java.io.Serializable {
         return measureDate.hashCode();
     }
     
-    public SpirometerReading(String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
+    public SpirometerReading(String deviceId, String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
         try{ 
+            this.deviceId = deviceId;
             this.pid = id + '\0';
             this.measureID = Integer.parseInt(mid);
              StringTokenizer st = new StringTokenizer(mdate, "T", false);     

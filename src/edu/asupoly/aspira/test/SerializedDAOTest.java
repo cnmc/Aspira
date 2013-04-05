@@ -1,7 +1,5 @@
 package edu.asupoly.aspira.test;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -72,25 +70,25 @@ public class SerializedDAOTest {
         __aq2Readings.addReading(new ParticleReading("device_two", "patient_two", "02/13/13", "00:48", "204900", "6400"));
         __aq2Readings.addReading(new ParticleReading("device_two", "patient_two", "02/13/13", "00:49", "206100", "6000"));
 
-        __spReadings.addReading(new SpirometerReading("2388", "2013-01-25T14:40:00-07:00", "0", "459", "3.17", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-01-29T11:32:00-07:00", "1", "410", "2.97", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-01-31T14:13:00-07:00", "2", "503", "3.11", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-08T09:39:00-07:00", "3", "350", "2", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-08T09:48:00-07:00", "4", "410", "2.58", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-18T11:31:00-07:00", "5", "386", "2.42", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-24T18:33:00-07:00", "6", "295", "2.28", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-24T18:34:00-07:00", "7", "115", "1.11", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-24T18:37:00-07:00", "8", "88", "1.23", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("2388", "2013-02-24T18:38:00-07:00", "9", "100", "1.21", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-01-25T14:40:00-07:00", "0", "459", "3.17", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-01-29T11:32:00-07:00", "1", "410", "2.97", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-01-31T14:13:00-07:00", "2", "503", "3.11", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-08T09:39:00-07:00", "3", "350", "2", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-08T09:48:00-07:00", "4", "410", "2.58", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-18T11:31:00-07:00", "5", "386", "2.42", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-24T18:33:00-07:00", "6", "295", "2.28", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-24T18:34:00-07:00", "7", "115", "1.11", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-24T18:37:00-07:00", "8", "88", "1.23", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-24T18:38:00-07:00", "9", "100", "1.21", "0", "503"));
 
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T18:40:00-07:00", "10", "74", "0.68", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T18:41:00-07:00", "11", "73", "1", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T18:43:00-07:00", "12", "134", "1.55", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T18:45:00-07:00", "13", "110", "1.05", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T20:27:00-07:00", "14", "138", "1.9", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-24T20:30:00-07:00", "15", "58", "0.87", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-25T09:59:00-07:00", "16", "419", "2.69", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("2388", "2013-02-27T13:14:00-07:00", "17", "123", "0.89", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T18:40:00-07:00", "10", "74", "0.68", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T18:41:00-07:00", "11", "73", "1", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T18:43:00-07:00", "12", "134", "1.55", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T18:45:00-07:00", "13", "110", "1.05", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T20:27:00-07:00", "14", "138", "1.9", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-24T20:30:00-07:00", "15", "58", "0.87", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-25T09:59:00-07:00", "16", "419", "2.69", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_two", "2388", "2013-02-27T13:14:00-07:00", "17", "123", "0.89", "0", "503"));
     }
 
     @Test
@@ -103,9 +101,7 @@ public class SerializedDAOTest {
             theDAO.addOrModifyAirQualityMonitor(__aqm1, false);
             theDAO.addOrModifySpirometer(__spirometer1, false);
             theDAO.importReadings(__aqReadings, __spReadings, false);
-            
-            
-            
+                   
             // next round
             theDAO.addOrModifyPatient(__patient2, false);
             theDAO.addOrModifyClinician(__clinician2, false);
@@ -113,7 +109,6 @@ public class SerializedDAOTest {
             theDAO.addOrModifySpirometer(__spirometer2, false);
             theDAO.importReadings(__aqReadings, __spReadings, false);
         } catch (DMPException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         

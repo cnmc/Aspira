@@ -41,7 +41,7 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(source);
             //buildpatientinfo(doc);  // KGDJ: this method does not do anything?
-            populateReadings(doc, _spReadings);
+            populateReadings(doc, _spReadings, deviceId);
         }
         catch (Throwable t) {
             Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, null, t);
@@ -74,7 +74,8 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
     }
     */
 
-    private void populateReadings(Document doc, SpirometerReadings _spReadings) throws DeviceLogException
+    private void populateReadings(Document doc, SpirometerReadings _spReadings, String deviceId) 
+            throws DeviceLogException
     {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
@@ -88,7 +89,7 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String fev = getFirstChildNodeValue(node, "FEV1Value");
                 String err = getFirstChildNodeValue(node, "Error");
                 String bvalue = getFirstChildNodeValue(node, "BestValue");
-                SpirometerReading pr = new SpirometerReading(id,  dt, mid,  pef, fev, err, bvalue);
+                SpirometerReading pr = new SpirometerReading(deviceId, id,  dt, mid,  pef, fev, err, bvalue);
                 _spReadings.addReading(pr);
             }
         }

@@ -1,0 +1,16 @@
+----------------------------------------------------------------
+Thu Apr 04 22:25:44 MST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013d-d8a8-59c0-0000047509d8 
+on database directory /Users/kevinagary/work/CNMC/projects/AsthmaMobile/Aspira/db/derby_home/aspiradb  with class loader sun.misc.Launcher$AppClassLoader@27a8c4e7 
+Loaded from file:/Users/kevinagary/jars/db-derby-10.9.1.0-bin/lib/derby.jar
+java.vendor=Apple Inc.
+java.runtime.version=1.6.0_43-b01-447-10M4203
+user.dir=/Users/kevinagary/work/CNMC/projects/AsthmaMobile/Aspira/db/derby_home
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Apr 05 08:27:14 MST 2013: Shutting down Derby engine
+----------------------------------------------------------------
+Fri Apr 05 08:27:14 MST 2013:
+Shutting down instance a816c00e-013d-d8a8-59c0-0000047509d8 on database directory /Users/kevinagary/work/CNMC/projects/AsthmaMobile/Aspira/db/derby_home/aspiradb with class loader sun.misc.Launcher$AppClassLoader@27a8c4e7 
+----------------------------------------------------------------
