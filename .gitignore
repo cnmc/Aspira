@@ -4,6 +4,9 @@ build/*
 build_dmp/*
 build_config/*
 
+# Derby, uncomment to update db
+db/*
+
 # Package Files #
 *.war
 *.ear
