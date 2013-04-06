@@ -1,6 +1,8 @@
 package edu.asupoly.aspira.gui;
 
 import org.json.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.awt.event.ActionEvent;
@@ -25,6 +27,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /*
  * To change this template, choose Tools | Templates
@@ -450,10 +456,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         configPanel = new javax.swing.JPanel();
         alarmTypeLabel = new javax.swing.JLabel();
-        soundTypeCheck = new javax.swing.JCheckBox();
-        blinkTypeCheck = new javax.swing.JCheckBox();
+        soundCB = new javax.swing.JCheckBox();
+        blinkCB = new javax.swing.JCheckBox();
         alarmSoundPromptLabel = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        alarmLengthField = new javax.swing.JTextField();
         alarmTimeUnitsLabel = new javax.swing.JLabel();
         urlToPushLabel = new javax.swing.JLabel();
         urlField = new javax.swing.JTextField();
@@ -474,24 +480,55 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         startDateField = new javax.swing.JTextField();
         endDateField = new javax.swing.JTextField();
         saveConfigButton = new javax.swing.JButton();
+        saveConfigButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		JSONParser parser = new JSONParser();
+        		JSONObject configObject;
+        		try {
+					configObject = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+					configObject.put("blinkAlarm", blinkCB.isSelected());
+					configObject.put("soundAlarm", soundCB.isSelected());
+					configObject.put("alarmLength", alarmLengthField.getText());
+					configObject.put("pushURL", urlField.getText());
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/YY/DD");
+					
+					configObject.put("startDate",sdf.parse(startDateField.getText()).getTime() );
+					configObject.put("endDate",sdf.parse(endDateField.getText()).getTime() );
+					configObject.put("totalSteps", rewardField.getText());
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (org.json.simple.parser.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch(ParseException e2){
+					// TODO write code
+				}
+        	}
+        });
         resetConfigButton = new javax.swing.JButton();
         
-        blinkTypeCheck.addItemListener(new AlarmCheckBoxListener());
-        soundTypeCheck.addItemListener(new AlarmCheckBoxListener());
+        blinkCB.addItemListener(new AlarmCheckBoxListener());
+        soundCB.addItemListener(new AlarmCheckBoxListener());
         
                 alarmTypeLabel.setText("Alarm Type: ");
                 
-                        soundTypeCheck.setSelected(true);
-                        soundTypeCheck.setText("Sound");
+                        soundCB.setSelected(true);
+                        soundCB.setText("Sound");
                         
-                                blinkTypeCheck.setSelected(true);
-                                blinkTypeCheck.setText("Blink");
-                                blinkTypeCheck.addMouseListener(new java.awt.event.MouseAdapter() {
+                                blinkCB.setSelected(true);
+                                blinkCB.setText("Blink");
+                                blinkCB.addMouseListener(new java.awt.event.MouseAdapter() {
                                     public void mouseClicked(java.awt.event.MouseEvent evt) {
                                         blinkTypeCheckMouseClicked(evt);
                                     }
                                 });
-                                blinkTypeCheck.addChangeListener(new javax.swing.event.ChangeListener() {
+                                blinkCB.addChangeListener(new javax.swing.event.ChangeListener() {
                                     public void stateChanged(javax.swing.event.ChangeEvent evt) {
                                         blinkTypeCheckStateChanged(evt);
                                     }
@@ -499,9 +536,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                 
                                         alarmSoundPromptLabel.setText("How long alarm sounds: ");
                                         
-                                                jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-                                                jTextField1.setText("3");
-                                                jTextField1.addActionListener(new java.awt.event.ActionListener() {
+                                                alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+                                                alarmLengthField.setText("3");
+                                                alarmLengthField.addActionListener(new java.awt.event.ActionListener() {
                                                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                                                         jTextField1ActionPerformed(evt);
                                                     }
@@ -588,15 +625,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                         							.addGroup(configPanelLayout.createSequentialGroup()
                                                                                                                                                                                                                                         								.addComponent(alarmSoundPromptLabel)
                                                                                                                                                                                                                                         								.addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                                                        								.addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        								.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                         								.addPreferredGap(ComponentPlacement.RELATED)
                                                                                                                                                                                                                                         								.addComponent(alarmTimeUnitsLabel))
                                                                                                                                                                                                                                         							.addGroup(configPanelLayout.createSequentialGroup()
                                                                                                                                                                                                                                         								.addComponent(alarmTypeLabel)
                                                                                                                                                                                                                                         								.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                                                                                                                                        								.addComponent(soundTypeCheck)
+                                                                                                                                                                                                                                        								.addComponent(soundCB)
                                                                                                                                                                                                                                         								.addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                                                        								.addComponent(blinkTypeCheck)))
+                                                                                                                                                                                                                                        								.addComponent(blinkCB)))
                                                                                                                                                                                                                                         						.addGroup(configPanelLayout.createSequentialGroup()
                                                                                                                                                                                                                                         							.addComponent(rewardLabel)
                                                                                                                                                                                                                                         							.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -671,12 +708,12 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                         			.addContainerGap()
                                                                                                                                                                                                                                         			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
                                                                                                                                                                                                                                         				.addComponent(alarmTypeLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                                                        				.addComponent(soundTypeCheck)
-                                                                                                                                                                                                                                        				.addComponent(blinkTypeCheck))
+                                                                                                                                                                                                                                        				.addComponent(soundCB)
+                                                                                                                                                                                                                                        				.addComponent(blinkCB))
                                                                                                                                                                                                                                         			.addPreferredGap(ComponentPlacement.UNRELATED)
                                                                                                                                                                                                                                         			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
                                                                                                                                                                                                                                         				.addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                                                        				.addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                         				.addComponent(alarmTimeUnitsLabel))
                                                                                                                                                                                                                                         			.addGap(18)
                                                                                                                                                                                                                                         			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
@@ -1444,7 +1481,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel alarmTypeLabel;
     private javax.swing.JCheckBox albInhalCB;
     private javax.swing.JCheckBox albNebCB;
-    private javax.swing.JCheckBox blinkTypeCheck;
+    private javax.swing.JCheckBox blinkCB;
     private javax.swing.JCheckBox budesonideCB;
     private javax.swing.JButton resetPatientInfo;
     private javax.swing.JPanel configPanel;
@@ -1453,7 +1490,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox floDiskCB;
     private javax.swing.JCheckBox floInhalCB;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField alarmLengthField;
     private javax.swing.JLabel lastACLogArea;
     private javax.swing.JLabel lastACLogHeader;
     private javax.swing.JLabel lastSpiroLogArea;
@@ -1489,7 +1526,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JButton saveConfigButton;
     private javax.swing.JButton savePatientInfo;
     private javax.swing.JCheckBox singulairCB;
-    private javax.swing.JCheckBox soundTypeCheck;
+    private javax.swing.JCheckBox soundCB;
     private javax.swing.JLabel spiroDateTimeArea;
     private javax.swing.JLabel spiroDateTimeHeader;
     private javax.swing.JButton spiroExportButton;
@@ -1625,7 +1662,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private class AlarmCheckBoxListener implements ItemListener{
     	public void itemStateChanged(ItemEvent e){
     		JCheckBox source = (JCheckBox)e.getSource();
-    		if(!blinkTypeCheck.isSelected()&&!soundTypeCheck.isSelected())
+    		if(!blinkCB.isSelected()&&!soundCB.isSelected())
     		{
     			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
     					"Error", JOptionPane.ERROR_MESSAGE);
@@ -1636,6 +1673,20 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     
     private class PatientSaveButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			JSONParser parser = new JSONParser();
+			JSONObject configObject = null;
+				try {
+					configObject = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (org.json.simple.parser.ParseException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 			Date reading1=null;
 			Date reading2=null;
 			Date reading3=null;
@@ -1676,6 +1727,32 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 					else if(reading2.compareTo(reading3)>0)
 					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 2", 
 	    					"Error", JOptionPane.ERROR_MESSAGE);
+					if(configObject != null){
+						JSONArray readings = new JSONArray();
+						SimpleDateFormat readingFormat = new SimpleDateFormat("HHmm");
+						readings.add(readingFormat.format(reading1));
+						readings.add(readingFormat.format(reading2));
+						readings.add(readingFormat.format(reading3));
+						configObject.put("spiroReadingTime", readings);
+						try{
+							configObject.put("PatientID", pidField.getText());
+						}
+						catch(NullPointerException npe)
+						{
+							JOptionPane.showMessageDialog(AdminConfigWindow.this, "Please enter a patient ID", 
+									"No patient ID", JOptionPane.ERROR_MESSAGE);
+						}
+						
+						try {
+							FileWriter jsonWriter = new FileWriter("Config/config.json");
+							jsonWriter.write(configObject.toJSONString());
+							jsonWriter.flush();
+							jsonWriter.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 				}
 			
 		}
