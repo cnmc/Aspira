@@ -8,7 +8,9 @@
             content += Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"];
             content += "\nFEV Value : ";
             content += Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"];
-            content += "\n\n";
+            content += "\nSymptoms? : ";
+            content += Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"];
+            content += "\n";
 
             Windows.Storage.FileIO.appendTextAsync(datafile, content);
         });

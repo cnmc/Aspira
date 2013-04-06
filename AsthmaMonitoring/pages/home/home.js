@@ -7,6 +7,7 @@
         
         ready: function (element, options) {  
             WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
+            WinJS.Utilities.id("helpLogin").listen("click", this.helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
 
             WinJS.Utilities.id("takeReading").removeEventListener("click", takeReading, false);
@@ -41,8 +42,12 @@
         },
         
        
-        adminLogin: function (eventInfo) { 
+        adminLogin: function (eventInfo) {
             WinJS.Navigation.navigate("/pages/adminPage/adminPage.html");
+        },
+        helpLogin: function (eventInfo) {
+            disableAllTimers();
+            WinJS.Navigation.navigate("/pages/contact/contact.html");
         },
         nextReadingAlert: function () {
             //enable user going into the flow when its time for new reading
@@ -73,11 +78,20 @@
             imageSrc += ".png";
           
             document.getElementById("trafficSignal").setAttribute("src", imageSrc);
-            var timeElapsedLastDynamicReading = new Date().getTime() - AsthmaGlobals.airQualityConfig.airQualityMeter.lastDynamicReadingTakenAt;
-            if (AsthmaGlobals.airQualityConfig.airQualityMeter.readingZone == AsthmaGlobals.airQualityConfig.airQualityMeter.takeDynamicReadingOn &&
-                AsthmaGlobals.dynamicAlertDisplay == false &&
-                AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "true" &&
-                AsthmaGlobals.canTakeReading == true) {
+            //var timeElapsedLastDynamicReading = new Date().getTime() - AsthmaGlobals.airQualityConfig.airQualityMeter.lastDynamicReadingTakenAt;
+            // check for reading zone are we in alert zone? 
+            //only one reading can be taken between two subsequent readings
+            if ((AsthmaGlobals.airQualityConfig.airQualityMeter.readingZone == AsthmaGlobals.airQualityConfig.airQualityMeter.takeDynamicReadingOn1 ||
+                 AsthmaGlobals.airQualityConfig.airQualityMeter.readingZone == AsthmaGlobals.airQualityConfig.airQualityMeter.takeDynamicReadingOn2) &&
+               
+                AsthmaGlobals.dynamicAlertDisplay == false && 
+               
+                AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "true" && //airquality meter should be connected
+               
+               // AsthmaGlobals.canTakeReading == true && //enabled to true after X mins of a reading
+               
+                isNextReadingNear() != true  //scheduled reading should not be nearer than X mins
+                ) {
                 initateDynamicAlert("dynamicReading", AsthmaGlobals.fileConfig.config.alertInfo.dynamicReadingAlertText);
                 AsthmaGlobals.dynamicAlertDisplay = true;
             }
@@ -90,7 +104,18 @@ function animateNextReading() {
     $("#nextReadingCard").animate({ marginLeft: "+=50px"}, 1000, "swing");
     $("#nextReadingCard").animate({ marginLeft: "-=50px" }, 1000, "swing", animateNextReading);
 }
-// subsequent reading in X mins
+// the next reading should be more than the minimum interval of X min
+function isNextReadingNear() {
+    
+    if (calculateNextReadingTimeout() < AsthmaGlobals.fileConfig.config.alertInfo.intervalInTwoReadings
+        || calculatePrevReadingTimeout() < AsthmaGlobals.fileConfig.config.alertInfo.intervalInTwoReadings) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+// subsequent reading after X mins
 function enableSubsequentReading() {
     setTimeout((function () {
         AsthmaGlobals.canTakeReading = true;
@@ -297,6 +322,50 @@ function teaseListener() {
         }, 10000, "sleepy");
     }
     AsthmaGlobals.teaseIndex = AsthmaGlobals.teaseIndex + 1;
+}
+// calculates time elapsed from previous reading
+function calculatePrevReadingTimeout() {
+    getProperties();
+    var spiroReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.spiroReadingTime;
+    spiroReadingTimeArray.sort();
+    var currHour = new Date().getHours();
+    var currMins = new Date().getMinutes();
+    var prevReadingHour = null;
+    for (var i = 0; i < spiroReadingTimeArray.length ; i++) {
+        //get the largest hour from the array
+        if (currHour < String(spiroReadingTimeArray[i]).substr(0, 2)) {
+            prevReadingHour = String(spiroReadingTimeArray[i - 1]);
+            break;
+        } else if (currHour <= String(spiroReadingTimeArray[i]).substr(0, 2)
+            && currMins < String(spiroReadingTimeArray[i]).substr(2, 2)) {
+            //else if it is the same hour and min when compared to time right now
+            prevReadingHour = String(spiroReadingTimeArray[i - 1]);
+            break;
+        }
+
+    }
+    var prevReadingObj = new Date();// create the date obj of the time we next reading has to be taken
+    // if no reading was found for the day then schedule it for tomorrow
+    if (prevReadingHour == null || prevReadingHour == "undefined") {
+        prevReadingHour = String(spiroReadingTimeArray[spiroReadingTimeArray.length - 1]);
+        prevReadingObj.setDate(prevReadingObj.getDate() - 1);
+    }
+
+    prevReadingObj.setHours(prevReadingHour.substr(0, 2), prevReadingHour.substr(2, 2), 00, 00);
+    var displayHours = prevReadingObj.getHours();
+    if (displayHours == 0) {
+        displayHours = "00";
+    }
+    var ampm = "am";
+    if (displayHours >= 12) {
+        if (displayHours > 12)
+            displayHours -= 12;
+        ampm = "pm";
+    }
+    Windows.Storage.ApplicationData.current.localSettings.values["prevReadingTimeText"] =
+        displayHours + ":" + prevReadingHour.substr(2, 2) + " " + ampm;
+    
+    return new Date().getTime() - prevReadingObj.getTime();
 }
 /*
 function getAdjacentReadingTimeouts() {

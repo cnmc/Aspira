@@ -11,7 +11,7 @@
             WinJS.Utilities.id("leftHelpItem2").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false); 
-
+            AsthmaGlobals.symptomQuestion = false;
             document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
             //Initialize the awesome stuff
             initializeAnimation();
@@ -31,17 +31,19 @@
                     else if (document.getElementById("FEVValue")) {
                         //it is in the fev sreen now and appending onclick event according to that
                         confirmBtnMarkup.onclick = function () {
-                            //change the mood of the fish to happy
-                           AsthmaGlobals.currMood = "happy";
-                           // setProperties();
-                            Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"] =
-                                document.getElementById("FEVValue").value;
-                            createSpirometerLog();
-                            AsthmaGlobals.canTakeReading = false;
-                            WinJS.Navigation.navigate("/pages/home/home.html");
+                            if (AsthmaGlobals.symptomQuestion == true) {
+                                //change the mood of the fish to happy
+                                AsthmaGlobals.currMood = "happy";
+                                // setProperties();
+                                Windows.Storage.ApplicationData.current.localSettings.values["FEVValCaptured"] =
+                                    document.getElementById("FEVValue").value;
+                                createSpirometerLog();
+                                AsthmaGlobals.canTakeReading = false;
+                                WinJS.Navigation.navigate("/pages/home/home.html");
+                            }
                         };
                     }
-                    document.getElementById('middleContent').appendChild(confirmBtnMarkup);
+                    document.getElementById('inputBoxDivision').appendChild(confirmBtnMarkup);
                 }
 
              } else {
@@ -68,6 +70,7 @@
                 document.getElementById("PEFValue").id = "FEVValue"
                 document.getElementById("FEVValue").value = "";
                 document.getElementById("confirmButton").removeNode(true);
+                askSymptonsView();
         },
         
         updateLayout: function (element, viewState, lastViewState) {
@@ -106,6 +109,34 @@
             return false;
         }
         return true;
+    }
+
+    function askSymptonsView() {
+        var content = "<div id='symptomBox' class='dynamicAlertBox' >"
+        content += "<div class='dynamicContent'>";
+            content += AsthmaGlobals.fileConfig.config.alertInfo.symptomBoxText;
+        content += "</div>";
+            content += "<div class='buttonPanel'>";
+            content += "<button id='yes' class='button-left'>Yes</button>";
+                content += "<button id='no' class='button-right'>No</button>";
+
+            content += "</div>";
+        
+        content += "</div>";
+        $("#middleContent").append(content);
+        document.getElementById("yes").onclick = logPressYes;
+        document.getElementById("no").onclick = logPressNo;
+          
+    }
+    function logPressNo() {
+        AsthmaGlobals.symptomQuestion = true;
+        appendLog("For symptoms user answered NO.");
+        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"]="No"
+    }
+    function logPressYes() {
+        AsthmaGlobals.symptomQuestion = true;
+        appendLog("For symptoms user answered Yes.");
+        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes"
     }
 
   

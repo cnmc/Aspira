@@ -122,6 +122,7 @@
     <Content Include="images\fishAnimation\9sick.png" />
     <Content Include="images\fishAnimation\9sleepy.png" />
     <Content Include="images\fishAnimation\fishBowl.png" />
+    <Content Include="images\help.png" />
     <Content Include="images\third.jpg" />
     <Content Include="images\adminPage.png" />
     <Content Include="images\first.jpg" />
@@ -145,6 +146,9 @@
     <Content Include="pages\adminPage\adminPage.css" />
     <Content Include="pages\adminPage\adminPage.html" />
     <Content Include="pages\adminPage\adminPage.js" />
+    <Content Include="pages\contact\contact.css" />
+    <Content Include="pages\contact\contact.html" />
+    <Content Include="pages\contact\contact.js" />
     <Content Include="pages\helpDisplay\helpDisplay.css" />
     <Content Include="pages\helpDisplay\helpDisplay.html" />
     <Content Include="pages\helpDisplay\helpDisplay.js" />

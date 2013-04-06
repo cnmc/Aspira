@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>contact</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.1.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
+
+    <link href="/pages/contact/contact.css" rel="stylesheet" />
+    <script src="/pages/contact/contact.js"></script>
+</head>
+<body>
+    <div class="contact fragment">
+        <header aria-label="Header content" role="banner">
+            <button class="win-backbutton" aria-label="Back" disabled type="button"></button>
+            <h1 class="titlearea win-type-ellipsis">
+                <span class="pagetitle">Contact?</span>
+            </h1>
+        </header>
+        <section aria-label="Main content" role="main" style="width:80% ; padding-left:10%">
+            <div class="contactInfo">
+                <h2>In case you need any assistance, please contact the following person:-</h2>
+                <br><br>
+                    <span id="contactName"></span>
+               <br>
+                    <span id="contactPhone"></span>
+               
+            </div>
+            <div class="helpHyperlinks">
+                <div class="leftHelpPanel">
+                    <ul><li>
+                    <div class="leftHelpPanelItem" id="leftHelpItem1"><a href="#">first</a> </div></li>
+                    <li><div class="leftHelpPanelItem" id="leftHelpItem2"><a href="#">second</a></div></li>
+                    <li><div class="leftHelpPanelItem" id="rightHelpItem3"><a href="#">third</a></div></li>
+                    <li><div class="leftHelpPanelItem" id="rightHelpItem4"><a href="#">fourth</a></div></li>
+                        </ul>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</body>
+</html>

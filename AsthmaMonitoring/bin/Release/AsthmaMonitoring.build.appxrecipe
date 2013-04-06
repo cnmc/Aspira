@@ -31,6 +31,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.css">
       <PackagePath>pages\adminPage\adminPage.css</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.css">
+      <PackagePath>pages\contact\contact.css</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.css">
       <PackagePath>pages\helpDisplay\helpDisplay.css</PackagePath>
     </AppxPackagedFile>
@@ -238,6 +241,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\fishAnimation\fishBowl.png">
       <PackagePath>images\fishAnimation\fishBowl.png</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\help.png">
+      <PackagePath>images\help.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
     </AppxPackagedFile>
@@ -293,6 +299,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
       <PackagePath>pages\adminPage\adminPage.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.js">
+      <PackagePath>pages\contact\contact.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.js">
       <PackagePath>pages\helpDisplay\helpDisplay.js</PackagePath>
     </AppxPackagedFile>
@@ -304,6 +313,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
       <PackagePath>pages\adminPage\adminPage.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.html">
+      <PackagePath>pages\contact\contact.html</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.html">
       <PackagePath>pages\helpDisplay\helpDisplay.html</PackagePath>

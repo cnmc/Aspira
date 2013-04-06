@@ -1,5 +1,5 @@
 ﻿function writeLogfile() {
-    Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("asthmaMonitoringLog.json").done(function (datafile) {
+    Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("asthmaMonitoringLog.txt").done(function (datafile) {
         try {
             var createLog;
             if (AsthmaGlobals.logString != undefined && AsthmaGlobals.logString !=null) {
@@ -47,7 +47,7 @@ function initializeLogging() {
 }
 function writeTextLogfile() {
     if (AsthmaGlobals.logString != null) {
-        Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("asthmaMonitoringLog.json").then(function (datafile) {
+        Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("asthmaMonitoringLog.txt").then(function (datafile) {
 
             Windows.Storage.FileIO.appendTextAsync(datafile, AsthmaGlobals.logString);
         });
@@ -65,7 +65,7 @@ function appendLog(content) {
     }
     var currDate = new Date().toDateString();
     var currTime = new Date().toTimeString();
-    var latestLog =  "at:"+ currDate + " " + currTime + " : " + content+'\n' ;
+    var latestLog =  "at-"+ currDate + " " + currTime + " - " + content+'\n' ;
     bufferedLogArray.push(latestLog);
     AsthmaGlobals.logString = bufferedLogArray;
     initializeLogging();

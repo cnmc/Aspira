@@ -22,7 +22,8 @@
         "canTakeReading": true,
         "teaseIndex": 0,
         "allTeaseImgArray": null,
-        "changeMoodSleepyTimeoutId":null
+        "changeMoodSleepyTimeoutId": null,
+        "symptomQuestion":false
     });
    
     app.addEventListener("activated", function (eventObject) {

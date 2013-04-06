@@ -68,6 +68,7 @@ images\fishAnimation\9scared.png
 images\fishAnimation\9sick.png
 images\fishAnimation\9sleepy.png
 images\fishAnimation\fishBowl.png
+images\help.png
 images\holdSpiroBothHands.jpg
 images\logo.png
 images\second.jpg
@@ -89,6 +90,9 @@ js\navigator.js
 pages\adminPage\adminPage.css
 pages\adminPage\adminPage.html
 pages\adminPage\adminPage.js
+pages\contact\contact.css
+pages\contact\contact.html
+pages\contact\contact.js
 pages\helpDisplay\helpDisplay.css
 pages\helpDisplay\helpDisplay.html
 pages\helpDisplay\helpDisplay.js
