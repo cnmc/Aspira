@@ -18,7 +18,7 @@ public class SpirometerReading implements java.io.Serializable {
     private String pid;
     private int    measureID;
     private Date   measureDate;
-    private int    pefValue;
+    private float    pefValue;
     private float  fev1Value;
     private int    error;
     private int    bestValue;
@@ -35,7 +35,7 @@ public class SpirometerReading implements java.io.Serializable {
     public Date getMeasureDate() {
         return measureDate;
     }
-    public int getPEFValue() {
+    public float getPEFValue() {
         return pefValue;
     }
     public float getFEV1Value() {
@@ -59,14 +59,17 @@ public class SpirometerReading implements java.io.Serializable {
     
     public SpirometerReading(String deviceId, String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
         try{ 
-            this.deviceId = deviceId;
             this.pid = id + '\0';
             this.measureID = Integer.parseInt(mid);
              StringTokenizer st = new StringTokenizer(mdate, "T", false);     
-             mdate = st.nextToken() + " " +  st.nextToken();
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss-MM:SS");
+             mdate = st.nextToken();
+             String time = st.nextToken();
+             StringTokenizer _t = new StringTokenizer(time, "-", false);
+             time = _t.nextToken();
+             mdate = mdate + " " + time;
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             this.measureDate = df.parse(mdate);           
-            pefValue = Integer.parseInt(pef);
+            pefValue = Float.valueOf(pef.trim()).floatValue();
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
