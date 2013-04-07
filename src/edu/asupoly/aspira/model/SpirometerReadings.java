@@ -2,11 +2,12 @@ package edu.asupoly.aspira.model;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 /*
- * SpirometerXMLReadings represents the spirometer readings
+ * SpirometerReadings represents the spirometer readings
  * taken by a given device for a given Patient.
  * The implementation is a SortedMap where the key is a
  * tuple <DeviceId, PatientId, measureDateTime> and the stored object
@@ -119,11 +120,11 @@ public class SpirometerReadings implements java.io.Serializable {
      * @param d
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
-    public Iterator<SpirometerReading> getSpirometerReadingsBefore(Date d) {
+    public SpirometerReadings getSpirometerReadingsBefore(Date d) {
         __forQuerying._measureDate = d;
         SortedMap<ReadingTuple, SpirometerReading> sm = __readings.headMap(__forQuerying, true);
         if (sm != null) {
-            return sm.values().iterator();
+            return __constructSPR(sm.values().iterator());
         }
         return null;
     }
@@ -133,11 +134,11 @@ public class SpirometerReadings implements java.io.Serializable {
      * @param d
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
-    public Iterator<SpirometerReading> getSpirometerReadingsAfter(Date d) {
+    public SpirometerReadings getSpirometerReadingsAfter(Date d) {
         __forQuerying._measureDate = d;
         SortedMap<ReadingTuple, SpirometerReading> sm = __readings.tailMap(__forQuerying, true);
         if (sm != null) {
-            return sm.values().iterator();
+            return __constructSPR(sm.values().iterator());
         }
         return null;
     }    
@@ -201,6 +202,35 @@ public class SpirometerReadings implements java.io.Serializable {
         return null;
     }
     
+ private SpirometerReadings __constructSPR(Iterator<SpirometerReading> ispr) {
+        SpirometerReadings spr = null;
+        if (ispr != null) {
+            spr = new SpirometerReadings(__deviceId, __patientId);
+            while (ispr.hasNext()) {
+                spr.addReading(ispr.next());
+            }
+        }
+        return spr;
+    }
+     
+     public SpirometerReading getFirstReading() {
+        SpirometerReading rval = null;
+        if (__readings != null) {
+            Map.Entry<ReadingTuple, SpirometerReading> firstEntry = __readings.firstEntry();
+            rval = firstEntry.getValue();
+        }
+        return rval;
+    }
+     
+     public SpirometerReading getLastReading() {
+        SpirometerReading rval = null;
+        if (__readings != null) {
+            Map.Entry<ReadingTuple, SpirometerReading> lastEntry = __readings.lastEntry();
+            rval = lastEntry.getValue();
+        }
+        return rval;
+    }
+     
     public int size() {
         if (__readings == null)  return 0;
         return __readings.size();

@@ -98,7 +98,7 @@ public class UIEvents {
         return rval;
     }
     
-    public UIEvent getLastReading() {
+    public UIEvent getLastUIEvent() {
         UIEvent rval = null;
         if (__events != null) {
             Map.Entry<EventTuple, UIEvent> lastEntry = __events.lastEntry();
@@ -191,7 +191,7 @@ public class UIEvents {
     }
     
     /*
-     * This is useful for merging maps but note the "other" maps readings could overwrite
+     * This is useful for merging maps but note the "other" maps events could overwrite
      * your own.
      */
     public boolean addEvents(UIEvents other) {
