@@ -32,7 +32,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     protected HashMap<String, Spirometer> __spirometers;
     protected HashMap<String, AirQualityMonitor> __aqMonitors;
 
-    protected HashMap<String, AirQualityReadings> __aqReadings;  // key is patientId
+    protected AirQualityReadings __aqReadings; 
     protected HashMap<String, SpirometerReadings> __spReadings;  // key is patientId
     
     /**
@@ -44,7 +44,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         __clinicians  = new HashMap<String, Clinician>();
         __spirometers = new HashMap<String, Spirometer>();
         __aqMonitors  = new HashMap<String, AirQualityMonitor>();
-        __aqReadings  = new HashMap<String, AirQualityReadings>();
+        __aqReadings  = new AirQualityReadings();
         __spReadings  = new HashMap<String, SpirometerReadings>();
     }
 
@@ -172,11 +172,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId)
             throws DMPException {
         
-        AirQualityReadings rval = null;
-        if (patientId != null && __aqReadings != null) {
-            rval = __aqReadings.get(patientId);
-        }
-        return rval;
+        return __aqReadings.getAirQualityReadingsForPatient(patientId);
     }
 
     /* (non-Javadoc)
@@ -221,17 +217,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         try {
             boolean rval = true;
             if (toImport != null) {
-                if (__aqReadings == null) {
-                    __aqReadings = new HashMap<String, AirQualityReadings>();
-                    __aqReadings.put(toImport.getPatientId(), toImport);
-                } else {
-                    AirQualityReadings aqr = __aqReadings.get(toImport.getPatientId());
-                    if (aqr == null) {
-                        __aqReadings.put(toImport.getPatientId(), toImport);
-                    } else {
-                        rval = aqr.addReadings(toImport);
-                    }
-                }
+                __aqReadings.addReadings(toImport);
             } else rval = false;   // if trying to import null
             return rval;
         } catch (Throwable t) {

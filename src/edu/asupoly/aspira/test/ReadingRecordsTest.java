@@ -21,7 +21,7 @@ public class ReadingRecordsTest {
     Workbook test;
     Sheet testSheet;
     private SpirometerReadings __spReadings = new SpirometerReadings("device_one", "patient_one");
-    private AirQualityReadings __aqReadings = new AirQualityReadings("device_one", "patient_one");
+    private AirQualityReadings __aqReadings = new AirQualityReadings();
 
     @Before
     public void setUp() throws Exception {

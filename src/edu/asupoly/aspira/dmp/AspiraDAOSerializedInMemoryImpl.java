@@ -50,7 +50,7 @@ public class AspiraDAOSerializedInMemoryImpl extends AspiraDAOInMemoryImpl {
     public void init(Properties p) throws DMPException {
         ObjectInputStream ois = null;
         __filename = p.getProperty(SERIALIZED_DAO_FILENAME_KEY);
-        System.out.println("Object filename is " + __filename);
+        
         if (__filename == null || __filename.trim().length() == 0) {
             throw new DMPException("Could not read property " + SERIALIZED_DAO_FILENAME_KEY);
         } else {
@@ -58,23 +58,14 @@ public class AspiraDAOSerializedInMemoryImpl extends AspiraDAOInMemoryImpl {
             // if it does not exist create it
             // if it does try and initialize the data structures from it
             try {
-                System.out.println("checking for file " + __filename);
                 if (! new File(__filename).createNewFile()) {
-                    System.out.println("file exists");
                     ois = new ObjectInputStream(new FileInputStream(__filename));
-                    System.out.println("reading");
                     __patients = (HashMap<String, Patient>) ois.readObject();
-                    System.out.println("reading 2");
                     __clinicians  = (HashMap<String, Clinician>) ois.readObject();
-                    System.out.println("reading 3");
                     __spirometers = (HashMap<String, Spirometer>) ois.readObject();
-                    System.out.println("reading 4");
                     __aqMonitors  = (HashMap<String, AirQualityMonitor>) ois.readObject();
-                    System.out.println("reading 5");
-                    __aqReadings  = (HashMap<String, AirQualityReadings>) ois.readObject();
-                    System.out.println("reading 6");
+                    __aqReadings  = (AirQualityReadings) ois.readObject();
                     __spReadings  = (HashMap<String, SpirometerReadings>) ois.readObject();
-                    System.out.println("DONE");
                 }
             } catch (IOException ie) {
                 __filename = null;
