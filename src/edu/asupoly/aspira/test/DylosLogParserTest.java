@@ -6,7 +6,6 @@ import edu.asupoly.aspira.dmp.devicelogs.DylosLogParser;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.AirQualityReadingsFactory;
 import edu.asupoly.aspira.model.ParticleReading;
-import edu.asupoly.aspira.monitorservice.MonitoringService;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -14,7 +13,7 @@ import org.junit.Test;
 
 public final class DylosLogParserTest {
 
-    private AirQualityReadings __benchmarkReadings = new AirQualityReadings("device_one", "patient_one");
+    private AirQualityReadings __benchmarkReadings = new AirQualityReadings();
     Properties p = new Properties();
 
     @Before

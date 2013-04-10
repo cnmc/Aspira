@@ -11,7 +11,7 @@ import java.util.Date;
 
 import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 
-public class ParticleReading implements java.io.Serializable  {
+public class ParticleReading implements java.io.Serializable, Comparable<ParticleReading>  {
     private static final long serialVersionUID = 9002395112333017198L;
     
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy HH:mm");
@@ -32,6 +32,19 @@ public class ParticleReading implements java.io.Serializable  {
         } catch (Throwable th) {
             throw new DeviceLogException(th);
         }
+    }
+    
+    public ParticleReading(String deviceId, String patientId, Date d, int s, int l)  {
+        this.deviceId  = deviceId;
+        this.patientId = patientId;
+        dateTime = d;
+        smallParticleCount = s;
+        largeParticleCount = l;
+    }
+    
+    @Override
+    public int compareTo(ParticleReading other) {
+        return dateTime.compareTo(other.dateTime);
     }
     
     public String getDeviceId() {

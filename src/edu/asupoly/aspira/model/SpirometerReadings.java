@@ -2,11 +2,11 @@ package edu.asupoly.aspira.model;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /*
- * SpirometerXMLReadings represents the spirometer readings
+ * SpirometerReadings represents the spirometer readings
  * taken by a given device for a given Patient.
  * The implementation is a SortedMap where the key is a
  * tuple <DeviceId, PatientId, measureDateTime> and the stored object
@@ -15,49 +15,16 @@ import java.util.TreeMap;
 public class SpirometerReadings implements java.io.Serializable {
     private static final long serialVersionUID = 3310136226572039162L;
 
-    private class ReadingTuple implements java.io.Serializable, Comparable<ReadingTuple> {
-        private static final long serialVersionUID = -7301658677561597086L;
-        
-        String _deviceId;
-        String _patientId;
-        Date   _measureDate;
-
-        ReadingTuple(String did, String pid, Date dt) {
-            _deviceId  = did;
-            _patientId = pid;
-            _measureDate = dt;
-        }
-
-        @Override
-        public int compareTo(ReadingTuple other) {
-            return _measureDate.compareTo(other._measureDate);
-        }
-    }
-
-    private TreeMap<ReadingTuple, SpirometerReading> __readings;
-
-    private String __deviceId;
-    private String __patientId;
-    private ReadingTuple __forQuerying;
+    private TreeSet<SpirometerReading> __readings;
     
-    /*
-     * To create one you have to know the device taking the readings
-     * and the id of the patient to which the device is assigned
-     */
-    public SpirometerReadings(String deviceId, String patientId) {
-        __deviceId = deviceId;
-        __patientId = patientId;
-        __readings = new TreeMap<ReadingTuple, SpirometerReading>();
+    public SpirometerReadings() {
+        __readings = new TreeSet<SpirometerReading>();
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((__deviceId == null) ? 0 : __deviceId.hashCode());
-        result = prime * result
-                + ((__patientId == null) ? 0 : __patientId.hashCode());
         result = prime * result
                 + ((__readings == null) ? 0 : __readings.hashCode());
         return result;
@@ -72,23 +39,13 @@ public class SpirometerReadings implements java.io.Serializable {
         if (getClass() != obj.getClass())
             return false;
         SpirometerReadings other = (SpirometerReadings) obj;
-        if (__deviceId == null) {
-            if (other.__deviceId != null)
-                return false;
-        } else if (!__deviceId.equals(other.__deviceId))
-            return false;
-        if (__patientId == null) {
-            if (other.__patientId != null)
-                return false;
-        } else if (!__patientId.equals(other.__patientId))
-            return false; 
 
         if (__readings == null) {
             if (other.__readings != null)
                 return false;
         } else {
-            Iterator<SpirometerReading> thisIter  = __readings.values().iterator();
-            Iterator<SpirometerReading> otherIter = other.__readings.values().iterator();
+            Iterator<SpirometerReading> thisIter  = __readings.iterator();
+            Iterator<SpirometerReading> otherIter = other.__readings.iterator();
             boolean equals = true;
             for (;
                     equals && thisIter.hasNext() && otherIter.hasNext(); 
@@ -101,17 +58,38 @@ public class SpirometerReadings implements java.io.Serializable {
         return true;
     }
 
-    public String getDeviceId()     { return __deviceId; }
-    public String getPatientId()    { return __patientId; }
-
+    public SpirometerReadings getSpirometerReadingsForPatient(String patientId) {
+        if (patientId == null) return null;
+        
+        SpirometerReading sr = null;
+        SpirometerReadings spr = new SpirometerReadings();
+        Iterator<SpirometerReading> iter = __readings.iterator();
+        while (iter.hasNext()) {
+            sr = iter.next();
+            if (patientId.equals(sr.getPatientId())) {
+                spr.addReading(sr);
+            }
+        }
+        return spr;   
+    }
+    
     /**
      * Get the Spirometer reading at a specific minute
      * @param d
      * @return a SpirometerReading or null if no reading at that minute
      */
     public SpirometerReading getSpirometerReadingAt(Date d) {
-        __forQuerying._measureDate = d;
-        return __readings.get(__forQuerying);
+        if (d == null) return null;
+
+        SpirometerReading sr = null;
+        Iterator<SpirometerReading> iterator = __readings.iterator();
+        while (iterator.hasNext()) {
+            sr = iterator.next();
+            if (sr.getMeasureDate() == d) {
+                return sr;
+            }
+        }
+        return null;
     }
     
     /**
@@ -119,11 +97,10 @@ public class SpirometerReadings implements java.io.Serializable {
      * @param d
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
-    public Iterator<SpirometerReading> getSpirometerReadingsBefore(Date d) {
-        __forQuerying._measureDate = d;
-        SortedMap<ReadingTuple, SpirometerReading> sm = __readings.headMap(__forQuerying, true);
+    public SpirometerReadings getSpirometerReadingsBefore(Date d) {
+        SortedSet<SpirometerReading> sm = __readings.headSet(new SpirometerReading(null, null, d, 0, 0.0f, 0.0f, 0, 0), true);
         if (sm != null) {
-            return sm.values().iterator();
+            return __constructSPR(sm.iterator());
         }
         return null;
     }
@@ -133,11 +110,10 @@ public class SpirometerReadings implements java.io.Serializable {
      * @param d
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
-    public Iterator<SpirometerReading> getSpirometerReadingsAfter(Date d) {
-        __forQuerying._measureDate = d;
-        SortedMap<ReadingTuple, SpirometerReading> sm = __readings.tailMap(__forQuerying, true);
+    public SpirometerReadings getSpirometerReadingsAfter(Date d) {
+        SortedSet<SpirometerReading> sm = __readings.tailSet(new SpirometerReading(null, null, d, 0, 0.0f, 0.0f, 0, 0), true);
         if (sm != null) {
-            return sm.values().iterator();
+            return __constructSPR(sm.iterator());
         }
         return null;
     }    
@@ -150,9 +126,12 @@ public class SpirometerReadings implements java.io.Serializable {
      */
     public Iterator<SpirometerReading> getSpirometerReadingsBetween(Date start, Date end) {
         if (__readings != null) {
-            __forQuerying._measureDate = start;
-            ReadingTuple forQ2 = new ReadingTuple(__forQuerying._deviceId, __forQuerying._patientId, end);
-            return __readings.subMap(__forQuerying, true, forQ2, true).values().iterator();
+            SortedSet<SpirometerReading> res = 
+                    __readings.subSet(new SpirometerReading(null, null, start, 0, 0.0f, 0.0f, 0, 0), true, 
+                                      new SpirometerReading(null, null, end, 0, 0.0f, 0.0f, 0, 0), true);
+            if (res != null) {
+                return res.iterator();
+            }
         }
         return null;
     }
@@ -163,7 +142,7 @@ public class SpirometerReadings implements java.io.Serializable {
      */
     public Iterator<SpirometerReading> iterator() {
         if (__readings != null) {
-            return __readings.values().iterator();
+            return __readings.iterator();
         }
         return null;
     }
@@ -173,14 +152,7 @@ public class SpirometerReadings implements java.io.Serializable {
      * the Spirometer Reading is from the same device and patient
      */
     public boolean addReading(SpirometerReading sp) {
-        SpirometerReading _spReading = __readings.put(new ReadingTuple(__deviceId, __patientId, 
-                sp.getMeasureDate()), sp);
-        if (_spReading != null) {
-            //problem, something was already there, put it back
-            __readings.put(new ReadingTuple(__deviceId, __patientId, _spReading.getMeasureDate()), _spReading);
-            return false;
-        }
-        return true;
+        return __readings.add(sp);
     }
 
     /*
@@ -188,19 +160,36 @@ public class SpirometerReadings implements java.io.Serializable {
      * your own.
      */
     public boolean addReadings(SpirometerReadings other) {
-        if (other.__deviceId.equals(__deviceId) && other.__patientId.equals(__patientId)) {
-            __readings.putAll(other.__readings);
-            return true;
-        }
-        return false;
+        return __readings.addAll(other.__readings);
     }
 
-    // Overlap means intersection here, which we need to know before
-    // pushing a collection to the underlying database
-    public SpirometerReadings getOverlap(SpirometerReadings other) {
-        return null;
+    private SpirometerReadings __constructSPR(Iterator<SpirometerReading> ispr) {
+        SpirometerReadings spr = null;
+        if (ispr != null) {
+            spr = new SpirometerReadings();
+            while (ispr.hasNext()) {
+                spr.addReading(ispr.next());
+            }
+        }
+        return spr;
     }
-    
+     
+     public SpirometerReading getFirstReading() {
+        SpirometerReading rval = null;
+        if (__readings != null) {
+            rval = __readings.first();
+        }
+        return rval;
+    }
+     
+     public SpirometerReading getLastReading() {
+         SpirometerReading rval = null;
+         if (__readings != null) {
+             rval = __readings.last();
+         }
+         return rval;
+     }
+     
     public int size() {
         if (__readings == null)  return 0;
         return __readings.size();

@@ -32,8 +32,8 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     protected HashMap<String, Spirometer> __spirometers;
     protected HashMap<String, AirQualityMonitor> __aqMonitors;
 
-    protected HashMap<String, AirQualityReadings> __aqReadings;  // key is patientId
-    protected HashMap<String, SpirometerReadings> __spReadings;  // key is patientId
+    protected AirQualityReadings __aqReadings; 
+    protected SpirometerReadings __spReadings; 
     
     /**
      * 
@@ -44,8 +44,8 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         __clinicians  = new HashMap<String, Clinician>();
         __spirometers = new HashMap<String, Spirometer>();
         __aqMonitors  = new HashMap<String, AirQualityMonitor>();
-        __aqReadings  = new HashMap<String, AirQualityReadings>();
-        __spReadings  = new HashMap<String, SpirometerReadings>();
+        __aqReadings  = new AirQualityReadings();
+        __spReadings  = new SpirometerReadings();
     }
 
     /**
@@ -172,11 +172,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId)
             throws DMPException {
         
-        AirQualityReadings rval = null;
-        if (patientId != null && __aqReadings != null) {
-            rval = __aqReadings.get(patientId);
-        }
-        return rval;
+        return __aqReadings.getAirQualityReadingsForPatient(patientId);
     }
 
     /* (non-Javadoc)
@@ -189,7 +185,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         SpirometerReadings rval = findSpirometerReadingsForPatient(patientId);
         if (rval != null) {
             Iterator<SpirometerReading> iter = rval.getSpirometerReadingsBetween(start, end);
-            rval = new SpirometerReadings(rval.getDeviceId(), rval.getPatientId());
+            rval = new SpirometerReadings();
             while (iter.hasNext()) {
                 rval.addReading(iter.next());
             }
@@ -204,11 +200,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     public SpirometerReadings findSpirometerReadingsForPatient(String patientId)
             throws DMPException {
         
-        SpirometerReadings rval = null;
-        if (patientId != null && __spReadings != null) {
-            rval = __spReadings.get(patientId);
-        }
-        return rval;
+        return __spReadings.getSpirometerReadingsForPatient(patientId);
     }
 
     
@@ -221,17 +213,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         try {
             boolean rval = true;
             if (toImport != null) {
-                if (__aqReadings == null) {
-                    __aqReadings = new HashMap<String, AirQualityReadings>();
-                    __aqReadings.put(toImport.getPatientId(), toImport);
-                } else {
-                    AirQualityReadings aqr = __aqReadings.get(toImport.getPatientId());
-                    if (aqr == null) {
-                        __aqReadings.put(toImport.getPatientId(), toImport);
-                    } else {
-                        rval = aqr.addReadings(toImport);
-                    }
-                }
+                __aqReadings.addReadings(toImport);
             } else rval = false;   // if trying to import null
             return rval;
         } catch (Throwable t) {
@@ -249,22 +231,11 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         try {
             boolean rval = true;
             if (toImport != null) {
-
-                if (__spReadings == null) {
-                    __spReadings = new HashMap<String, SpirometerReadings>();
-                    __spReadings.put(toImport.getPatientId(), toImport);
-                } else {
-                    SpirometerReadings spr = __spReadings.get(toImport.getPatientId());
-                    if (spr == null) {
-                        __spReadings.put(toImport.getPatientId(), toImport);
-                    } else {
-                        rval = spr.addReadings(toImport);
-                    }
-                }
-            } else rval = false;  // try to import null
-            // Need to write a save operation
+                __spReadings.addReadings(toImport);
+            } else rval = false;   // if trying to import null
             return rval;
         } catch (Throwable t) {
+            // XXX log
             throw new DMPException(t);
         }
     }
@@ -286,10 +257,13 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
      */
     @Override
     public boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException {
+    return false;
+    }
+    /* XXX THIS METHOD NEEDS COMPLETION, include manual flag in the equals computation for SR
         boolean rval = false;
         boolean saveTheReading = true;
         
-        SpirometerReadings readings = findSpirometerReadingsForPatient(sr.getPid());
+        SpirometerReadings readings = findSpirometerReadingsForPatient(sr.getPatientId());
         if (readings == null) {
             readings = new SpirometerReadings("", "");
             __spReadings.put(sr.getPid(), readings);
@@ -305,6 +279,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         
         return rval;
     }
+    */
     
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.AspiraDAO#addOrModifyPatient(edu.asupoly.aspira.model.Patient, boolean)

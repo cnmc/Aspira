@@ -15,7 +15,7 @@ import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 
-public class SerializedDAOTest {
+public class DAOTest {
     private SpirometerReadings __spReadings = null;
     private AirQualityReadings __aqReadings = null;
     private SpirometerReadings __sp2Readings = null;
@@ -31,10 +31,10 @@ public class SerializedDAOTest {
     
     @Before
     public void setUp() throws Exception {
-        __spReadings = new SpirometerReadings("device_one", "patient_one");
-        __aqReadings = new AirQualityReadings("device_one", "patient_one");
-        __sp2Readings = new SpirometerReadings("device_two", "patient_two");
-        __aq2Readings = new AirQualityReadings("device_two", "patient_two");
+        __spReadings = new SpirometerReadings();
+        __aqReadings = new AirQualityReadings();
+        __sp2Readings = new SpirometerReadings();
+        __aq2Readings = new AirQualityReadings();
         //String anonId, String sex, String rH, String rL, 
         // String vH, String vL,  String btype, String bvalue, String pN
         __patient1 = new Patient("patient_one", "M", "500", "100", "300", "100", "bvType", "400", "patient one notes");

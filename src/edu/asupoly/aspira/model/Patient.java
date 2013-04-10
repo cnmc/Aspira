@@ -52,6 +52,20 @@ public class Patient implements java.io.Serializable {
         }
     }
     
+    public Patient(String anonId, String sex, int rH, int rL, 
+            int vH, int vL,  String btype, int bvalue, String pN) throws DeviceLogException
+    {
+        this.patientId = anonId;
+        this.sex = sex;
+        this.patientNotes = pN;
+        this.bestValueType = btype;
+        this.bestValueTarget = bvalue;
+        this.rateH = rH;
+        this.rateL = rL;
+        this.valueH = vH;
+        this.valueL = vL;
+    }
+    
     public String getPatientId() {
         return patientId;
     }

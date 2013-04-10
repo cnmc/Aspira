@@ -20,31 +20,31 @@ public class ReadingRecordsTest {
     Sheet testCaseSheet;
     Workbook test;
     Sheet testSheet;
-    private SpirometerReadings __spReadings = new SpirometerReadings("device_one", "patient_one");
-    private AirQualityReadings __aqReadings = new AirQualityReadings("device_one", "patient_one");
+    private SpirometerReadings __spReadings = new SpirometerReadings();
+    private AirQualityReadings __aqReadings = new AirQualityReadings();
 
     @Before
     public void setUp() throws Exception {
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:31", "169900", "5700"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:32", "166300", "5700"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:33", "164500", "6100"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:34", "165100", "6400"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:35", "173500", "6600"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:36", "178800", "6400"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:37", "171900", "5200"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:38", "170700", "7000"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:38", "171500", "6100"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:39", "168800", "5800"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:40", "167000", "5900"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:41", "165000", "5100"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:42", "167900", "5700"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:43", "191200", "6000"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:44", "236700", "6900"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:45", "241200", "7500"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:46", "222700", "7100"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:47", "201400", "5600"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:48", "204900", "6400"));
-        __aqReadings.addReading(new ParticleReading("device_one", "patient_one", "02/13/13", "00:49", "206100", "6000"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:31", "169900", "5700"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:32", "166300", "5700"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:33", "164500", "6100"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:34", "165100", "6400"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:35", "173500", "6600"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:36", "178800", "6400"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:37", "171900", "5200"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:38", "170700", "7000"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:38", "171500", "6100"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:39", "168800", "5800"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:40", "167000", "5900"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:41", "165000", "5100"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:42", "167900", "5700"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:43", "191200", "6000"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:44", "236700", "6900"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:45", "241200", "7500"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:46", "222700", "7100"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:47", "201400", "5600"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:48", "204900", "6400"));
+        __aqReadings.addReading(new ParticleReading("device_one", "p_one", "02/13/13", "00:49", "206100", "6000"));
 
         __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-01-25T14:40:00-07:00", "0", "459", "3.17", "0", "503"));
         __spReadings.addReading(new SpirometerReading("device_one", "2388", "2013-01-29T11:32:00-07:00", "1", "410", "2.97", "0", "503"));

@@ -22,7 +22,7 @@ public class DylosLogParser implements AirQualityReadingsFactory  {
     public AirQualityReadings createAirQualityReadings(Properties props) throws Exception {    
         String deviceId =  props.getProperty("deviceid");
         String patientId = props.getProperty("patientid");
-        AirQualityReadings dyloslog = new AirQualityReadings(deviceId, patientId);
+        AirQualityReadings dyloslog = new AirQualityReadings();
         
         BufferedReader br = null;
         String date;

@@ -28,8 +28,8 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
     public SpirometerReadings createSpirometerXMLReadings(Properties props) throws Exception
     {
         String deviceId  = props.getProperty("deviceid");
-        String patientId = props.getProperty("patientid");
-        SpirometerReadings _spReadings = new SpirometerReadings(deviceId, patientId);
+        //String patientId = props.getProperty("patientid");
+        SpirometerReadings _spReadings = new SpirometerReadings();
 
         try
         {
