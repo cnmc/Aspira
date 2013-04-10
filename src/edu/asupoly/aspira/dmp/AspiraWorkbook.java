@@ -62,7 +62,7 @@ public class AspiraWorkbook {
                 Cell cell = currentRow.createCell(0);
                 cell.setCellValue(r.getMeasureDate());
                 cell.setCellStyle(cellStyle);
-                currentRow.createCell(1).setCellValue(r.getPid());
+                currentRow.createCell(1).setCellValue(r.getPatientId());
                 currentRow.createCell(2).setCellValue(r.getMeasureID());
                 currentRow.createCell(3).setCellValue(r.getPEFValue());
                 currentRow.createCell(4).setCellValue(r.getFEV1Value());

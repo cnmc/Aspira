@@ -31,9 +31,9 @@ public class DAOTest {
     
     @Before
     public void setUp() throws Exception {
-        __spReadings = new SpirometerReadings("device_one", "patient_one");
+        __spReadings = new SpirometerReadings();
         __aqReadings = new AirQualityReadings();
-        __sp2Readings = new SpirometerReadings("device_two", "patient_two");
+        __sp2Readings = new SpirometerReadings();
         __aq2Readings = new AirQualityReadings();
         //String anonId, String sex, String rH, String rL, 
         // String vH, String vL,  String btype, String bvalue, String pN

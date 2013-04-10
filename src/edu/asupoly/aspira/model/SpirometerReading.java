@@ -5,13 +5,15 @@
  * author djawle
  */
 package edu.asupoly.aspira.model;
+
 import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-public class SpirometerReading implements java.io.Serializable {
+public class SpirometerReading implements java.io.Serializable, Comparable<SpirometerReading> {
     private static final long serialVersionUID = 9002395112333017198L;
     
     private String deviceId;
@@ -23,10 +25,15 @@ public class SpirometerReading implements java.io.Serializable {
     private int    error;
     private int    bestValue;
     
+    @Override
+    public int compareTo(SpirometerReading other) {
+        return measureDate.compareTo(other.measureDate);
+    }
+    
     public String getDeviceId() {
         return deviceId;
     }
-    public String getPid() {
+    public String getPatientId() {
         return pid;
     }
     public int getMeasureID() {
@@ -78,5 +85,17 @@ public class SpirometerReading implements java.io.Serializable {
         {
              throw new DeviceLogException(th);
         }
+    }
+    
+    public SpirometerReading(String deviceId, String id, Date mdate, int mid, 
+            float pef, float fev, int err, int bvalue)  {
+        
+        this.pid = id + '\0';
+        this.measureID = mid;
+        this.measureDate = mdate; 
+        pefValue = pef;
+        fev1Value = fev;
+        error = err;
+        bestValue = bvalue;
     }
 }

@@ -65,7 +65,7 @@ public class AspiraDAOSerializedInMemoryImpl extends AspiraDAOInMemoryImpl {
                     __spirometers = (HashMap<String, Spirometer>) ois.readObject();
                     __aqMonitors  = (HashMap<String, AirQualityMonitor>) ois.readObject();
                     __aqReadings  = (AirQualityReadings) ois.readObject();
-                    __spReadings  = (HashMap<String, SpirometerReadings>) ois.readObject();
+                    __spReadings  = (SpirometerReadings) ois.readObject();
                 }
             } catch (IOException ie) {
                 __filename = null;

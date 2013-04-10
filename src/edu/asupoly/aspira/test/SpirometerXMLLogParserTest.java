@@ -23,7 +23,7 @@ public class SpirometerXMLLogParserTest {
     public SpirometerXMLLogParserTest() {
     }
     
-    private SpirometerReadings __benchmarkReadings = new SpirometerReadings("device_one", "patient_one");
+    private SpirometerReadings __benchmarkReadings = new SpirometerReadings();
     Properties p = new Properties();
 
     @Before
@@ -47,7 +47,7 @@ public class SpirometerXMLLogParserTest {
         __benchmarkReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-25T09:59:00-07:00", "16", "419", "2.69", "0", "503"));
         __benchmarkReadings.addReading(new SpirometerReading("device_one", "2388", "2013-02-27T13:14:00-07:00", "17", "123", "0.89", "0", "503"));
         p.put("deviceid", "device_one");
-        p.put("patientid", "patient_one");
+        p.put("patientid", "p_one");
         p.put("splogfile", "devicelogsamples/2388.datAA3XML"); 
     }
 
