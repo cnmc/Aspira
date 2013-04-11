@@ -317,7 +317,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             rs = ps.executeQuery();
             while (rs.next()) {
                rval.addReading(new ParticleReading(rs.getString("deviceid"), rs.getString("patientid"),
-                       rs.getDate("readingtime"), rs.getInt("smallparticle"), rs.getInt("largeparticle")));
+                       new Date(rs.getTimestamp("readingtime").getTime()), 
+                       rs.getInt("smallparticle"), rs.getInt("largeparticle")));
             }
             return rval;
         } catch (SQLException se) {
