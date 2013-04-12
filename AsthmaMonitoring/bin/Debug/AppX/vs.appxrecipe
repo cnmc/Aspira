@@ -26,7 +26,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
       <PackagePath>config.json</PackagePath>
-      <Modified>2013-04-12T06:23:31.944</Modified>
+      <Modified>2013-04-12T22:43:22.536</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\css\default.css">
       <PackagePath>css\default.css</PackagePath>
@@ -370,7 +370,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\default.js">
       <PackagePath>js\default.js</PackagePath>
-      <Modified>2013-04-12T05:18:04.615</Modified>
+      <Modified>2013-04-12T20:39:17.400</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\fishAnimation.js">
       <PackagePath>js\fishAnimation.js</PackagePath>
@@ -386,7 +386,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\medicationConfig.js">
       <PackagePath>js\medicationConfig.js</PackagePath>
-      <Modified>2013-04-12T08:43:26.796</Modified>
+      <Modified>2013-04-12T23:29:38.513</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\navigator.js">
       <PackagePath>js\navigator.js</PackagePath>
@@ -394,7 +394,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\configurationProperties.js">
       <PackagePath>js\configurationProperties.js</PackagePath>
-      <Modified>2013-03-31T07:40:55.976</Modified>
+      <Modified>2013-04-12T23:03:16.636</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.js">
       <PackagePath>pages\adminPage\adminPage.js</PackagePath>
@@ -410,7 +410,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-04-12T08:43:43.999</Modified>
+      <Modified>2013-04-12T23:05:33.580</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
@@ -430,7 +430,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.html">
       <PackagePath>pages\home\home.html</PackagePath>
-      <Modified>2013-04-12T08:44:27.289</Modified>
+      <Modified>2013-04-12T21:34:31.484</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\default.html">
       <PackagePath>default.html</PackagePath>

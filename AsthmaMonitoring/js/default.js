@@ -23,7 +23,8 @@
         "teaseIndex": 0,
         "allTeaseImgArray": null,
         "changeMoodSleepyTimeoutId": null,
-        "symptomQuestion":false
+        "symptomQuestion": false,
+        "medicationArray" : null
     });
    
     app.addEventListener("activated", function (eventObject) {

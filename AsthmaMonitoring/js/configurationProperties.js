@@ -31,6 +31,23 @@ function setAirQualityProperties() {
             Windows.Storage.FileIO.writeTextAsync(datafile, JSON.stringify(AsthmaGlobals.airQualityConfig));
     });
 }
+readMedicationfile();
+function readMedicationfile() {
+    Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("medicationReminder.txt").done(function (datafile) {
+        if (datafile !== null) {
+            Windows.Storage.FileIO.readTextAsync(datafile).done(function (fileContent) {
+                try {
+                    AsthmaGlobals.medicationArray = fileContent;
+                } catch (e) {
+                    // e.message;
+                    console.log(e.message);
+                    // Windows.UI.Popups.MessageDialog(e.message).showAsync();
+                }
+            });
+        }
+    });
+}
+
 getAirQualityProperties();
 function getAirQualityProperties() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("airQualityStatus.json").done(function (datafile) {

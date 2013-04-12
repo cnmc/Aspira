@@ -5,20 +5,17 @@
         // This function is called whenever a user navigates to this page. It
         // populates the page elements with the app's data.
         
-        ready: function (element, options) {  
+        ready: function (element, options) {
             WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
             WinJS.Utilities.id("helpLogin").listen("click", this.helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
-            readMedicationfile();
+          
+           // getMedicationText("0300");
             WinJS.Utilities.id("takeReading").removeEventListener("click", takeReading, false);
             enableSubsequentReading();
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
            this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
-            //set next medication alert
-            if (AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertTime != undefined) {
-                Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] = setTimeout(
-              initateDynamicAlert, calculateNextmedicationTimeout());
-            }
+           
             //writeLogfile();
             document.getElementById("nextReadingContent").innerHTML =
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
@@ -38,6 +35,12 @@
                 //TO DO: //3. disable the fish tank until next reading
             } else {
                 initializeAnimation();
+            }
+            //set next medication alert
+            setMedicationTimeout();
+            if (AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertTime != undefined) {
+                Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] = setTimeout(
+              initateDynamicAlert, calculateNextmedicationTimeout());
             }
         },
         
