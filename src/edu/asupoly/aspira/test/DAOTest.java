@@ -97,17 +97,19 @@ public class DAOTest {
             IAspiraDAO theDAO = AspiraDAO.getDAO();
             
             theDAO.addOrModifyPatient(__patient1, false);            
-            theDAO.addOrModifyClinician(__clinician1, false);
+            theDAO.addClinician(__clinician1, false);
             theDAO.addOrModifyAirQualityMonitor(__aqm1, false);
             theDAO.addOrModifySpirometer(__spirometer1, false);
-            theDAO.importReadings(__aqReadings, __spReadings, false);
+            theDAO.importAirQualityReadings(__aqReadings, true);
+            theDAO.importSpirometerReadings(__spReadings, true);
                    
             // next round
             theDAO.addOrModifyPatient(__patient2, false);
-            theDAO.addOrModifyClinician(__clinician2, false);
+            theDAO.addClinician(__clinician2, false);
             theDAO.addOrModifyAirQualityMonitor(__aqm2, false);
             theDAO.addOrModifySpirometer(__spirometer2, false);
-            theDAO.importReadings(__aqReadings, __spReadings, false);
+            theDAO.importAirQualityReadings(__aq2Readings, true);
+            theDAO.importSpirometerReadings(__sp2Readings, true);
         } catch (DMPException e) {
             e.printStackTrace();
         }
