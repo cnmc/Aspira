@@ -548,9 +548,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 					
 					animationObject = (JSONObject)configObject.get("animation");
 					
-					animationObject.put("startDate",sdf.parse(startDateField.getText()).getTime() );
-					animationObject.put("endDate",sdf.parse(endDateField.getText()).getTime() );
-					animationObject.put("totalSteps", Long.getLong(rewardField.getText()));
+					animationObject.put("startDateMilliSec",sdf.parse(startDateField.getText()).getTime() );
+					animationObject.put("endDateMilliSec",sdf.parse(endDateField.getText()).getTime() );
+					animationObject.put("totalStages", Long.getLong(rewardField.getText()));
 					configObject.put("animation", animationObject);
 					deviceObject = (JSONObject)configObject.get("device");
 					deviceObject.put("serial", serialField.getText());
