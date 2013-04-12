@@ -20,7 +20,8 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     private String pid;
     private int    measureID;
     private Date   measureDate;
-    private float    pefValue;
+    private boolean manual;
+    private int    pefValue;
     private float  fev1Value;
     private int    error;
     private int    bestValue;
@@ -42,7 +43,10 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     public Date getMeasureDate() {
         return measureDate;
     }
-    public float getPEFValue() {
+    public boolean getManual() {
+        return manual;
+    }
+    public int getPEFValue() {
         return pefValue;
     }
     public float getFEV1Value() {
@@ -75,8 +79,10 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
              time = _t.nextToken();
              mdate = mdate + " " + time;
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            this.measureDate = df.parse(mdate);           
-            pefValue = Float.valueOf(pef.trim()).floatValue();
+            this.measureDate = df.parse(mdate);
+            this.measureID = Integer.valueOf(mid.trim()).intValue();
+            this.manual = false;  // hardwire this to false as this constructor only exists for device readings
+            pefValue = Integer.valueOf(pef.trim()).intValue();
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
@@ -87,12 +93,13 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         }
     }
     
-    public SpirometerReading(String deviceId, String id, Date mdate, int mid, 
-            float pef, float fev, int err, int bvalue)  {
+    public SpirometerReading(String deviceId, String id, Date mdate, int mid, boolean manual,
+            int pef, float fev, int err, int bvalue)  {
         
         this.pid = id + '\0';
         this.measureID = mid;
         this.measureDate = mdate; 
+        this.manual = manual;
         pefValue = pef;
         fev1Value = fev;
         error = err;

@@ -296,6 +296,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
+        if (patientId == null || start == null || end == null) return null;
+        
         return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientBetween"),
                 start, end);
@@ -307,6 +309,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId)
             throws DMPException {
+        if (patientId == null) return null;
         
         return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
@@ -316,6 +319,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head)
             throws DMPException {
+        if (patientId == null) return null;
+        
         return __findAirQualityReadingsForPatientByQuery(patientId, head, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
                 null, null);
@@ -324,6 +329,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail)
             throws DMPException {
+        if (patientId == null) return null;
+        
         return __findAirQualityReadingsForPatientByQuery(patientId, tail, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientTail"),
                 null, null);
@@ -332,8 +339,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     /**
      * Used by findAirQualityReadings methods, parameterized behavior
      * @param patientId
-     * @param tail - pass in MAXINT if not seeking the tail
+     * @param count - pass in MAXINT if not seeking the tail/head
      * @param query - pass in the query from the properties
+     * @param begin - null if no start date
+     * @param end   - null if no end date
      * @return
      * @throws DMPException
      */
@@ -387,8 +396,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatient(String patientId)
             throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
+        if (patientId == null) return null;
+        
+        return __findSpirometerReadingsForPatientByQuery(patientId, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findSpirometerReadingsForPatient"),      
+                null, null);
     }
 
     /* (non-Javadoc)
@@ -397,9 +409,70 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
+        if (patientId == null || start == null || end == null) return null;
+        
+        return __findSpirometerReadingsForPatientByQuery(patientId, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientBetween"),      
+                null, null);
     }
+    
+    /**
+     * Used by findAirQualityReadings methods, parameterized behavior
+     * @param patientId
+     * @param count - pass in MAXINT if not seeking the tail/head
+     * @param query - pass in the query from the properties
+     * @param begin - null if no start date
+     * @param end   - null if no end date
+     * @return
+     * @throws DMPException
+     */
+    private SpirometerReadings __findSpirometerReadingsForPatientByQuery(String patientId, int count, String query,
+            Date begin, Date end)
+            throws DMPException {
+        if (query == null || query.trim().length() == 0) return null;
+        
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        SpirometerReadings rval = new SpirometerReadings();
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(query);
+            ps.setString(1, patientId);
+            if (begin != null) {
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                if (end != null) {
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                }
+            }
+            rs = ps.executeQuery();
+            while (rs.next() && count > 0) {
+               rval.addReading(new SpirometerReading(rs.getString("deviceid"), rs.getString("patientid"),
+                       new Date(rs.getTimestamp("readingtime").getTime()), 
+                       rs.getInt("measureid"), rs.getBoolean("manual"),
+                       rs.getInt("pefvalue"), rs.getFloat("fev1value"),
+                       rs.getInt("error"), rs.getInt("bestvalue") /*, rs.getInt("groupid") */));
+               count--;
+            }
+            return rval;
+        } catch (SQLException se) {
+            // XXX log a DB problem
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
+    }
+    
+// ZZZ below are the CUD methods
     
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#importAirQualityReadings(edu.asupoly.aspira.model.AirQualityReadings, boolean)
