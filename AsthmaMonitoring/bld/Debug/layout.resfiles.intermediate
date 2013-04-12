@@ -85,6 +85,7 @@ js\default.js
 js\fishAnimation.js
 js\jquery1.8.js
 js\logSpirometerReading.js
+js\medicationConfig.js
 js\navigator.js
 pages\adminPage\adminPage.css
 pages\adminPage\adminPage.html

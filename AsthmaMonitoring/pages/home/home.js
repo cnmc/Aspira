@@ -9,7 +9,7 @@
             WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
             WinJS.Utilities.id("helpLogin").listen("click", this.helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
-
+            readMedicationfile();
             WinJS.Utilities.id("takeReading").removeEventListener("click", takeReading, false);
             enableSubsequentReading();
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
@@ -90,7 +90,8 @@
                
                // AsthmaGlobals.canTakeReading == true && //enabled to true after X mins of a reading
                
-                isNextReadingNear() != true  //scheduled reading should not be nearer than X mins
+                isNextReadingNear() != true && //scheduled reading should not be nearer than X mins
+                 AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == true
                 ) {
                 initateDynamicAlert("dynamicReading", AsthmaGlobals.fileConfig.config.alertInfo.dynamicReadingAlertText);
                 AsthmaGlobals.dynamicAlertDisplay = true;

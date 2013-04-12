@@ -140,6 +140,7 @@
     <Content Include="js\fishAnimation.js" />
     <Content Include="js\jquery1.8.js" />
     <Content Include="js\logSpirometerReading.js" />
+    <Content Include="js\medicationConfig.js" />
     <Content Include="js\navigator.js" />
     <Content Include="js\configurationProperties.js" />
     <Content Include="pages\adminPage\adminPage.css" />
