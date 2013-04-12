@@ -137,6 +137,12 @@ public final class AspiraDAO implements IAspiraDAO {
     }
 
     @Override
+    public AirQualityReadings findAirQualityReadingsForPatient(String patientId, int groupId)
+            throws DMPException {
+        return __dao.findAirQualityReadingsForPatient(patientId, groupId);
+    }
+    
+    @Override
     public SpirometerReadings findSpirometerReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
         return __dao.findSpirometerReadingsForPatient(patientId, start, end);
@@ -148,6 +154,12 @@ public final class AspiraDAO implements IAspiraDAO {
         return __dao.findSpirometerReadingsForPatient(patientId);
     }
 
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatient(String patientId, int groupId)
+            throws DMPException {
+        return __dao.findSpirometerReadingsForPatient(patientId, groupId);
+    }
+    
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail) 
             throws DMPException {

@@ -15,7 +15,9 @@ import java.util.StringTokenizer;
 
 public class SpirometerReading implements java.io.Serializable, Comparable<SpirometerReading> {
     private static final long serialVersionUID = 9002395112333017198L;
-    
+
+    public static final int DEFAULT_NO_GROUP_ASSIGNED = -1;
+
     private String deviceId;
     private String pid;
     private int    measureID;
@@ -25,17 +27,21 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     private float  fev1Value;
     private int    error;
     private int    bestValue;
-    
+    private int    groupId;
+
     @Override
     public int compareTo(SpirometerReading other) {
         return measureDate.compareTo(other.measureDate);
     }
-    
+
     public String getDeviceId() {
         return deviceId;
     }
     public String getPatientId() {
         return pid;
+    }
+    public int getGroupId() {
+        return groupId;
     }
     public int getMeasureID() {
         return measureID;
@@ -62,22 +68,23 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     public boolean equals(Object obj) {
         return obj instanceof SpirometerReading && measureDate.equals(((SpirometerReading)obj).measureDate);
     }
-    
+
     @Override
     public int hashCode() {
         return measureDate.hashCode();
     }
-    
+
     public SpirometerReading(String deviceId, String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
-        try{ 
-            this.pid = id + '\0';
+        try{
+            this.deviceId = deviceId;
+            this.pid = id;
             this.measureID = Integer.parseInt(mid);
-             StringTokenizer st = new StringTokenizer(mdate, "T", false);     
-             mdate = st.nextToken();
-             String time = st.nextToken();
-             StringTokenizer _t = new StringTokenizer(time, "-", false);
-             time = _t.nextToken();
-             mdate = mdate + " " + time;
+            StringTokenizer st = new StringTokenizer(mdate, "T", false);     
+            mdate = st.nextToken();
+            String time = st.nextToken();
+            StringTokenizer _t = new StringTokenizer(time, "-", false);
+            time = _t.nextToken();
+            mdate = mdate + " " + time;
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             this.measureDate = df.parse(mdate);
             this.measureID = Integer.valueOf(mid.trim()).intValue();
@@ -86,17 +93,19 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
+            this.groupId = DEFAULT_NO_GROUP_ASSIGNED;
         }
         catch(Throwable th)
         {
-             throw new DeviceLogException(th);
+            throw new DeviceLogException(th);
         }
     }
-    
+
     public SpirometerReading(String deviceId, String id, Date mdate, int mid, boolean manual,
-            int pef, float fev, int err, int bvalue)  {
-        
-        this.pid = id + '\0';
+            int pef, float fev, int err, int bvalue, int groupid)  {
+
+        this.deviceId = deviceId;
+        this.pid = id;
         this.measureID = mid;
         this.measureDate = mdate; 
         this.manual = manual;
@@ -104,5 +113,6 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         fev1Value = fev;
         error = err;
         bestValue = bvalue;
+        this.groupId = groupid;
     }
 }

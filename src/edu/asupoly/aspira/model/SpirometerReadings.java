@@ -98,7 +98,7 @@ public class SpirometerReadings implements java.io.Serializable {
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
     public SpirometerReadings getSpirometerReadingsBefore(Date d) {
-        SortedSet<SpirometerReading> sm = __readings.headSet(new SpirometerReading(null, null, d, 0, true, 0, 0.0f, 0, 0), true);
+        SortedSet<SpirometerReading> sm = __readings.headSet(new SpirometerReading(null, null, d, 0, true, 0, 0.0f, 0, 0, 0), true);
         if (sm != null) {
             return __constructSPR(sm.iterator());
         }
@@ -111,7 +111,7 @@ public class SpirometerReadings implements java.io.Serializable {
      * @return an Iterator that preserves the sorted ordering of dates in ascending order
      */
     public SpirometerReadings getSpirometerReadingsAfter(Date d) {
-        SortedSet<SpirometerReading> sm = __readings.tailSet(new SpirometerReading(null, null, d, 0, true, 0, 0.0f, 0, 0), true);
+        SortedSet<SpirometerReading> sm = __readings.tailSet(new SpirometerReading(null, null, d, 0, true, 0, 0.0f, 0, 0, 0), true);
         if (sm != null) {
             return __constructSPR(sm.iterator());
         }
@@ -127,8 +127,8 @@ public class SpirometerReadings implements java.io.Serializable {
     public Iterator<SpirometerReading> getSpirometerReadingsBetween(Date start, Date end) {
         if (__readings != null) {
             SortedSet<SpirometerReading> res = 
-                    __readings.subSet(new SpirometerReading(null, null, start, 0, true, 0, 0.0f, 0, 0), true, 
-                                      new SpirometerReading(null, null, end, 0, true, 0, 0.0f, 0, 0), true);
+                    __readings.subSet(new SpirometerReading(null, null, start, 0, true, 0, 0.0f, 0, 0, 0), true, 
+                                      new SpirometerReading(null, null, end, 0, true, 0, 0.0f, 0, 0, 0), true);
             if (res != null) {
                 return res.iterator();
             }

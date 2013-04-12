@@ -14,6 +14,8 @@ import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 public class ParticleReading implements java.io.Serializable, Comparable<ParticleReading>  {
     private static final long serialVersionUID = 9002395112333017198L;
     
+    public static final int DEFAULT_NO_GROUP_ASSIGNED = -1;
+    
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy HH:mm");
     private Date dateTime;
     private int smallParticleCount;
@@ -21,6 +23,7 @@ public class ParticleReading implements java.io.Serializable, Comparable<Particl
 
     private String deviceId;
     private String patientId;
+    private int    groupId;
     
     public ParticleReading(String deviceId, String patientId, String d, String t, String s, String l) throws DeviceLogException {
         try {
@@ -29,17 +32,19 @@ public class ParticleReading implements java.io.Serializable, Comparable<Particl
             dateTime = ParticleReading.formatter.parse(d + " " + t);
             smallParticleCount = Integer.parseInt(s);
             largeParticleCount = Integer.parseInt(l);
+            this.groupId = DEFAULT_NO_GROUP_ASSIGNED;
         } catch (Throwable th) {
             throw new DeviceLogException(th);
         }
     }
     
-    public ParticleReading(String deviceId, String patientId, Date d, int s, int l)  {
+    public ParticleReading(String deviceId, String patientId, Date d, int s, int l, int groupid)  {
         this.deviceId  = deviceId;
         this.patientId = patientId;
         dateTime = d;
         smallParticleCount = s;
         largeParticleCount = l;
+        this.groupId = groupid;
     }
     
     @Override
@@ -53,6 +58,10 @@ public class ParticleReading implements java.io.Serializable, Comparable<Particl
 
     public String getPatientId() {
         return patientId;
+    }
+    
+    public int getGroupId() {
+        return groupId;
     }
     
     public Date getDateTime() {

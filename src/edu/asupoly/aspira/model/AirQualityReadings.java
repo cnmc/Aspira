@@ -53,7 +53,7 @@ public class AirQualityReadings implements java.io.Serializable {
     public AirQualityReadings getAirQualityBefore(Date d, boolean inclusive) {
         if (d == null) return null;
         
-        SortedSet<ParticleReading> sm = __readings.headSet(new ParticleReading(null, null, d, 0, 0), inclusive);
+        SortedSet<ParticleReading> sm = __readings.headSet(new ParticleReading(null, null, d, 0, 0, 0), inclusive);
         if (sm != null) {
             return __constructAQR(sm.iterator());  
          }
@@ -63,7 +63,7 @@ public class AirQualityReadings implements java.io.Serializable {
     public AirQualityReadings getAirQualityAfter(Date d, boolean inclusive) {
         if (d == null) return null;
         
-        SortedSet<ParticleReading> sm = __readings.tailSet(new ParticleReading(null, null, d, 0, 0), inclusive);
+        SortedSet<ParticleReading> sm = __readings.tailSet(new ParticleReading(null, null, d, 0, 0, 0), inclusive);
         if (sm != null) {
             return __constructAQR(sm.iterator());
         }
@@ -74,8 +74,8 @@ public class AirQualityReadings implements java.io.Serializable {
                                                    Date end,   boolean inclend) {
         if (start == null || end == null) return null;
         if (__readings != null) {
-            ParticleReading startPR = new ParticleReading(null, null, start, 0, 0);
-            ParticleReading endPR   = new ParticleReading(null, null, end, 0, 0);
+            ParticleReading startPR = new ParticleReading(null, null, start, 0, 0, 0);
+            ParticleReading endPR   = new ParticleReading(null, null, end, 0, 0, 0);
             return __constructAQR(__readings.subSet(startPR, inclstart, endPR, inclend).iterator());
         }
         return null;

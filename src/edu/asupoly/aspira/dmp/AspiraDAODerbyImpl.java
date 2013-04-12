@@ -30,6 +30,7 @@ import edu.asupoly.aspira.model.SpirometerReadings;
  */
 public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
+    private static final int NO_GROUP_IDENTIFIER = -2;
     /**
      * 
      */
@@ -159,10 +160,23 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         ArrayList<Clinician> clinicians = new ArrayList<Clinician>();
         try {
             c = DriverManager.getConnection(__jdbcURL);
-            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getPatients"));
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getClinicians"));
             rs = ps.executeQuery();
+            Clinician cl = null;
             while (rs.next()) {
-               clinicians.add(new Clinician(rs.getString("clinicianid")));
+                String clinicianId = rs.getString("clinicianid");
+                // now get any Patients we may have to add
+                if (cl == null) {
+                    cl = new Clinician(clinicianId);
+                }
+                String patientId = rs.getString("patientid");
+                if (patientId != null) {
+                    Patient patients[] = getPatients();
+                    for (Patient p : patients) {
+                        cl.addPatient(p);
+                    }
+                }          
+               clinicians.add(cl);
             }
             return clinicians.toArray(new Clinician[0]);
         } catch (SQLException se) {
@@ -298,7 +312,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             String patientId, Date start, Date end) throws DMPException {
         if (patientId == null || start == null || end == null) return null;
         
-        return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
+        return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientBetween"),
                 start, end);
     }
@@ -311,17 +325,30 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             throws DMPException {
         if (patientId == null) return null;
         
-        return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
+        return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
                 null, null);
     }
  
+    /* (non-Javadoc)
+     * @see edu.asupoly.aspira.dmp.IAspiraDAO#findAirQualityReadingsForPatient(java.lang.String)
+     */
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatient(String patientId, int groupId)
+            throws DMPException {
+        if (patientId == null || groupId <= NO_GROUP_IDENTIFIER) return null;
+        
+        return __findAirQualityReadingsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE, 
+                __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
+                null, null);
+    }
+    
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head)
             throws DMPException {
         if (patientId == null) return null;
         
-        return __findAirQualityReadingsForPatientByQuery(patientId, head, 
+        return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, head, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
                 null, null);
     }
@@ -331,7 +358,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             throws DMPException {
         if (patientId == null) return null;
         
-        return __findAirQualityReadingsForPatientByQuery(patientId, tail, 
+        return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientTail"),
                 null, null);
     }
@@ -346,8 +373,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
      * @return
      * @throws DMPException
      */
-    private AirQualityReadings __findAirQualityReadingsForPatientByQuery(String patientId, int count, String query,
-            Date begin, Date end)
+    private AirQualityReadings __findAirQualityReadingsForPatientByQuery(String patientId, int groupId, 
+            int count, String query, Date begin, Date end)
             throws DMPException {
         if (query == null || query.trim().length() == 0) return null;
         
@@ -364,12 +391,14 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (end != null) {
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
                 }
+            } else if (groupId != NO_GROUP_IDENTIFIER) {
+                ps.setInt(2,  groupId);
             }
             rs = ps.executeQuery();
             while (rs.next() && count > 0) {
                rval.addReading(new ParticleReading(rs.getString("deviceid"), rs.getString("patientid"),
                        new Date(rs.getTimestamp("readingtime").getTime()), 
-                       rs.getInt("smallparticle"), rs.getInt("largeparticle")));
+                       rs.getInt("smallparticle"), rs.getInt("largeparticle"), rs.getInt("groupid")));
                count--;
             }
             return rval;
@@ -398,7 +427,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             throws DMPException {
         if (patientId == null) return null;
         
-        return __findSpirometerReadingsForPatientByQuery(patientId, Integer.MAX_VALUE,
+        return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatient"),      
                 null, null);
     }
@@ -411,8 +440,18 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             String patientId, Date start, Date end) throws DMPException {
         if (patientId == null || start == null || end == null) return null;
         
-        return __findSpirometerReadingsForPatientByQuery(patientId, Integer.MAX_VALUE,
+        return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientBetween"),      
+                null, null);
+    }
+    
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatient(String patientId, int groupId) 
+            throws DMPException {
+       if (patientId == null || groupId <= NO_GROUP_IDENTIFIER) return null;
+        
+        return __findSpirometerReadingsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientByGroup"),      
                 null, null);
     }
     
@@ -426,9 +465,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
      * @return
      * @throws DMPException
      */
-    private SpirometerReadings __findSpirometerReadingsForPatientByQuery(String patientId, int count, String query,
-            Date begin, Date end)
-            throws DMPException {
+    private SpirometerReadings __findSpirometerReadingsForPatientByQuery(String patientId, 
+            int groupId, int count, String query, Date begin, Date end) throws DMPException {
         if (query == null || query.trim().length() == 0) return null;
         
         Connection c = null;
@@ -444,6 +482,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (end != null) {
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
                 }
+            } else if (groupId != NO_GROUP_IDENTIFIER) {
+                ps.setInt(2,  groupId);
             }
             rs = ps.executeQuery();
             while (rs.next() && count > 0) {
@@ -451,7 +491,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                        new Date(rs.getTimestamp("readingtime").getTime()), 
                        rs.getInt("measureid"), rs.getBoolean("manual"),
                        rs.getInt("pefvalue"), rs.getFloat("fev1value"),
-                       rs.getInt("error"), rs.getInt("bestvalue") /*, rs.getInt("groupid") */));
+                       rs.getInt("error"), rs.getInt("bestvalue"), rs.getInt("groupid")));
                count--;
             }
             return rval;
@@ -582,6 +622,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             c.commit();
         } catch (SQLException se) {
             // XXX log a db error
+            System.out.println("SpirometerReading to import: " + next.toString());
+            se.printStackTrace();
             throw new DMPException(se);
         } catch (Throwable t) {
             // XXX The unknown happened, log it
@@ -825,22 +867,32 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         Connection c = null;
         PreparedStatement ps = null;
         PreparedStatement psdml = null;
+        PreparedStatement psdml2 = null;
         ResultSet rs = null;
 
         try {
             c = DriverManager.getConnection(__jdbcURL);
-            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getAirQualityMonitor"));
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getClinician"));
             ps.setString(1, cl.getClinicianId());
-            rs = ps.executeQuery();
+            rs = ps.executeQuery();            
             if (!rs.next()) {
                 // Since Clinician only has an id now, if it is in there it must be the same so noop
-                psdml = c.prepareStatement(__derbyProperties.getProperty("sql.addAirQualityMonitor"));   
-
-                // now write the new or updated Patient
-                // vendor,model,description,patientid,serialid
+                psdml = c.prepareStatement(__derbyProperties.getProperty("sql.addClinician"));
                 psdml.setString(1, cl.getClinicianId());         
-                return (psdml.executeUpdate() == 1);
-            } else return true;
+                if (psdml.executeUpdate() == 1) {
+                    String[] patientIds = cl.getPatientIds();
+                    if (patientIds != null) {
+                        psdml2 = c.prepareStatement(__derbyProperties.getProperty("sql.addPatientClinician"));
+                        for (String pid : patientIds) { 
+                            psdml2.setString(1, cl.getClinicianId());
+                            psdml2.setString(2, pid);
+                            psdml2.executeUpdate();
+                            psdml2.clearParameters();
+                        }
+                    }
+                }
+            } 
+            return true;
         } catch (SQLException se) {
             // XXX log a DB problem
             throw new DMPException(se);
@@ -852,6 +904,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
                 if (psdml != null) ps.close();
+                if (psdml2 != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
                 // XXX log it and give up

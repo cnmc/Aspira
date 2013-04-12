@@ -29,10 +29,12 @@ public interface IAspiraDAO {
     Clinician findClinicianForPatient(String patientId) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId) throws DMPException;
-    SpirometerReadings findSpirometerReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
-    SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
+    AirQualityReadings findAirQualityReadingsForPatient(String patientId,int groupId) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head) throws DMPException;
+    SpirometerReadings findSpirometerReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
+    SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
+    SpirometerReadings findSpirometerReadingsForPatient(String patientId,int groupId) throws DMPException;
     
     // CUD operations
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;

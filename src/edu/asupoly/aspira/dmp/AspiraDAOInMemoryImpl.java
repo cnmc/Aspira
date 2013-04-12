@@ -12,6 +12,7 @@ import java.util.Properties;
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.Clinician;
+import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
@@ -219,6 +220,42 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         return __spReadings.getSpirometerReadingsForPatient(patientId);
     }
 
+
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatient(
+            String patientId, int groupId) throws DMPException {
+        AirQualityReadings aqr = findAirQualityReadingsForPatient(patientId);
+        if (aqr == null) return null;
+
+        AirQualityReadings rval = new AirQualityReadings();
+        ParticleReading pr = null;
+        Iterator<ParticleReading> iter = aqr.iterator();
+        while (iter.hasNext()) {
+            pr = iter.next();
+            if (pr.getGroupId() == groupId) {
+                rval.addReading(pr);
+            }
+        }
+        return rval;
+    }
+
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatient(
+            String patientId, int groupId) throws DMPException {
+        SpirometerReadings spr = findSpirometerReadingsForPatient(patientId);
+        if (spr == null) return null;
+
+        SpirometerReadings rval = new SpirometerReadings();
+        SpirometerReading pr = null;
+        Iterator<SpirometerReading> iter = spr.iterator();
+        while (iter.hasNext()) {
+            pr = iter.next();
+            if (pr.getGroupId() == groupId) {
+                rval.addReading(pr);
+            }
+        }
+        return rval;
+    }
     
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.AspiraDAO#importAirQualityReadings(edu.asupoly.aspira.model.AirQualityReadings, boolean)
