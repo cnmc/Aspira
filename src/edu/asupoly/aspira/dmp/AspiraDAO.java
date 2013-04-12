@@ -17,6 +17,7 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvents;
 
 /**
  * @author kevinagary
@@ -177,56 +178,64 @@ public final class AspiraDAO implements IAspiraDAO {
     @Override
     public boolean importAirQualityReadings(AirQualityReadings toImport,
             boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.importAirQualityReadings(toImport, overwrite);
     }
 
     @Override
     public boolean importSpirometerReadings(SpirometerReadings toImport,
             boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.importSpirometerReadings(toImport, overwrite);
-    }
-
-    @Override
-    public boolean importReadings(AirQualityReadings aqImport,
-            SpirometerReadings spImport, boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
-        return __dao.importReadings(aqImport, spImport, overwrite);
     }
 
     @Override
     public boolean addManualSpirometerReading(SpirometerReading sr,
             boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.addManualSpirometerReading(sr, overwrite);
     }
 
     @Override
     public boolean addOrModifyPatient(Patient p, boolean overwrite)
             throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.addOrModifyPatient(p, overwrite);
     }
 
     @Override
     public boolean addOrModifySpirometer(Spirometer s, boolean overwrite)
             throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.addOrModifySpirometer(s, overwrite);
     }
 
     @Override
     public boolean addOrModifyAirQualityMonitor(AirQualityMonitor aqm,
             boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.addOrModifyAirQualityMonitor(aqm, overwrite);
     }
 
     @Override
     public boolean addClinician(Clinician c, boolean overwrite)
             throws DMPException {
-        // TODO Auto-generated method stub
         return __dao.addClinician(c, overwrite);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, Date start, Date end) throws DMPException {
+        return __dao.findUIEventsForPatient(patientId, start, end);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId) throws DMPException {
+        return __dao.findUIEventsForPatient(patientId);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, int groupId)
+            throws DMPException {
+        return __dao.findUIEventsForPatient(patientId, groupId);
+    }
+
+    @Override
+    public boolean importUIevents(UIEvents toImport, boolean overwrite)
+            throws DMPException {
+        return __dao.importUIevents(toImport, overwrite);
     }
 }

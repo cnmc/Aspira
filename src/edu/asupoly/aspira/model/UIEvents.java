@@ -45,7 +45,7 @@ public class UIEvents implements java.io.Serializable {
     public UIEvents getUIEventsBefore(Date d, boolean inclusive) {
         if (d == null) return null;
  
-        SortedSet<UIEvent> sm = __events.headSet(new UIEvent("","","","","","",d), inclusive);
+        SortedSet<UIEvent> sm = __events.headSet(new UIEvent("","","","","","",d,0), inclusive);
         if (sm != null) {
             return __constructEvents(sm.iterator());  
          }
@@ -55,7 +55,7 @@ public class UIEvents implements java.io.Serializable {
     public UIEvents getUIEventsAfter(Date d, boolean inclusive) {
         if (d == null) return null;
         
-        SortedSet<UIEvent> sm = __events.tailSet(new UIEvent("","","","","","",d), inclusive);
+        SortedSet<UIEvent> sm = __events.tailSet(new UIEvent("","","","","","",d,0), inclusive);
         if (sm != null) {
             return __constructEvents(sm.iterator());  
          }
@@ -67,8 +67,8 @@ public class UIEvents implements java.io.Serializable {
         SortedSet<UIEvent> res  = null;
         
         if (start != null && end != null && __events != null) { 
-            res = __events.subSet(new UIEvent("","","","","","",start), inclstart, 
-                                  new UIEvent("","","","","","",end), inclend);
+            res = __events.subSet(new UIEvent("","","","","","",start,0), inclstart, 
+                                  new UIEvent("","","","","","",end,0), inclend);
             return res.iterator();
         } else return null;    
     }

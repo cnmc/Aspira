@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
     private static final long serialVersionUID = 3259668122833834878L;
 
+    public static final int DEFAULT_NO_GROUP_ASSIGNED = -1;
+    
     private String deviceId;
     private String patientId;
     private String version;     // software build version
@@ -24,6 +26,7 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
     private String eventTarget; // identifies the UI widget uniquely
     private String eventValue;  // actual value may be numeric depending on type
     private Date date;
+    private int groupId;
 
     @Override
     public int compareTo(UIEvent other) {
@@ -32,11 +35,11 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
     
     public UIEvent (String did, String pid, String version, String eType,
             String eTarget, String eValue, String date) {
-        this(did, pid, version, eType, eTarget, eValue, formatDate(date));
+        this(did, pid, version, eType, eTarget, eValue, formatDate(date), DEFAULT_NO_GROUP_ASSIGNED);
     }
     
     public UIEvent (String did, String pid, String version, String eType,
-            String eTarget, String eValue, Date date) {
+            String eTarget, String eValue, Date date, int gid) {
 
         this.deviceId    = did;
         this.patientId   = pid;
@@ -44,7 +47,8 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
         this.eventType   = eType;
         this.eventTarget = eTarget;
         this.eventValue  = eValue;
-        this.date        = date;           
+        this.date        = date;
+        this.groupId     = gid;
     }
     
     private static Date formatDate(String date)
@@ -135,6 +139,10 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
         return eventValue;
     }
     
+    public int getGroupId() {
+        return groupId;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof UIEvent) {
@@ -145,7 +153,7 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
                 eventType.equals(other.eventType) &&
                 eventTarget.equals(other.eventTarget) &&
                 eventValue.equals(other.eventValue) &&
-                version.equals(other.version);
+                version.equals(other.version);        
         } else return false;
     }
 }

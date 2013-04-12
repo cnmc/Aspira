@@ -10,6 +10,7 @@ import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvents;
 
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public interface IAspiraDAO {
     Spirometer findSpirometerForPatient(String patientId) throws DMPException;
     AirQualityMonitor findAirQualityMonitorForPatient(String patientId) throws DMPException;
     Clinician findClinicianForPatient(String patientId) throws DMPException;
+    
     AirQualityReadings findAirQualityReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId,int groupId) throws DMPException;
@@ -35,12 +37,15 @@ public interface IAspiraDAO {
     SpirometerReadings findSpirometerReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId,int groupId) throws DMPException;
+    UIEvents findUIEventsForPatient(String patientId, Date start, Date end) throws DMPException;
+    UIEvents findUIEventsForPatient(String patientId) throws DMPException;
+    UIEvents findUIEventsForPatient(String patientId,int groupId) throws DMPException;
     
     // CUD operations
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;
     boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException;
-    // We only have this one so we can do in the context of a single transaction and rollback if needed
-    boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) throws DMPException;
+    boolean importUIevents(UIEvents toImport, boolean overwrite) throws DMPException;
+    
     // This is for the manual readings we can get via data entry
     boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException;
     

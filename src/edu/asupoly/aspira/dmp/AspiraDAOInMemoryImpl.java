@@ -17,6 +17,8 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvent;
+import edu.asupoly.aspira.model.UIEvents;
 
 /**
  * @author kevinagary
@@ -34,7 +36,8 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     protected HashMap<String, AirQualityMonitor> __aqMonitors;
 
     protected AirQualityReadings __aqReadings; 
-    protected SpirometerReadings __spReadings; 
+    protected SpirometerReadings __spReadings;
+    protected UIEvents __events;
     
     /**
      * 
@@ -294,24 +297,13 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     }
 
     /* (non-Javadoc)
-     * @see edu.asupoly.aspira.dmp.AspiraDAO#importReadings(edu.asupoly.aspira.model.AirQualityReadings, edu.asupoly.aspira.model.SpirometerReadings, boolean)
-     */
-    @Override
-    public boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) 
-            throws DMPException {
-        // In a real persistence store we have to wrap this in a transaction
-        importAirQualityReadings(aqImport, overwrite);
-        importSpirometerReadings(spImport, overwrite);
-        return true;
-    }
-
-    /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.AspiraDAO#addManualSpirometerReading(edu.asupoly.aspira.model.SpirometerReading, boolean)
      */
     @Override
     public boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException {
-    return false;
+        return false;
     }
+    
     /* XXX THIS METHOD NEEDS COMPLETION, include manual flag in the equals computation for SR
         boolean rval = false;
         boolean saveTheReading = true;
@@ -386,6 +378,51 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         if (overwrite || existing == null) {
             return (__clinicians.put(c.getClinicianId(), c) == null);
         }
+        return false;
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, Date start, Date end) throws DMPException {
+        UIEvents rval = findUIEventsForPatient(patientId);
+        
+        if (rval != null) {
+            Iterator<UIEvent> iter = rval.getUIEventsBetween(start, true, end, true);
+            rval = new UIEvents();
+            while (iter.hasNext()) {
+                rval.addEvent(iter.next());
+            }
+        }
+        return rval;
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId)
+            throws DMPException {
+        return __events.getUIEventsForPatient(patientId);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, int groupId)
+            throws DMPException {
+        UIEvents events = findUIEventsForPatient(patientId);
+        if (events == null) return null;
+
+        UIEvents rval = new UIEvents();
+        UIEvent pr = null;
+        Iterator<UIEvent> iter = events.iterator();
+        while (iter.hasNext()) {
+            pr = iter.next();
+            if (pr.getGroupId() == groupId) {
+                rval.addEvent(pr);
+            }
+        }
+        return rval;
+    }
+
+    @Override
+    public boolean importUIevents(UIEvents toImport, boolean overwrite)
+            throws DMPException {
+        // TODO Auto-generated method stub
         return false;
     }
 }
