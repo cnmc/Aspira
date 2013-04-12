@@ -152,6 +152,7 @@ public class SpirometerReadings implements java.io.Serializable {
      * the Spirometer Reading is from the same device and patient
      */
     public boolean addReading(SpirometerReading sp) {
+        if (sp == null) return false;
         return __readings.add(sp);
     }
 
@@ -160,6 +161,7 @@ public class SpirometerReadings implements java.io.Serializable {
      * your own.
      */
     public boolean addReadings(SpirometerReadings other) {
+        if (other == null || other.__readings == null) return false;
         return __readings.addAll(other.__readings);
     }
 

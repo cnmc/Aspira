@@ -6,7 +6,6 @@
  */
 package edu.asupoly.aspira.model;
 
-import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,23 +14,40 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UIEvent {
+public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
+    private static final long serialVersionUID = 3259668122833834878L;
 
+    private String deviceId;
     private String patientId;
+    private String version;     // software build version
+    private String eventType;   // later this ought to be an enum
+    private String eventTarget; // identifies the UI widget uniquely
+    private String eventValue;  // actual value may be numeric depending on type
     private Date date;
-    private String event;
 
-    public UIEvent (String id, String _date, String event) throws DeviceLogException {
-        try {
-            this.patientId = id;
-            this.date = formatDate(_date);      
-            this.event = event;
-        } catch (Throwable th) {
-            throw new DeviceLogException(th);
-        }
+    @Override
+    public int compareTo(UIEvent other) {
+        return date.compareTo(other.date);
     }
     
-    private Date formatDate(String date)
+    public UIEvent (String did, String pid, String version, String eType,
+            String eTarget, String eValue, String date) {
+        this(did, pid, version, eType, eTarget, eValue, formatDate(date));
+    }
+    
+    public UIEvent (String did, String pid, String version, String eType,
+            String eTarget, String eValue, Date date) {
+
+        this.deviceId    = did;
+        this.patientId   = pid;
+        this.version     = version;
+        this.eventType   = eType;
+        this.eventTarget = eTarget;
+        this.eventValue  = eValue;
+        this.date        = date;           
+    }
+    
+    private static Date formatDate(String date)
     {
         //
         // Originally logs have date of this format
@@ -56,7 +72,7 @@ public class UIEvent {
         return dt;
     }
     
-    public String getMonth(String mm)
+    public static String getMonth(String mm)
     {
         String _month = null;
         
@@ -90,37 +106,46 @@ public class UIEvent {
         
         return _month;
     }
+    
     public String getPatientId() {
         return patientId;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date dt) {
-        this.date = dt;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public String getEvent() {
-        return event;
+    public String getVersion() {
+        return version;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
+    public String getEventType() {
+        return eventType;
     }
 
+    public String getEventTarget() {
+        return eventTarget;
+    }
+
+    public String getEventValue() {
+        return eventValue;
+    }
+    
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof UIEvent && date.equals(((UIEvent) obj).date);
-    }
-
-    @Override
-    public int hashCode() {
-        return date.hashCode();
+        if (obj instanceof UIEvent) {
+            UIEvent other = (UIEvent)obj;
+            return date.equals(other.date) &&
+                patientId.equals(other.patientId) &&
+                deviceId.equals(other.deviceId) &&
+                eventType.equals(other.eventType) &&
+                eventTarget.equals(other.eventTarget) &&
+                eventValue.equals(other.eventValue) &&
+                version.equals(other.version);
+        } else return false;
     }
 }
