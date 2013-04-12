@@ -420,9 +420,18 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
     }
 
     @Override
-    public boolean importUIevents(UIEvents toImport, boolean overwrite)
+    public boolean importUIEvents(UIEvents toImport, boolean overwrite)
             throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+        // we are disregarding overwrite now and just always overwriting
+        try {
+            boolean rval = true;
+            if (toImport != null) {
+                __events.addEvents(toImport);
+            } else rval = false;   // if trying to import null
+            return rval;
+        } catch (Throwable t) {
+            // XXX log
+            throw new DMPException(t);
+        }
     }
 }

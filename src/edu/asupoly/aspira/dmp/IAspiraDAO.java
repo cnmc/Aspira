@@ -44,7 +44,7 @@ public interface IAspiraDAO {
     // CUD operations
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;
     boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException;
-    boolean importUIevents(UIEvents toImport, boolean overwrite) throws DMPException;
+    boolean importUIEvents(UIEvents toImport, boolean overwrite) throws DMPException;
     
     // This is for the manual readings we can get via data entry
     boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException;

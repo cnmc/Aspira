@@ -234,8 +234,8 @@ public final class AspiraDAO implements IAspiraDAO {
     }
 
     @Override
-    public boolean importUIevents(UIEvents toImport, boolean overwrite)
+    public boolean importUIEvents(UIEvents toImport, boolean overwrite)
             throws DMPException {
-        return __dao.importUIevents(toImport, overwrite);
+        return __dao.importUIEvents(toImport, overwrite);
     }
 }

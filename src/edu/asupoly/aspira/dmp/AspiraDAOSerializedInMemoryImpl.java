@@ -19,6 +19,7 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvents;
 
 /**
  * @author kevinagary
@@ -136,14 +137,13 @@ public class AspiraDAOSerializedInMemoryImpl extends AspiraDAOInMemoryImpl {
         return true;
     }
     
-    // We only have this one so we can do in the context of a single transaction and rollback if needed
-    public boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) 
+    public boolean importUIEvents(UIEvents toImport, boolean overwrite) 
             throws DMPException  {
-        boolean rval = false;
-        if ((rval = importAirQualityReadings(aqImport, overwrite))) {
-            rval = importSpirometerReadings(spImport, overwrite);
+        boolean rval = super.importUIEvents(toImport, overwrite);
+        if (rval) {
+            _writeStore();
         }
-        return rval;
+        return true;
     }
     
     // This is for the manual readings we can get via data entry
