@@ -182,7 +182,7 @@ public class AspiraDAOSerializedInMemoryImpl extends AspiraDAOInMemoryImpl {
     }
     
     public boolean addOrModifyClinician(Clinician c, boolean overwrite) throws DMPException {      
-        boolean rval = super.addOrModifyClinician(c, overwrite);
+        boolean rval = super.addClinician(c, overwrite);
         if (rval) {
             _writeStore();
         }

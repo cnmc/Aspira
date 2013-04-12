@@ -533,17 +533,73 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 // XXX log it and give up
             }
         }
-        return false;
+        return true;
     }
 
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#importSpirometerReadings(edu.asupoly.aspira.model.SpirometerReadings, boolean)
      */
     @Override
-    public boolean importSpirometerReadings(SpirometerReadings toImport,
-            boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException {
+        Connection c = null;
+        PreparedStatement ps = null;
+        PreparedStatement psgroup = null;
+        SpirometerReading next = null;
+        ResultSet rs = null;
+        int id = -1; // in case get unique fails
+        
+        if (toImport == null || toImport.size() == 0) return true;
+        
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.importSpirometerReadings"));
+            psgroup = c.prepareStatement(__derbyProperties.getProperty("sql.getUniqueId"));
+            
+            // every import is a batch insert of particle readings, so we track those imports in
+            // a particular table
+            rs = psgroup.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+            
+            Iterator<SpirometerReading> iter = toImport.iterator();
+            while (iter.hasNext()) {
+                next = iter.next();
+                ps.setString(1, next.getDeviceId());
+                ps.setString(2, next.getPatientId());
+                // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
+                ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()));
+                ps.setInt(4, next.getMeasureID());
+                ps.setBoolean(5, next.getManual());
+                ps.setInt(6, next.getPEFValue());
+                ps.setFloat(7,  next.getFEV1Value());
+                ps.setInt(8,  next.getError());
+                ps.setInt(9,  next.getBestValue());
+                ps.setInt(10,  id);
+                ps.executeUpdate();
+                ps.clearParameters();
+            }
+            c.commit();
+        } catch (SQLException se) {
+            // XXX log a db error
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (psgroup != null) psgroup.close();
+                if (c != null) {
+                    c.rollback();
+                    c.close();
+                }
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
+        return true;
     }
 
     /* (non-Javadoc)
@@ -560,10 +616,47 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#addManualSpirometerReading(edu.asupoly.aspira.model.SpirometerReading, boolean)
      */
     @Override
-    public boolean addManualSpirometerReading(SpirometerReading sr,
-            boolean overwrite) throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean addManualSpirometerReading(SpirometerReading next, boolean overwrite) throws DMPException {
+        if (next == null) return true;
+
+        Connection c = null;
+        PreparedStatement ps = null;
+
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.addManualSpirometerReading"));
+
+            ps.setString(1, next.getDeviceId());
+            ps.setString(2, next.getPatientId());
+            ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()));
+            ps.setInt(4, next.getMeasureID());
+            ps.setBoolean(5, next.getManual());
+            ps.setInt(6, next.getPEFValue());
+            ps.setFloat(7,  next.getFEV1Value());
+            ps.setInt(8,  next.getError());
+            ps.setInt(9,  next.getBestValue());
+            ps.setInt(10,  0);
+            ps.executeUpdate();
+
+            c.commit();
+        } catch (SQLException se) {
+            // XXX log a db error
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (c != null) {
+                    c.rollback();
+                    c.close();
+                }
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
+        return true;
     }
 
     /* (non-Javadoc)
@@ -625,8 +718,49 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public boolean addOrModifySpirometer(Spirometer s, boolean overwrite)
             throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+        if (s == null) return false;
+        
+        Connection c = null;
+        PreparedStatement ps = null;
+        PreparedStatement psdml = null;
+        ResultSet rs = null;
+
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getSpirometer"));
+            ps.setString(1, s.getSerialId());
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                if (overwrite) {
+                    psdml = c.prepareStatement(__derbyProperties.getProperty("sql.modifySpirometer"));
+                } else return false;  // duplicate with no overwrite flag
+            } else {
+                psdml = c.prepareStatement(__derbyProperties.getProperty("sql.addSpirometer"));
+            }
+            // now write the new or updated Spirometer
+            psdml.setString(1, s.getVendor());
+            psdml.setString(2, s.getModel());
+            psdml.setString(3, s.getDescription());
+            psdml.setString(4, s.getAssignedToPatient());
+            psdml.setString(5, s.getSerialId());
+
+            return (psdml.executeUpdate() == 1);
+        } catch (SQLException se) {
+            // XXX log a DB problem
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (psdml != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
     }
 
     /* (non-Javadoc)
@@ -685,10 +819,44 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#addOrModifyClinician(edu.asupoly.aspira.model.Clinician, boolean)
      */
     @Override
-    public boolean addOrModifyClinician(Clinician c, boolean overwrite)
-            throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean addClinician(Clinician cl, boolean overwrite) throws DMPException {
+        if (cl == null) return false;
+
+        Connection c = null;
+        PreparedStatement ps = null;
+        PreparedStatement psdml = null;
+        ResultSet rs = null;
+
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.getAirQualityMonitor"));
+            ps.setString(1, cl.getClinicianId());
+            rs = ps.executeQuery();
+            if (!rs.next()) {
+                // Since Clinician only has an id now, if it is in there it must be the same so noop
+                psdml = c.prepareStatement(__derbyProperties.getProperty("sql.addAirQualityMonitor"));   
+
+                // now write the new or updated Patient
+                // vendor,model,description,patientid,serialid
+                psdml.setString(1, cl.getClinicianId());         
+                return (psdml.executeUpdate() == 1);
+            } else return true;
+        } catch (SQLException se) {
+            // XXX log a DB problem
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (psdml != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
     }
 
     /* (non-Javadoc)

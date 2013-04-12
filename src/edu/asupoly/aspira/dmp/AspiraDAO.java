@@ -212,9 +212,9 @@ public final class AspiraDAO implements IAspiraDAO {
     }
 
     @Override
-    public boolean addOrModifyClinician(Clinician c, boolean overwrite)
+    public boolean addClinician(Clinician c, boolean overwrite)
             throws DMPException {
         // TODO Auto-generated method stub
-        return __dao.addOrModifyClinician(c, overwrite);
+        return __dao.addClinician(c, overwrite);
     }
 }

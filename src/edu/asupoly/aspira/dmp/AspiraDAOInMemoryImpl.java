@@ -343,8 +343,7 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
      * @see edu.asupoly.aspira.dmp.AspiraDAO#addOrModifyClinician(edu.asupoly.aspira.model.Clinician, boolean)
      */
     @Override
-    public boolean addOrModifyClinician(Clinician c, boolean overwrite)
-            throws DMPException {
+    public boolean addClinician(Clinician c, boolean overwrite) throws DMPException {
         
         Clinician existing = __clinicians.get(c.getClinicianId());
         if (overwrite || existing == null) {

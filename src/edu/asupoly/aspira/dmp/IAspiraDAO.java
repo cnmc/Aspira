@@ -46,7 +46,7 @@ public interface IAspiraDAO {
     boolean addOrModifyPatient(Patient p, boolean overwrite) throws DMPException;
     boolean addOrModifySpirometer(Spirometer s, boolean overwrite) throws DMPException;
     boolean addOrModifyAirQualityMonitor(AirQualityMonitor aqm, boolean overwrite) throws DMPException;
-    boolean addOrModifyClinician(Clinician c, boolean overwrite) throws DMPException;
+    boolean addClinician(Clinician c, boolean overwrite) throws DMPException;
     
     // XXX We are going to want to track imports
 }
