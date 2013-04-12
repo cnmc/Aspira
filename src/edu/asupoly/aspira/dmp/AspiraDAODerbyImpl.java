@@ -296,8 +296,9 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
+        return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
+                __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientBetween"),
+                start, end);
     }
 
     /* (non-Javadoc)
@@ -306,19 +307,61 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId)
             throws DMPException {
+        
+        return __findAirQualityReadingsForPatientByQuery(patientId, Integer.MAX_VALUE, 
+                __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
+                null, null);
+    }
+ 
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head)
+            throws DMPException {
+        return __findAirQualityReadingsForPatientByQuery(patientId, head, 
+                __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
+                null, null);
+    }
+    
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail)
+            throws DMPException {
+        return __findAirQualityReadingsForPatientByQuery(patientId, tail, 
+                __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientTail"),
+                null, null);
+    }
+    
+    /**
+     * Used by findAirQualityReadings methods, parameterized behavior
+     * @param patientId
+     * @param tail - pass in MAXINT if not seeking the tail
+     * @param query - pass in the query from the properties
+     * @return
+     * @throws DMPException
+     */
+    private AirQualityReadings __findAirQualityReadingsForPatientByQuery(String patientId, int count, String query,
+            Date begin, Date end)
+            throws DMPException {
+        if (query == null || query.trim().length() == 0) return null;
+        
         Connection c = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         AirQualityReadings rval = new AirQualityReadings();
         try {
             c = DriverManager.getConnection(__jdbcURL);
-            ps = c.prepareStatement(__derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"));
+            ps = c.prepareStatement(query);
             ps.setString(1, patientId);
+            if (begin != null) {
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                if (end != null) {
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                }
+            }
             rs = ps.executeQuery();
-            while (rs.next()) {
+            while (rs.next() && count > 0) {
                rval.addReading(new ParticleReading(rs.getString("deviceid"), rs.getString("patientid"),
                        new Date(rs.getTimestamp("readingtime").getTime()), 
                        rs.getInt("smallparticle"), rs.getInt("largeparticle")));
+               count--;
             }
             return rval;
         } catch (SQLException se) {
@@ -339,16 +382,6 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
 
     /* (non-Javadoc)
-     * @see edu.asupoly.aspira.dmp.IAspiraDAO#findSpirometerReadingsForPatient(java.lang.String, java.util.Date, java.util.Date)
-     */
-    @Override
-    public SpirometerReadings findSpirometerReadingsForPatient(
-            String patientId, Date start, Date end) throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#findSpirometerReadingsForPatient(java.lang.String)
      */
     @Override
@@ -358,6 +391,16 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see edu.asupoly.aspira.dmp.IAspiraDAO#findSpirometerReadingsForPatient(java.lang.String, java.util.Date, java.util.Date)
+     */
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatient(
+            String patientId, Date start, Date end) throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#importAirQualityReadings(edu.asupoly.aspira.model.AirQualityReadings, boolean)
      */

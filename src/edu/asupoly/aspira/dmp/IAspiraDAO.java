@@ -31,6 +31,8 @@ public interface IAspiraDAO {
     AirQualityReadings findAirQualityReadingsForPatient(String patientId) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
+    AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail) throws DMPException;
+    AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head) throws DMPException;
     
     // CUD operations
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;

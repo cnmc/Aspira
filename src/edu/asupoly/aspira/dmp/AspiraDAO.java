@@ -148,6 +148,18 @@ public final class AspiraDAO implements IAspiraDAO {
         return __dao.findSpirometerReadingsForPatient(patientId);
     }
 
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail) 
+            throws DMPException {
+        return __dao.findAirQualityReadingsForPatientTail(patientId, tail);
+    }
+    
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head) 
+            throws DMPException {
+        return __dao.findAirQualityReadingsForPatientTail(patientId, head);
+    }
+    
     // XXX The writes are more interesting as we want to push if we have a URL to push to
     
     @Override

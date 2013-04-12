@@ -97,6 +97,36 @@ public class AirQualityReadings implements java.io.Serializable {
         return rval;
     }
     
+    public AirQualityReadings getFirstNReadings(int n) {
+        if (n <= 0) return null;
+        
+        AirQualityReadings rval = new AirQualityReadings();
+        Iterator<ParticleReading> iter = __readings.iterator();
+        while (iter.hasNext() && n > 0) {
+            rval.addReading(iter.next());
+            n--;
+        }
+        return rval;
+    }
+ 
+    public AirQualityReadings getLastNReadings(int n) {
+        if (n <= 0) return null;
+        
+        AirQualityReadings rval = new AirQualityReadings();
+        int size = __readings.size() - n;
+        Iterator<ParticleReading> iter = __readings.iterator();
+        // skip first n, none if n > number of readings we have
+        while (iter.hasNext() && size > 0) {
+            iter.next();
+            size--;
+        }
+        while (iter.hasNext() && n > 0) {
+            rval.addReading(iter.next());
+            n--;
+        }      
+        return rval;
+    }
+    
     public AirQualityReadings getAirQualityReadingsForPatient(String patientId) {
         if (patientId == null) return null;
         

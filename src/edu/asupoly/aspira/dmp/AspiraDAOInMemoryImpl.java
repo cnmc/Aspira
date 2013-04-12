@@ -175,6 +175,22 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         return __aqReadings.getAirQualityReadingsForPatient(patientId);
     }
 
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientTail(
+            String patientId, int tail) throws DMPException {
+        AirQualityReadings aqr = __aqReadings.getAirQualityReadingsForPatient(patientId);
+        if (aqr == null) return null;
+        return aqr.getLastNReadings(tail);
+    }
+
+    @Override
+    public AirQualityReadings findAirQualityReadingsForPatientHead(
+            String patientId, int head) throws DMPException {
+        AirQualityReadings aqr = __aqReadings.getAirQualityReadingsForPatient(patientId);
+        if (aqr == null) return null;
+        return aqr.getFirstNReadings(head);
+    }
+    
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.AspiraDAO#findSpirometerReadingsForPatient(java.lang.String, java.util.Date, java.util.Date)
      */
