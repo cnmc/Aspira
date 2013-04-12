@@ -1,113 +1,1926 @@
 package edu.asupoly.aspira.gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import org.json.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.GroupLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class AdministratorView extends JPanel{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5485014204648698376L;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-	public  AdministratorView(){
-		super(new GridLayout(1,1));
-		JTabbedPane tp = new JTabbedPane();
-		JButton changeReadingsButton = new JButton("Change");
-		JButton savePatientInfo = new JButton("Save");
-		JButton cancelPatientInfo = new JButton("Cancel");
-		JRadioButton medicationYes = new JRadioButton("Yes");
-		JRadioButton medicationNo = new JRadioButton("No");
-		JScrollPane readTimeArea = new JScrollPane();
-		JScrollPane medTimeArea = new JScrollPane();
-		JLabel pidLabel = new JLabel("Patient id: ");
-		JLabel readNumLabel = new JLabel("Readings per day: ");
-		JLabel medCheckLabel = new JLabel("Medication Reminder");
-		JTextField pidField = new JTextField();
-		JTextField readNumField = new JTextField("3");
-		JPanel pidPanel = new JPanel();
-		JPanel readPanel = new JPanel();
-		JPanel medPanel = new JPanel();
-		JPanel finishedPanel = new JPanel();
-		JPanel patientPanel = new JPanel();
-		JPanel logPanel = new JPanel();
-		JPanel configPanel = new JPanel();
-		patientPanel.setLayout(new BoxLayout(patientPanel, BoxLayout.Y_AXIS));
-		
-		ButtonGroup YesNogroup = new ButtonGroup();
-		YesNogroup.add(medicationYes);
-		YesNogroup.add(medicationNo);
-		
-		pidPanel.setLayout(new FlowLayout());
-		pidPanel.add(pidLabel);
-		pidPanel.add(pidField);
-		
-		readPanel.setLayout(new FlowLayout());
-		readPanel.add(readNumLabel);
-		readPanel.add(readNumField);
-		readPanel.add(changeReadingsButton);
-		
-		medPanel.setLayout(new FlowLayout());
-		medPanel.add(medCheckLabel);
-		medPanel.add(medicationYes);
-		medPanel.add(medicationNo);
-		
-		finishedPanel.setLayout(new FlowLayout());
-		finishedPanel.add(savePatientInfo);
-		finishedPanel.add(cancelPatientInfo);
-		
-		patientPanel.add(pidPanel);
-		patientPanel.add(readPanel);
-		patientPanel.add(readTimeArea);
-		patientPanel.add(medPanel);
-		patientPanel.add(medTimeArea);
-		patientPanel.add(finishedPanel);
-		
-		tp.addTab("Patient", patientPanel);
-		tp.addTab("App config", configPanel);
-		tp.addTab("Logs", logPanel);
-		
-		add(tp);
-	}
-	
-	private static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("Administrative settings");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        //Add content to the window.
-        frame.add(new AdministratorView(), BorderLayout.CENTER);
-        
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
+/**
+ *
+ * @author Richard
+ */
+@SuppressWarnings("serial")
+public class AdminConfigWindow extends javax.swing.JFrame {
+
+    /**
+     * Creates new form NewJFrame
+     * @throws org.json.simple.parser.ParseException 
+     * @throws IOException 
+     * @throws FileNotFoundException 
+     */
+    public AdminConfigWindow() throws FileNotFoundException, IOException, org.json.simple.parser.ParseException, ParseException {
+        initComponents();
     }
-	
-	public static void main(String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new Runnable() {
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     * @throws org.json.simple.parser.ParseException 
+     * @throws IOException 
+     * @throws FileNotFoundException 
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() throws FileNotFoundException, IOException, org.json.simple.parser.ParseException, ParseException {
+    	
+    	JSONParser parser = new JSONParser();
+		JSONObject jo;
+		jo = (JSONObject)parser.parse(new FileReader("Config\\config.json"));
+		JSONObject configObject = (JSONObject)jo.get("config");
+		
+
+    	albInhalTD = new TimeDialog(this);
+        albNebTD = new TimeDialog(this);
+        floDiskTD = new TimeDialog(this);
+        floInhalTD = new TimeDialog(this);
+        qvarTD = new TimeDialog(this);
+        adDiskTD = new TimeDialog(this);
+        adInhalTD = new TimeDialog(this);
+        budeTD = new TimeDialog(this);
+        pulmiTwistTD = new TimeDialog(this);
+        pulmiNebTD = new TimeDialog(this);
+        singTD = new TimeDialog(this);
+        otherTD = new TimeDialog(this);
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        PatientPanel = new javax.swing.JPanel();
+        pidLabel = new javax.swing.JLabel();
+        pidField = new javax.swing.JTextField();
+        rpdLabel = new javax.swing.JLabel();
+        readOneTimeLabel = new javax.swing.JLabel();
+        read1TimeField = new javax.swing.JTextField();
+        read1TimeCB = new javax.swing.JComboBox();
+        readTwoTimeLabel = new javax.swing.JLabel();
+        read2TimeField = new javax.swing.JTextField();
+        read2TimeCB = new javax.swing.JComboBox();
+        read3TimeLabel = new javax.swing.JLabel();
+        read3TimeField = new javax.swing.JTextField();
+        read3TimeCB = new javax.swing.JComboBox();
+        savePatientInfo = new javax.swing.JButton();
+        resetPatientInfo = new javax.swing.JButton();
+        logPanel = new javax.swing.JPanel();
+        lastSpiroLogHeader = new javax.swing.JLabel();
+        lastSpiroLogArea = new javax.swing.JLabel();
+        spiroDateTimeHeader = new javax.swing.JLabel();
+        spiroDateTimeArea = new javax.swing.JLabel();
+        spiroServerPushHeader = new javax.swing.JLabel();
+        spiroPushArea = new javax.swing.JLabel();
+        spiroPushButton = new javax.swing.JButton();
+        spiroExportedHeader = new javax.swing.JLabel();
+        spiroExportButton = new javax.swing.JButton();
+        spiroExportedArea = new javax.swing.JLabel();
+        acExportedArea = new javax.swing.JLabel();
+        acExportButton = new javax.swing.JButton();
+        lastACLogArea = new javax.swing.JLabel();
+        lastACLogHeader = new javax.swing.JLabel();
+        acPushButton = new javax.swing.JButton();
+        acExportedHeader = new javax.swing.JLabel();
+        acPushHeader = new javax.swing.JLabel();
+        acPushArea = new javax.swing.JLabel();
+        acDateTimeHeader = new javax.swing.JLabel();
+        acDateTimeArea = new javax.swing.JLabel();
+        userExportButton = new javax.swing.JButton();
+        userDateTimeArea = new javax.swing.JLabel();
+        userExportArea = new javax.swing.JLabel();
+        userInterLogArea = new javax.swing.JLabel();
+        userInteractionLogHeader = new javax.swing.JLabel();
+        userPushButton = new javax.swing.JButton();
+        userExportHeader = new javax.swing.JLabel();
+        userPushHeader = new javax.swing.JLabel();
+        userPushArea = new javax.swing.JLabel();
+        userDateTimeHeader = new javax.swing.JLabel();
+        savePatientInfo.addActionListener(new PatientSaveButtonHandler());
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("Administrator Config Window"); // NOI18N
+
+        pidLabel.setText("Patient ID: ");
+
+        pidField.setText((String)configObject.get("patientID"));
+
+        rpdLabel.setText("Readings per day: 3");
+
+        readOneTimeLabel.setText("Reading 1 Time:");
+        
+        JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+        JSONArray readingArray = (JSONArray)alertObject.get("spiroReadingTime");
+        
+        SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
+        SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm");
+        
+        Date reading = readingTimeFormat.parse((String)readingArray.get(0));
+        Date noon = readingTimeFormat.parse("1200");
+        int amOrPM = reading.compareTo(noon);
+        
+        
+
+        read1TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        read1TimeField.setText(displayFormat.format(reading));
+        read1TimeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                read1TimeFieldActionPerformed(evt);
+            }
+        });
+
+        read1TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
+        
+        if(amOrPM>=0)
+        	read1TimeCB.setSelectedIndex(0);
+        else
+        	read1TimeCB.setSelectedIndex(1);
+        
+        reading = readingTimeFormat.parse((String)readingArray.get(1));
+        amOrPM = reading.compareTo(noon);
+
+        readTwoTimeLabel.setText("Reading 2 Time:");
+
+        read2TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        read2TimeField.setText(displayFormat.format(reading));
+        read2TimeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readTwoTimeFieldActionPerformed(evt);
+            }
+        });
+
+        read2TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
+        if(amOrPM < 0)
+        	read2TimeCB.setSelectedIndex(0);
+        else
+        	read2TimeCB.setSelectedIndex(1);
+        read2TimeCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                read2TimeCBActionPerformed(evt);
+            }
+        });
+
+        read3TimeLabel.setText("Reading 3 Time:");
+        
+        reading = readingTimeFormat.parse((String)readingArray.get(2));
+        amOrPM = reading.compareTo(noon);
+
+        read3TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        read3TimeField.setText(displayFormat.format(reading));
+        read3TimeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                read3TimeFieldActionPerformed(evt);
+            }
+        });
+
+        read3TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
+        if(amOrPM < 0)
+        	read3TimeCB.setSelectedIndex(0);
+        else
+        	read3TimeCB.setSelectedIndex(1);
+        read3TimeCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                read3TimeCBActionPerformed(evt);
+            }
+        });
+
+        savePatientInfo.setText("Save");
+        savePatientInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savePatientInfoActionPerformed(evt);
+            }
+        });
+
+        resetPatientInfo.setText("Reset");
+
+        javax.swing.GroupLayout PatientPanelLayout = new javax.swing.GroupLayout(PatientPanel);
+        PatientPanel.setLayout(PatientPanelLayout);
+        PatientPanelLayout.setHorizontalGroup(
+            PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PatientPanelLayout.createSequentialGroup()
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(savePatientInfo)
+                    .addGroup(PatientPanelLayout.createSequentialGroup()
+                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(PatientPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(PatientPanelLayout.createSequentialGroup()
+                                        .addComponent(pidLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(pidField, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(rpdLabel)))
+                            .addGroup(PatientPanelLayout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(readOneTimeLabel)
+                                    .addComponent(readTwoTimeLabel)
+                                    .addComponent(read3TimeLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(read2TimeField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(read1TimeField)
+                                    .addComponent(read3TimeField, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(read1TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(resetPatientInfo)
+                .addContainerGap(353, Short.MAX_VALUE))
+        );
+        PatientPanelLayout.setVerticalGroup(
+            PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PatientPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pidLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pidField))
+                .addGap(18, 18, 18)
+                .addComponent(rpdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(readOneTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(read1TimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(read1TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(read2TimeField)
+                    .addComponent(readTwoTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(read3TimeField)
+                    .addComponent(read3TimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
+                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(savePatientInfo)
+                    .addComponent(resetPatientInfo))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Patient", PatientPanel);
+
+        lastSpiroLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lastSpiroLogHeader.setText("Last spirometer log:");
+
+        spiroDateTimeHeader.setText("Date/time");
+
+        spiroServerPushHeader.setText("Push to server");
+
+        spiroPushButton.setText("push");
+
+        spiroExportedHeader.setText("Exported");
+
+        spiroExportButton.setText("export");
+
+        acExportButton.setText("export");
+
+        lastACLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lastACLogHeader.setText("Last AC log:");
+
+        acPushButton.setText("push");
+
+        acExportedHeader.setText("Exported");
+
+        acPushHeader.setText("Push to server");
+
+        acDateTimeHeader.setText("Date/time");
+
+        userExportButton.setText("export");
+
+        userInteractionLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        userInteractionLogHeader.setText("User interaction log");
+
+        userPushButton.setText("push");
+
+        userExportHeader.setText("Exported");
+
+        userPushHeader.setText("Push to server");
+
+        userDateTimeHeader.setText("Date/time");
+
+        javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
+        logPanel.setLayout(logPanelLayout);
+        logPanelLayout.setHorizontalGroup(
+            logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastACLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(userInterLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(spiroServerPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(spiroDateTimeHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(spiroExportedHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acExportedHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(acExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acDateTimeHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userDateTimeHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userExportHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(userExportArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spiroPushButton)
+                            .addComponent(spiroExportButton)
+                            .addComponent(acExportButton)
+                            .addComponent(acPushButton)
+                            .addComponent(userExportButton)
+                            .addComponent(userPushButton))))
+                .addContainerGap(427, Short.MAX_VALUE))
+        );
+        logPanelLayout.setVerticalGroup(
+            logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spiroDateTimeHeader)
+                    .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spiroServerPushHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spiroExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(spiroPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spiroExportButton)))
+                .addGap(18, 18, 18)
+                .addComponent(lastACLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lastACLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(acDateTimeHeader)
+                    .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(acPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(acExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(acExportedArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(acPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(acExportButton)))
+                .addGap(18, 18, 18)
+                .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userInterLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(userDateTimeHeader)
+                    .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(userExportHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userExportArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(userPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userExportButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Logs", logPanel);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        layout.setHorizontalGroup(
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 681, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jTabbedPane1, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+        			.addContainerGap())
+        );
+        getContentPane().setLayout(layout);
+        configPanel = new javax.swing.JPanel();
+        alarmTypeLabel = new javax.swing.JLabel();
+        soundCB = new javax.swing.JCheckBox();
+        blinkCB = new javax.swing.JCheckBox();
+        alarmSoundPromptLabel = new javax.swing.JLabel();
+        alarmLengthField = new javax.swing.JTextField();
+        alarmTimeUnitsLabel = new javax.swing.JLabel();
+        urlToPushLabel = new javax.swing.JLabel();
+        urlField = new javax.swing.JTextField();
+        testURLButton = new javax.swing.JButton();
+        ProvisioningLabel = new javax.swing.JLabel();
+        startDateLabel = new javax.swing.JLabel();
+        endDateLabel = new javax.swing.JLabel();
+        rewardLabel = new javax.swing.JLabel();
+        rewardField = new javax.swing.JTextField();
+        spiroRangeLabel = new javax.swing.JLabel();
+        lowerTextLabel = new javax.swing.JLabel();
+        pefLowerRangeField = new javax.swing.JTextField();
+        upperRangeLabel = new javax.swing.JLabel();
+        pefUpperRangeField = new javax.swing.JTextField();
+        pollingTimeLabel = new javax.swing.JLabel();
+        pollingTimeField = new javax.swing.JTextField();
+        pollingTimeUnitLabel = new javax.swing.JLabel();
+        startDateField = new javax.swing.JTextField();
+        endDateField = new javax.swing.JTextField();
+        saveConfigButton = new javax.swing.JButton();
+        saveConfigButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		JSONParser parser = new JSONParser();
+        		JSONObject jo;
+        		JSONObject configObject;
+        		JSONObject alertObject;
+        		JSONObject deviceObject;
+        		JSONObject minObject;
+        		JSONObject maxObject;
+        		JSONObject animationObject;
+        		try {
+					jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+					configObject = (JSONObject)jo.get("config");
+					alertObject = (JSONObject)configObject.get("alertInfo");
+					
+					alertObject.put("blinkAlarm", blinkCB.isSelected());
+					alertObject.put("soundAlarm", soundCB.isSelected());
+					alertObject.put("alarmLength", alarmLengthField.getText());
+					configObject.put("pushURL", urlField.getText());
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
+					
+					animationObject = (JSONObject)configObject.get("animation");
+					
+					animationObject.put("startDate",sdf.parse(startDateField.getText()).getTime() );
+					animationObject.put("endDate",sdf.parse(endDateField.getText()).getTime() );
+					animationObject.put("totalSteps", rewardField.getText());
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (org.json.simple.parser.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch(ParseException e2){
+					// TODO write code
+				}
+        	}
+        });
+        resetConfigButton = new javax.swing.JButton();
+        
+        blinkCB.addItemListener(new AlarmCheckBoxListener());
+        soundCB.addItemListener(new AlarmCheckBoxListener());
+        
+                alarmTypeLabel.setText("Alarm Type: ");
+                
+                        soundCB.setSelected((boolean)alertObject.get("soundAlarm"));
+                        soundCB.setText("Sound");
+                        
+                                blinkCB.setSelected((boolean)alertObject.get("blinkAlarm"));
+                                blinkCB.setText("Blink");
+                                
+                                        alarmSoundPromptLabel.setText("How long alarm sounds: ");
+                                        
+                                                alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+                                                alarmLengthField.setText((String)alertObject.get("alarmLength"));
+                                                alarmLengthField.addActionListener(new java.awt.event.ActionListener() {
+                                                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                                        jTextField1ActionPerformed(evt);
+                                                    }
+                                                });
+                                                
+                                                        alarmTimeUnitsLabel.setText("minutes");
+                                                        
+                                                                urlToPushLabel.setText("URL to push readings: ");
+                                                                
+                                                                        urlField.setText((String)configObject.get("pushURL" +
+                                                                        		""));
+                                                                        
+                                                                                testURLButton.setText("Test");
+                                                                                
+                                                                                        ProvisioningLabel.setText("Provisioning: ");
+                                                                                        
+                                                                                                startDateLabel.setText("Start Date:");
+                                                                                                
+                                                                                                        endDateLabel.setText("End Date: ");
+                                                                                                        
+                                                                                                                rewardLabel.setText("Reward Steps: ");
+                                                                                                                JSONObject animationObject = (JSONObject)configObject.get("animation");
+                                                                                                                        rewardField.setText(""+(Long) animationObject.get("totalStages"));
+                                                                                                                        
+                                                                                                                                spiroRangeLabel.setText("Spirometer range: ");
+                                                                                                                                JSONObject minObject = (JSONObject)configObject.get("minValues");
+                                                                                                                                JSONObject maxObject = (JSONObject)configObject.get("maxValues");
+                                                                                                                                pefLowerRangeField.setText("" + minObject.get("PEFValue"));
+                                                                                                                                pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+                                                                                                                                        lowerTextLabel.setText("Lower");
+                                                                                                                                        
+                                                                                                                                                upperRangeLabel.setText("Upper");
+                                                                                                                                                                        
+                                                                                                                                                                                pollingTimeLabel.setText("Air Quality Polling: ");
+                                                                                                                                                                                Time pollingTime = new Time((long)configObject.get("logFileWriteFrequency"));
+                                                                                                                                                                                Calendar minutesGotDeprecated = GregorianCalendar.getInstance();
+                                                                                                                                                                                minutesGotDeprecated.setTime(pollingTime);
+                                                                                                                                                                                
+                                                                                                                                                                                        pollingTimeField.setText("" + pollingTime.getMinutes());
+                                                                                                                                                                                        
+                                                                                                                                                                                                pollingTimeUnitLabel.setText("minutes");
+                                                                                                                                                                                                
+                                                                                                                                                                                                SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
+                                                                                                                                                                                                Date startDate = new Date((long)animationObject.get("startDateMilliSec"));
+                                                                                                                                                                                                Date endDate = new Date((long)animationObject.get("endDateMilliSec"));
+                                                                                                                                                                                                        startDateField.setText(startAndEndFormat.format(startDate));
+                                                                                                                                                                                                        
+                                                                                                                                                                                                                endDateField.setText(startAndEndFormat.format(endDate));
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                        saveConfigButton.setText("Save");
+                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                resetConfigButton.setText("Reset");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JCheckBox chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JSONObject dynamicObject = (JSONObject)configObject.get("dynamicAlerts");
+                                                                                                                                                                                                                                        chckbxEnableDynamicAlerts.setSelected((boolean)dynamicObject.get("enabled"));
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel lblCurrentMeanParticle = new JLabel("Current mean particle read:");
+                                                                                                                                                                                                                                        lblCurrentMeanParticle.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                                                                                                                                                                        double mean = (double)dynamicObject.get("mean");
+                                                                                                                                                                                                                                        double deviation = (double)dynamicObject.get("deviation");
+                                                                                                                                                                                                                                        double yellow = mean + deviation;
+                                                                                                                                                                                                                                        double red = mean + 2*deviation;
+                                                                                                                                                                                                                                        JLabel meanParticleDisplay = new JLabel(""+ mean);
+                                                                                                                                                                                                                                        meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel lblCurrentStandardDeviation = new JLabel("Current standard deviation:");
+                                                                                                                                                                                                                                        lblCurrentStandardDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel standardDeviationDisplay = new JLabel("" + deviation);
+                                                                                                                                                                                                                                        standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel lblYellowZone = new JLabel("Yellow Zone:");
+                                                                                                                                                                                                                                        lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel lblRedZone = new JLabel("Red Zone:");
+                                                                                                                                                                                                                                        lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        yellowZoneField = new JTextField();
+                                                                                                                                                                                                                                        yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
+                                                                                                                                                                                                                                        yellowZoneField.setColumns(10);
+                                                                                                                                                                                                                                        yellowZoneField.setText(""+yellow);
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        redZoneField = new JTextField();
+                                                                                                                                                                                                                                        redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
+                                                                                                                                                                                                                                        redZoneField.setColumns(10);
+                                                                                                                                                                                                                                        redZoneField.setText(""+red);
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel pefRangeLabel = new JLabel("PEF");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel fevRangeLabel = new JLabel("Fev1");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel lblLower = new JLabel("Lower");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        fevLowerRangeField = new JTextField();
+                                                                                                                                                                                                                                        fevLowerRangeField.setColumns(10);
+                                                                                                                                                                                                                                        fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JLabel fevUpperLabel = new JLabel("Upper");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        fevUpperField = new JTextField();
+                                                                                                                                                                                                                                        fevUpperField.setColumns(10);
+                                                                                                                                                                                                                                        fevUpperField.setText("" + maxObject.get("FEVValue"));
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        JSONObject deviceObject = (JSONObject)configObject.get("device");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        lblSerial = new JLabel("Serial#:");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        serialField = new JTextField();
+                                                                                                                                                                                                                                        serialField.setColumns(10);
+                                                                                                                                                                                                                                        serialField.setText((String)deviceObject.get("serial"));
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        lblVendor = new JLabel("Vendor:");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        vendorField = new JTextField();
+                                                                                                                                                                                                                                        vendorField.setColumns(10);
+                                                                                                                                                                                                                                        vendorField.setText((String)deviceObject.get("vendor"));
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        lblDevice = new JLabel("Device:");
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                        deviceField = new JTextField();
+                                                                                                                                                                                                                                        deviceField.setColumns(10);
+                                                                                                                                                                                                                                        deviceField.setText((String)deviceObject.get("name"));
+                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                        javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
+                                                                                                                                                                                                                                        configPanelLayout.setHorizontalGroup(
+                                                                                                                                                                                                                                        	configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                        		.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addContainerGap()
+                                                                                                                                                                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                                                                                                                                                                                        							.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        								.addComponent(alarmSoundPromptLabel)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        								.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        								.addComponent(alarmTimeUnitsLabel))
+                                                                                                                                                                                                                                        							.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        								.addComponent(alarmTypeLabel)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                                                                                                        								.addComponent(soundCB)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        								.addComponent(blinkCB)))
+                                                                                                                                                                                                                                        						.addComponent(chckbxEnableDynamicAlerts)
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(spiroRangeLabel)
+                                                                                                                                                                                                                                        							.addGap(18)
+                                                                                                                                                                                                                                        							.addComponent(pefRangeLabel)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(lowerTextLabel)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        							.addGap(12)
+                                                                                                                                                                                                                                        							.addComponent(upperRangeLabel)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        							.addGap(10)
+                                                                                                                                                                                                                                        							.addComponent(fevRangeLabel)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(lblLower)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        							.addComponent(fevUpperLabel)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(fevUpperField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblCurrentStandardDeviation)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                                                                                                        								.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        									.addComponent(saveConfigButton)
+                                                                                                                                                                                                                                        									.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        									.addComponent(resetConfigButton))
+                                                                                                                                                                                                                                        								.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        									.addComponent(urlToPushLabel)
+                                                                                                                                                                                                                                        									.addGap(18)
+                                                                                                                                                                                                                                        									.addComponent(urlField, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(testURLButton))
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                                                                                                        							.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        								.addComponent(endDateLabel)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        								.addComponent(endDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        							.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        								.addComponent(ProvisioningLabel)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        								.addComponent(startDateLabel)
+                                                                                                                                                                                                                                        								.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        								.addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblCurrentMeanParticle)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addContainerGap()
+                                                                                                                                                                                                                                        					.addComponent(pollingTimeLabel)
+                                                                                                                                                                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        					.addComponent(pollingTimeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        					.addComponent(pollingTimeUnitLabel))
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addGap(89)
+                                                                                                                                                                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblRedZone)
+                                                                                                                                                                                                                                        							.addGap(18)
+                                                                                                                                                                                                                                        							.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblYellowZone)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        							.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addContainerGap()
+                                                                                                                                                                                                                                        					.addComponent(rewardLabel)
+                                                                                                                                                                                                                                        					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        					.addComponent(rewardField, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addContainerGap()
+                                                                                                                                                                                                                                        					.addComponent(lblSerial)
+                                                                                                                                                                                                                                        					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        					.addComponent(serialField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        					.addContainerGap()
+                                                                                                                                                                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                                                                                                                                                                        						.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblVendor)
+                                                                                                                                                                                                                                        							.addGap(10)
+                                                                                                                                                                                                                                        							.addComponent(vendorField, 0, 0, Short.MAX_VALUE))
+                                                                                                                                                                                                                                        						.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        							.addComponent(lblDevice)
+                                                                                                                                                                                                                                        							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        							.addComponent(deviceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                                                                                                                                                                                                                                        			.addContainerGap(144, Short.MAX_VALUE))
+                                                                                                                                                                                                                                        );
+                                                                                                                                                                                                                                        configPanelLayout.setVerticalGroup(
+                                                                                                                                                                                                                                        	configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                        		.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                        			.addContainerGap()
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(alarmTypeLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(soundCB)
+                                                                                                                                                                                                                                        				.addComponent(blinkCB))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(alarmTimeUnitsLabel))
+                                                                                                                                                                                                                                        			.addGap(18)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(urlToPushLabel)
+                                                                                                                                                                                                                                        				.addComponent(urlField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(testURLButton))
+                                                                                                                                                                                                                                        			.addGap(18)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(ProvisioningLabel)
+                                                                                                                                                                                                                                        				.addComponent(startDateLabel)
+                                                                                                                                                                                                                                        				.addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(endDateLabel)
+                                                                                                                                                                                                                                        				.addComponent(endDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(rewardLabel)
+                                                                                                                                                                                                                                        				.addComponent(rewardField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblSerial)
+                                                                                                                                                                                                                                        				.addComponent(serialField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(vendorField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(lblVendor))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblDevice)
+                                                                                                                                                                                                                                        				.addComponent(deviceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addGap(21)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(spiroRangeLabel)
+                                                                                                                                                                                                                                        				.addComponent(pefRangeLabel)
+                                                                                                                                                                                                                                        				.addComponent(lowerTextLabel)
+                                                                                                                                                                                                                                        				.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(upperRangeLabel)
+                                                                                                                                                                                                                                        				.addComponent(fevRangeLabel)
+                                                                                                                                                                                                                                        				.addComponent(lblLower)
+                                                                                                                                                                                                                                        				.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(fevUpperLabel)
+                                                                                                                                                                                                                                        				.addComponent(fevUpperField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addComponent(chckbxEnableDynamicAlerts)
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblCurrentMeanParticle)
+                                                                                                                                                                                                                                        				.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblCurrentStandardDeviation)
+                                                                                                                                                                                                                                        				.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addGap(3)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblYellowZone)
+                                                                                                                                                                                                                                        				.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(lblRedZone)
+                                                                                                                                                                                                                                        				.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        			.addGap(11)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(pollingTimeLabel)
+                                                                                                                                                                                                                                        				.addComponent(pollingTimeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(pollingTimeUnitLabel))
+                                                                                                                                                                                                                                        			.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                        				.addComponent(resetConfigButton)
+                                                                                                                                                                                                                                        				.addComponent(saveConfigButton)))
+                                                                                                                                                                                                                                        );
+                                                                                                                                                                                                                                        configPanel.setLayout(configPanelLayout);
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                jTabbedPane1.addTab("App Config", configPanel);
+                                                                                                                                                                                                                                                MedicationPanel = new javax.swing.JPanel();
+                                                                                                                                                                                                                                                medPannelSaveButton = new javax.swing.JButton();
+                                                                                                                                                                                                                                                medResetClearButton = new javax.swing.JButton();
+                                                                                                                                                                                                                                                albInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                albNebCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                floDiskCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                floInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                qvarCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                adDiskCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                adInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                budesonideCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                pulmiTwistCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                otherMedCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                singulairCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                otherMedField = new javax.swing.JTextField();
+                                                                                                                                                                                                                                                pulmiNebCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                albInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                albNebCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                floDiskCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                floInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                qvarCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                adDiskCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                adInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                budesonideCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                singulairCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                otherMedCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                        medPannelSaveButton.setText("Save");
+                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                medResetClearButton.setText("Reset");
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                        albInhalCB.setText("Albuteral (inhaler)");
+                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                albNebCB.setText("Albuterol (nebulizer)");
+                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                        floDiskCB.setText("Flovent (diskus)");
+                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                floInhalCB.setText("Flovent (inhaler)");
+                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                        qvarCB.setText("Qvar");
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                adDiskCB.setText("Advair (diskus)");
+                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                        adInhalCB.setText("Advair (inhaler)");
+                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                budesonideCB.setText("Budesonide");
+                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                        pulmiTwistCB.setText("Pulmicort (twisthaler)");
+                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                otherMedCB.setText("Other:");
+                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                        singulairCB.setText("Singulair");
+                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                otherMedField.setText("Other");
+                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebCB.setText("Pulmicort (nebulizer)");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblOtherTimes = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albuInTimesLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albuNebTimesLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floDiskTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floInhalTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        qvarTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adDiskusTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adInhalTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        budeTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        singTimeLabel = new JLabel("Times:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albuInhalFreField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        albuInhalFreField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        albuInhalFreField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        albuInhalFreField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        albuInhalFreField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albuNebFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        albuNebTimesLabel.setLabelFor(albuNebFreqField);
+                                                                                                                                                                                                                                                                                                                                                                        albuNebFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        albuNebFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        albuNebFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        albuNebFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floDiskFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        floDiskFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        floDiskFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        floDiskFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        floDiskFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floInhalFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        floInhalFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        floInhalFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        floInhalFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        floInhalFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        qvarFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        qvarFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        qvarFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        qvarFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        qvarFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adDiskFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        adDiskFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        adDiskFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        adDiskFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        adDiskFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adInhalFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        adInhalFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        adInhalFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        adInhalFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        adInhalFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        budeFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        budeFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        budeFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        budeFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        budeFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmTwistFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        pulmTwistFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        pulmTwistFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        pulmTwistFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        pulmTwistFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmNebFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        pulmNebFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        pulmNebFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        pulmNebFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        pulmNebFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        singFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        singFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        singFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        singFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        singFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        otherFreqField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        otherFreqField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        otherFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        otherFreqField.setEditable(false);
+                                                                                                                                                                                                                                                                                                                                                                        otherFreqField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblAlbInhalDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblAlbuNebDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblFloDiskDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblFloInhalDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblQvarDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblAdvairDiskDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblAdvairInhaleDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblBudeDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblPulmiTwistDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblPulmiNebDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblSingulairDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        lblOtherDoses = new JLabel("Doses:");
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albInhalDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        albInhalDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        albInhalDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        albInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        albInhalDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        albNebDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        albNebDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        albNebDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        albNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        albNebDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floDiskDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        floDiskDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        floDiskDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        floDiskDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        floDiskDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        floInhalDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        floInhalDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        floInhalDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        floInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        floInhalDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        qvarDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        qvarDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        qvarDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        qvarDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        qvarDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adDiskDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        adDiskDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        adDiskDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        adDiskDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        adDiskDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        adInhalDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        adInhalDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        adInhalDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        adInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        adInhalDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        budeDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        budeDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        budeDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        budeDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        budeDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        pulmiNebDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        singDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        singDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        singDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        singDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        singDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                        otherDoseField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                        otherDoseField.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        otherDoseField.setText("1");
+                                                                                                                                                                                                                                                                                                                                                                        otherDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
+                                                                                                                                                                                                                                                                                                                                                                        otherDoseField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbNeb = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbNeb.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		albNebTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbNeb.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnFloDisk = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnFloDisk.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		floDiskTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnFloDisk.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnFloInhal = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnFloInhal.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		floInhalTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnFloInhal.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnQvar = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnQvar.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		qvarTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnQvar.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnAdDisk = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnAdDisk.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		adDiskTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnAdDisk.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnAdInhal = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnAdInhal.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		adInhalTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnAdInhal.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnBude = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnBude.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		budeTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnBude.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiTwist = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiTwist.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		pulmiTwistTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiTwist.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiNeb = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiNeb.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		pulmiNebTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                btnPulmiNeb.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnSing = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnSing.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		singTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnSing.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnOther = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnOther.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		otherTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnOther.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbInhal = new JButton("Select Times");
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbInhal.addMouseListener(new MouseAdapter() {
+                                                                                                                                                                                                                                                                                                                                                                                	@Override
+                                                                                                                                                                                                                                                                                                                                                                                	public void mouseClicked(MouseEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                		albInhalTD.setVisible(true);
+                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                btnAlbInhal.setEnabled(false);
+                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
+                                                                                                                                                                                                                                                                                                                                                                                MedicationPanelLayout.setHorizontalGroup(
+                                                                                                                                                                                                                                                                                                                                                                                	MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                		.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                                                                                                                                                                                                                                                                                                                                				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                					.addGap(258)
+                                                                                                                                                                                                                                                                                                                                                                                					.addComponent(medPannelSaveButton))
+                                                                                                                                                                                                                                                                                                                                                                                				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                					.addContainerGap()
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherMedCB)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(albInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(albNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budesonideCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiTwistCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singulairCB))
+                                                                                                                                                                                                                                                                                                                                                                                					.addGap(18)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(singTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(singFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnSing, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(pulmiNebTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(pulmNebFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnPulmiNeb, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(pulmiTwistTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(pulmTwistFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnPulmiTwist, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(budeTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(budeFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnBude, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(adInhalTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(adInhalFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnAdInhal, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(adDiskusTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(adDiskFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnAdDisk, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(qvarTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(qvarFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnQvar, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(floInhalTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(floInhalFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnFloInhal, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(floDiskTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(floDiskFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnFloDisk, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(albuNebTimesLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(albuNebFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnAlbNeb, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(albuInTimesLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(albuInhalFreField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnAlbInhal))
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(lblOtherTimes)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnOther, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)))))
+                                                                                                                                                                                                                                                                                                                                                                                			.addGap(25)
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(medResetClearButton)
+                                                                                                                                                                                                                                                                                                                                                                                				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                					.addGap(117)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblFloInhalDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblFloDiskDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAlbuNebDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAlbInhalDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblQvarDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAdvairDiskDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAdvairInhaleDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblBudeDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblPulmiTwistDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblPulmiNebDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblSingulairDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblOtherDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(otherDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(albInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budeDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiTwistDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                                                                                                                                                                                                			.addContainerGap(100, Short.MAX_VALUE))
+                                                                                                                                                                                                                                                                                                                                                                                );
+                                                                                                                                                                                                                                                                                                                                                                                MedicationPanelLayout.setVerticalGroup(
+                                                                                                                                                                                                                                                                                                                                                                                	MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                                                                                                                                                                                                                                                		.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                			.addContainerGap()
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albuInTimesLabel)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albuInhalFreField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(lblAlbInhalDoses)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(btnAlbInhal))
+                                                                                                                                                                                                                                                                                                                                                                                			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albuNebTimesLabel)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albuNebFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(lblAlbuNebDoses)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(btnAlbNeb))
+                                                                                                                                                                                                                                                                                                                                                                                			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(floDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(floDiskTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(floDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(lblFloDiskDoses)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(btnFloDisk))
+                                                                                                                                                                                                                                                                                                                                                                                			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblFloInhalDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(floInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblQvarDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(qvarDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnQvar))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskusTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAdvairDiskDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnAdDisk))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblAdvairInhaleDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(adInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnAdInhal))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budesonideCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budeTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budeFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblBudeDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(budeDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnBude))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiTwistCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiTwistTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmTwistFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblPulmiTwistDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiTwistDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnPulmiTwist))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiNebTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmNebFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblPulmiNebDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(pulmiNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnPulmiNeb))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singulairCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singTimeLabel)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(lblSingulairDoses)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(singDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(btnSing))
+                                                                                                                                                                                                                                                                                                                                                                                					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                                                                                                                                                                                                                                                						.addComponent(otherMedCB)
+                                                                                                                                                                                                                                                                                                                                                                                						.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(lblOtherTimes)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(lblOtherDoses)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(otherDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                							.addComponent(btnOther))))
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(btnFloInhal))
+                                                                                                                                                                                                                                                                                                                                                                                			.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                                                                                                                                                                                                                                                                                                                                                                                			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(medPannelSaveButton)
+                                                                                                                                                                                                                                                                                                                                                                                				.addComponent(medResetClearButton))
+                                                                                                                                                                                                                                                                                                                                                                                			.addContainerGap())
+                                                                                                                                                                                                                                                                                                                                                                                );
+                                                                                                                                                                                                                                                                                                                                                                                MedicationPanel.setLayout(MedicationPanelLayout);
+                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                        jTabbedPane1.addTab("Medication", MedicationPanel);
+
+        pack();
+    }// </editor-fold>                        
+
+    private void savePatientInfoActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
+    }                                               
+
+    private void read3TimeCBActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void read3TimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void read2TimeCBActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void readTwoTimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void read1TimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void pidFieldActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void startDateFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void blinkTypeCheckMouseClicked(java.awt.event.MouseEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void blinkTypeCheckStateChanged(javax.swing.event.ChangeEvent evt) {                                            
+
+    }                                           
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AdminConfigWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdminConfigWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdminConfigWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdminConfigWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //Turn off metal's use of bold fonts
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
-		createAndShowGUI();
+               try {
+				try {
+					thisFrame = new AdminConfigWindow();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+               thisFrame.setVisible(true);
             }
         });
     }
+    // Variables declaration - do not modify                     
+    private javax.swing.JPanel MedicationPanel;
+    private javax.swing.JPanel PatientPanel;
+    private javax.swing.JLabel ProvisioningLabel;
+    private javax.swing.JLabel acDateTimeArea;
+    private javax.swing.JLabel acDateTimeHeader;
+    private javax.swing.JButton acExportButton;
+    private javax.swing.JLabel acExportedArea;
+    private javax.swing.JLabel acExportedHeader;
+    private javax.swing.JLabel acPushArea;
+    private javax.swing.JButton acPushButton;
+    private javax.swing.JLabel acPushHeader;
+    private javax.swing.JCheckBox adDiskCB;
+    private javax.swing.JCheckBox adInhalCB;
+    private javax.swing.JLabel alarmSoundPromptLabel;
+    private javax.swing.JLabel alarmTimeUnitsLabel;
+    private javax.swing.JLabel alarmTypeLabel;
+    private javax.swing.JCheckBox albInhalCB;
+    private javax.swing.JCheckBox albNebCB;
+    private javax.swing.JCheckBox blinkCB;
+    private javax.swing.JCheckBox budesonideCB;
+    private javax.swing.JButton resetPatientInfo;
+    private javax.swing.JPanel configPanel;
+    private javax.swing.JTextField endDateField;
+    private javax.swing.JLabel endDateLabel;
+    private javax.swing.JCheckBox floDiskCB;
+    private javax.swing.JCheckBox floInhalCB;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField alarmLengthField;
+    private javax.swing.JLabel lastACLogArea;
+    private javax.swing.JLabel lastACLogHeader;
+    private javax.swing.JLabel lastSpiroLogArea;
+    private javax.swing.JLabel lastSpiroLogHeader;
+    private javax.swing.JPanel logPanel;
+    private javax.swing.JTextField pefLowerRangeField;
+    private javax.swing.JLabel lowerTextLabel;
+    private javax.swing.JButton medResetClearButton;
+    private javax.swing.JButton medPannelSaveButton;
+    private javax.swing.JCheckBox otherMedCB;
+    private javax.swing.JTextField otherMedField;
+    private javax.swing.JTextField pidField;
+    private javax.swing.JLabel pidLabel;
+    private javax.swing.JTextField pollingTimeField;
+    private javax.swing.JLabel pollingTimeLabel;
+    private javax.swing.JLabel pollingTimeUnitLabel;
+    private javax.swing.JCheckBox pulmiNebCB;
+    private javax.swing.JCheckBox pulmiTwistCB;
+    private javax.swing.JCheckBox qvarCB;
+    private javax.swing.JComboBox read1TimeCB;
+    private javax.swing.JTextField read1TimeField;
+    private javax.swing.JComboBox read2TimeCB;
+    private javax.swing.JComboBox read3TimeCB;
+    private javax.swing.JTextField read3TimeField;
+    private javax.swing.JLabel read3TimeLabel;
+    private javax.swing.JLabel readOneTimeLabel;
+    private javax.swing.JTextField read2TimeField;
+    private javax.swing.JLabel readTwoTimeLabel;
+    private javax.swing.JButton resetConfigButton;
+    private javax.swing.JTextField rewardField;
+    private javax.swing.JLabel rewardLabel;
+    private javax.swing.JLabel rpdLabel;
+    private javax.swing.JButton saveConfigButton;
+    private javax.swing.JButton savePatientInfo;
+    private javax.swing.JCheckBox singulairCB;
+    private javax.swing.JCheckBox soundCB;
+    private javax.swing.JLabel spiroDateTimeArea;
+    private javax.swing.JLabel spiroDateTimeHeader;
+    private javax.swing.JButton spiroExportButton;
+    private javax.swing.JLabel spiroExportedArea;
+    private javax.swing.JLabel spiroExportedHeader;
+    private javax.swing.JLabel spiroPushArea;
+    private javax.swing.JButton spiroPushButton;
+    private javax.swing.JLabel spiroRangeLabel;
+    private javax.swing.JLabel spiroServerPushHeader;
+    private javax.swing.JTextField startDateField;
+    private javax.swing.JLabel startDateLabel;
+    private javax.swing.JButton testURLButton;
+    private javax.swing.JTextField pefUpperRangeField;
+    private javax.swing.JLabel upperRangeLabel;
+    private javax.swing.JTextField urlField;
+    private javax.swing.JLabel urlToPushLabel;
+    private javax.swing.JLabel userDateTimeArea;
+    private javax.swing.JLabel userDateTimeHeader;
+    private javax.swing.JLabel userExportArea;
+    private javax.swing.JButton userExportButton;
+    private javax.swing.JLabel userExportHeader;
+    private javax.swing.JLabel userInterLogArea;
+    private javax.swing.JLabel userInteractionLogHeader;
+    private javax.swing.JLabel userPushArea;
+    private javax.swing.JButton userPushButton;
+    private javax.swing.JLabel userPushHeader;
+    private static JFrame thisFrame;
+    private JTextField yellowZoneField;
+    private JTextField redZoneField;
+    private JLabel lblOtherTimes;
+    private JLabel albuInTimesLabel;
+    private JLabel albuNebTimesLabel;
+    private JLabel floDiskTimeLabel;
+    private JLabel floInhalTimeLabel;
+    private JLabel qvarTimeLabel;
+    private JLabel adDiskusTimeLabel;
+    private JLabel adInhalTimeLabel;
+    private JLabel budeTimeLabel;
+    private JLabel pulmiTwistTimeLabel;
+    private JLabel pulmiNebTimeLabel;
+    private JLabel singTimeLabel;
+    private JTextField albuInhalFreField;
+    private JTextField albuNebFreqField;
+    private JTextField floDiskFreqField;
+    private JTextField floInhalFreqField;
+    private JTextField qvarFreqField;
+    private JTextField adDiskFreqField;
+    private JTextField adInhalFreqField;
+    private JTextField budeFreqField;
+    private JTextField pulmTwistFreqField;
+    private JTextField pulmNebFreqField;
+    private JTextField singFreqField;
+    private JTextField otherFreqField;
+    private JLabel lblAlbInhalDoses;
+    private JLabel lblAlbuNebDoses;
+    private JLabel lblFloDiskDoses;
+    private JLabel lblFloInhalDoses;
+    private JLabel lblQvarDoses;
+    private JLabel lblAdvairDiskDoses;
+    private JLabel lblAdvairInhaleDoses;
+    private JLabel lblBudeDoses;
+    private JLabel lblPulmiTwistDoses;
+    private JLabel lblPulmiNebDoses;
+    private JLabel lblSingulairDoses;
+    private JLabel lblOtherDoses;
+    private JTextField albInhalDoseField;
+    private JTextField albNebDoseField;
+    private JTextField floDiskDoseField;
+    private JTextField floInhalDoseField;
+    private JTextField qvarDoseField;
+    private JTextField adDiskDoseField;
+    private JTextField adInhalDoseField;
+    private JTextField budeDoseField;
+    private JTextField pulmiTwistDoseField;
+    private JTextField pulmiNebDoseField;
+    private JTextField singDoseField;
+    private JTextField otherDoseField;
+    TimeDialog albInhalTD;
+    TimeDialog albNebTD;
+    TimeDialog floDiskTD;
+    TimeDialog floInhalTD;
+    TimeDialog qvarTD;
+    TimeDialog adDiskTD;
+    TimeDialog adInhalTD;
+    TimeDialog budeTD;
+    TimeDialog pulmiTwistTD;
+    TimeDialog pulmiNebTD;
+    TimeDialog singTD;
+    TimeDialog otherTD;
+    private JButton btnAlbNeb;
+    private JButton btnFloDisk;
+    private JButton btnFloInhal;
+    private JButton btnQvar;
+    private JButton btnAdDisk;
+    private JButton btnAdInhal;
+    private JButton btnBude;
+    private JButton btnPulmiTwist;
+    private JButton btnPulmiNeb;
+    private JButton btnSing;
+    private JButton btnOther;
+    private JButton btnAlbInhal;
+    private JTextField fevLowerRangeField;
+    private JTextField fevUpperField;
+    private JLabel lblSerial;
+    private JTextField serialField;
+    private JLabel lblVendor;
+    private JTextField vendorField;
+    private JLabel lblDevice;
+    private JTextField deviceField;
+    // End of variables declaration
     
-
+    private class MedicineCheckBoxListener implements ItemListener{
+        public void itemStateChanged(ItemEvent e) {
+        	btnAlbNeb.setEnabled(albNebCB.isSelected());
+        	btnOther.setEnabled(otherMedCB.isSelected());
+            btnSing.setEnabled(singulairCB.isSelected());
+            btnPulmiNeb.setEnabled(pulmiNebCB.isSelected());
+            btnPulmiTwist.setEnabled(pulmiTwistCB.isSelected());
+            btnBude.setEnabled(budesonideCB.isSelected());
+            btnFloDisk.setEnabled(floDiskCB.isSelected());
+            btnFloInhal.setEnabled(floInhalCB.isSelected());
+            btnQvar.setEnabled(qvarCB.isSelected());
+            btnAdDisk.setEnabled(adDiskCB.isSelected());
+            btnAdInhal.setEnabled(adInhalCB.isSelected());
+            btnAlbInhal.setEnabled(albInhalCB.isSelected());
+            otherDoseField.setEnabled(otherMedCB.isSelected());
+            singDoseField.setEnabled(singulairCB.isSelected());
+            pulmiNebDoseField.setEnabled(pulmiNebCB.isSelected());
+            pulmiTwistDoseField.setEnabled(pulmiTwistCB.isSelected());
+            budeDoseField.setEnabled(budesonideCB.isSelected());
+            floDiskDoseField.setEnabled(floDiskCB.isSelected());
+            floInhalDoseField.setEnabled(floInhalCB.isSelected());
+            qvarDoseField.setEnabled(qvarCB.isSelected());
+            adDiskDoseField.setEnabled(adDiskCB.isSelected());
+            adInhalDoseField.setEnabled(adInhalCB.isSelected());
+            albInhalDoseField.setEnabled(albInhalCB.isSelected());
+            albNebDoseField.setEnabled(albNebCB.isSelected());
+         }
+    }
+    
+    private class AlarmCheckBoxListener implements ItemListener{
+    	public void itemStateChanged(ItemEvent e){
+    		JCheckBox source = (JCheckBox)e.getSource();
+    		if(!blinkCB.isSelected()&&!soundCB.isSelected())
+    		{
+    			JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
+    					"Error", JOptionPane.ERROR_MESSAGE);
+    			source.setSelected(true);
+    		}
+    	}
+    }
+    
+    private class PatientSaveButtonHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			JSONParser parser = new JSONParser();
+			JSONObject jo = null;
+			JSONObject configObject = null;
+			JSONObject alertObject = null;
+				try {
+					jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+					configObject = (JSONObject)jo.get("config");
+					alertObject = (JSONObject)configObject.get("alertInfo");
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (org.json.simple.parser.ParseException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			Date reading1=null;
+			Date reading2=null;
+			Date reading3=null;
+			Boolean validInputs = true;
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+				try {
+					reading1 = sdf.parse(read1TimeField.getText() + " " + read1TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				try {
+					reading2 = sdf.parse(read2TimeField.getText() + " " + read2TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				try {
+					reading3 = sdf.parse(read3TimeField.getText() + " " + read3TimeCB.getSelectedItem());
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 time is invalid", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					validInputs = false;
+				}
+				
+				if(validInputs)
+				{
+					if(reading1.compareTo(reading2)>0)
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 must occur after reading 1", 
+		    					"Error", JOptionPane.ERROR_MESSAGE);
+					else if(reading1.compareTo(reading3)>0)
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 1", 
+		    					"Error", JOptionPane.ERROR_MESSAGE);
+					else if(reading2.compareTo(reading3)>0)
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 2", 
+	    					"Error", JOptionPane.ERROR_MESSAGE);
+					if(jo != null){
+						JSONArray readings = new JSONArray();
+						SimpleDateFormat readingFormat = new SimpleDateFormat("HHmm");
+						readings.add(readingFormat.format(reading1));
+						readings.add(readingFormat.format(reading2));
+						readings.add(readingFormat.format(reading3));
+						alertObject.put("spiroReadingTime", readings);
+						configObject.put("alertInfo", alertObject);
+						try{
+							configObject.put("patientID", pidField.getText());
+						}
+						catch(NullPointerException npe)
+						{
+							JOptionPane.showMessageDialog(AdminConfigWindow.this, "Please enter a patient ID", 
+									"No patient ID", JOptionPane.ERROR_MESSAGE);
+						}
+						jo.put("config", configObject);
+						
+						try {
+							FileWriter jsonWriter = new FileWriter("Config/config.json");
+							jsonWriter.write(jo.toJSONString());
+							jsonWriter.flush();
+							jsonWriter.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			
+		}
+    }
 }
