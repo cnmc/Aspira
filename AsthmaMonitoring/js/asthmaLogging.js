@@ -56,17 +56,23 @@ function writeTextLogfile() {
    
 
 }
-function appendLog(content) {
+
+function appendLog(eventType, target, value) {
     //getLogFile();
-    var bufferedLogArray = new Array(); 
-    
+    var bufferedLogString = new String();
+   // var bufferedLogArray = new Array(); 
     if (AsthmaGlobals.logString != undefined && AsthmaGlobals.logString != null) {
-        bufferedLogArray = AsthmaGlobals.logString;
+     //   bufferedLogArray = AsthmaGlobals.logString;
+        bufferedLogString = AsthmaGlobals.logString;
     }
     var currDate = new Date().toDateString();
     var currTime = new Date().toTimeString();
-    var latestLog =  "at-"+ currDate + " " + currTime + " - " + content+'\n' ;
-    bufferedLogArray.push(latestLog);
-    AsthmaGlobals.logString = bufferedLogArray;
+    var latestLog = AsthmaGlobals.fileConfig.config.pateintID + " , " +
+         AsthmaGlobals.fileConfig.config.deviceID + " , " +
+          AsthmaGlobals.fileConfig.config.buildVer + " , " + eventType + " , " +
+          target + " , " + value + " , " + currDate + " " + currTime +  '\n';
+    bufferedLogString += latestLog;
+   // bufferedLogArray.push(latestLog);
+    AsthmaGlobals.logString = bufferedLogString;
     initializeLogging();
 }

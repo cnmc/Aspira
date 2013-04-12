@@ -1,5 +1,8 @@
 {
    "config":{
+		"pateintID":1,
+		"deviceID":1,
+		"buildVer" : "0.0.18",
       "animation":{
          "totalStages":3,
          "totalDays":3,
@@ -9,8 +12,7 @@
       },
       "alertInfo":{
          "spiroReadingTime":[
-            "0111",
-            "1745",
+            "0033",
             "0108",
             "1727",
             "1914",
@@ -23,7 +25,8 @@
          ],
 		 "medicationAlertText":"You should take the prescribed medication now.",
 		 "dynamicReadingAlertText" : "The air quality doesn't seem good, please take a reading.",
-		 "intervalInTwoReadings" : 60000
+		 "intervalInTwoReadings" : 120000,
+		 "symptomBoxText": "Are You having Symptoms?"
       },
       "maxValues":{
          "PEFValue":600,
@@ -34,7 +37,8 @@
          "FEVValue":100
       },
       "logFileWriteFrequency":10000,
-	  
+		 "contactName": "Abcs Def",
+		 "contactPhone": "4806038683",
 	  "airQualityConfig":{
 		"monitorServicePollingTime":100000,
 		"yellowZone": 456,

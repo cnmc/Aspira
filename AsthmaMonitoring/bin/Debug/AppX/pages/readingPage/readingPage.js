@@ -55,6 +55,7 @@
 
         navHelpPage: function (eventInfo) {
             var invokingHelpIcon = eventInfo.currentTarget.id;
+            appendLog("navigation", "application", "Seek Help");
             WinJS.Navigation.navigate("/pages/helpDisplay/helpDisplay.html", {"displayContent" : invokingHelpIcon});
         },
 
@@ -62,7 +63,7 @@
             // TODO: Respond to navigations away from this page.
         }, 
         changeScreenFev: function () {
-            appendLog("User completed PEF reading");
+            appendLog("navigation", "application", "PEF Complete");
             Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] =
                 document.getElementById("PEFValue").value;
 
@@ -82,7 +83,8 @@
 
     function validateInput(feildName) {
         var currValueEntered = document.getElementById(feildName).value.trim();
-        appendLog("in " + feildName + " text box, user entered " + currValueEntered);
+        appendLog("data entry", feildName+" " + "text box", currValueEntered);
+        //appendLog("in " + feildName + " text box, user entered " + currValueEntered);
         var re = /^\d{3}\.\d{1}$/g;
         var result = re.exec(currValueEntered);
         if (result == null) {
@@ -130,12 +132,12 @@
     }
     function logPressNo() {
         AsthmaGlobals.symptomQuestion = true;
-        appendLog("For symptoms user answered NO.");
+        appendLog("click", "sympton button", "No");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"]="No"
     }
     function logPressYes() {
         AsthmaGlobals.symptomQuestion = true;
-        appendLog("For symptoms user answered Yes.");
+        appendLog("click", "sympton button", "Yes");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes"
     }
 

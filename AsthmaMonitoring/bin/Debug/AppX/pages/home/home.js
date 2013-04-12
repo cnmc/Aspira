@@ -32,7 +32,7 @@
                 
             if (AsthmaGlobals.currMood == "happy") {
                 changeFishMood("happy");
-                appendLog("User finished taking reading");
+                appendLog("navigation", "application", "Reading Complete");
                 Windows.Storage.ApplicationData.current.localSettings.values["changeMoodNormalTimeoutId"] =
                 setTimeout(changeFishMood, AsthmaGlobals.fileConfig.config.animation.switchMoodSleepy, "sleepy");
                 //TO DO: //3. disable the fish tank until next reading
@@ -53,7 +53,7 @@
             //enable user going into the flow when its time for new reading
             dismissAlert();
             changeFishMood("attentive");
-
+            appendLog("alert", "application home", "Take Reading");
            // Windows.Storage.ApplicationData.current.localSettings.values["bowlClickListener"] = 
             WinJS.Utilities.id("takeReading").listen("click", takeReading, false);
             WinJS.Utilities.id("takeReading").removeEventListener("click", teaseListener, false);
@@ -124,7 +124,7 @@ function enableSubsequentReading() {
 
 //This func is called when you click on the bowl
 function takeReading(eventInfo) {
-    appendLog("User Started taking reading");
+    appendLog("click", "Fish Bowl", "Started taking reading");
     AsthmaGlobals.dynamicAlertDisplay = false;
     takeDynamicReading(eventInfo);// 
 }
@@ -140,7 +140,7 @@ function takeDynamicReading(eventInfo) {
 
 function readingNotTaken  () {
     // stop alert that says take reading
-
+    appendLog("alert", "application", "missed reading");
     $("#nextReadingCard").stop();
     $("#nextReadingCard").stop();
     AsthmaGlobals.canTakeReading == true;
@@ -237,10 +237,10 @@ function initateDynamicAlert(type, description) {
     $("#dynamicInfoBox").append(content);
     if (type != "scheduledReading") {
         if (type == "dynamicReading") {
-            appendLog("User was shown dynamic reading alert");
+            appendLog("alert", "application", "dynamic alert");
             document.getElementById("done").onclick = takeDynamicReading;
         } else {
-            appendLog("User was shown medication reminder");
+            appendLog("alert", "application", "medication");
 
             document.getElementById("done").onclick = alertActionComplete;
 
@@ -252,14 +252,16 @@ function initateDynamicAlert(type, description) {
 
 function dismissAlert() {
     changeFishMood("sleepy");
-    appendLog("User Dismissed the alert");
-    if (document.getElementById("dynamicAlertBox") != null || document.getElementById("dynamicAlertBox") != undefined)
-    document.getElementById("dynamicAlertBox").removeNode(true);
+   
+    if (document.getElementById("dynamicAlertBox") != null || document.getElementById("dynamicAlertBox") != undefined) {
+        document.getElementById("dynamicAlertBox").removeNode(true);
+        appendLog("click", "alert", "dismissed");
+    }
 }
 
 function alertActionComplete() {
     changeFishMood("sleepy");
-    appendLog("User clicked done on the alert");
+    appendLog("click", "alert", "done");
     document.getElementById("dynamicAlertBox").removeNode(true);
 }
 
@@ -307,7 +309,7 @@ function calculateNextmedicationTimeout() {
 }
 
 function teaseListener() {
-    
+    appendLog("click", "Fish Bowl", "tease");
     if (AsthmaGlobals.allTeaseImgArray.length == AsthmaGlobals.teaseIndex) {
         AsthmaGlobals.teaseIndex = 0;
     }

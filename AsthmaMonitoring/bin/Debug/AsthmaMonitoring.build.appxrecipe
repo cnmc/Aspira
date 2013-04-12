@@ -13,9 +13,6 @@
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\asthmaMonitoringLog.json">
-      <PackagePath>asthmaMonitoringLog.json</PackagePath>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\airQualityStatus.json">
       <PackagePath>airQualityStatus.json</PackagePath>
     </AppxPackagedFile>

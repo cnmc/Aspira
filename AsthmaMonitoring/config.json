@@ -1,5 +1,8 @@
 {
    "config":{
+		"pateintID":1,
+		"deviceID":1,
+		"buildVer" : "0.0.18",
       "animation":{
          "totalStages":3,
          "totalDays":3,
