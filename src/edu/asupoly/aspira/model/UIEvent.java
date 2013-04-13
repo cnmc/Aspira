@@ -51,7 +51,7 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
         this.groupId     = gid;
     }
     
-    private static Date formatDate(String date)
+    public static Date formatDate(String date)
     {
         //
         // Originally logs have date of this format

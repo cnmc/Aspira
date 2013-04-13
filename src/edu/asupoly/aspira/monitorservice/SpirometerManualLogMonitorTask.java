@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /*
  * This task should wake up and read the spirometer readings manually entered by the user logs since the
  * last time we read them - so we have to store the last reading or timestamp
- * XXX
+ * XXX NOT DONE
  */
 public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
 
@@ -31,7 +31,7 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
     public void run() {
         if (_isInitialized) {
             try {
-                System.out.println("Executing Spirometer Manual Log Timer Task!");
+                //System.out.println("Executing Spirometer Manual Log Timer Task!");
                 SpirometerTextReadingFactory strf = new SpirometerTextLogParser();  // need to property-ize
                 SpirometerReadings spr = strf.createSpirometerTextReadings(__props);
                 // need to push these to DAO, but in the simple way we are reading in the whole

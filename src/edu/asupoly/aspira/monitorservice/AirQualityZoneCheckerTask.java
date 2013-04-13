@@ -18,16 +18,21 @@ import org.json.simple.parser.JSONParser;
 /*
  * This task should wake up and read the air quality reading since the
  * last time we read them - and accordingly update air quality status and zone
- * XXX
  */
 public class AirQualityZoneCheckerTask extends AspiraTimerTask {
 
-    private Date __lastRead;
-    private Properties __props;
-    private long yellowZoneThreshold;
-    private long redZoneThreshold;
-    private int no_of_readings;
+    private static enum Zones { UNKNOWN, GREEN, YELLOW, RED };
+    private static final String[] ZoneDescriptors = { "unknown", "green", "yellow", "red" };
     
+    private Zones   __zone;
+    private boolean __connected;
+    private Date   __lastRead;
+    private long   __yellowZoneThreshold;
+    private long   __redZoneThreshold;
+    private int    __numReadings;
+    private String __patientId;
+    private String __airQualityStatusFile;
+
     public AirQualityZoneCheckerTask() {
         super();
         // is there a property to read here?
@@ -38,50 +43,34 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
     public void run() {
         if (_isInitialized) {
             try {
-                    System.out.println("Executing  Air Quality Zone Checker Timer Task!");
-                    String connected = "true";
-                    String zone = "green";     
-                    getZonesAndPollTime();       
-                    // Now we need to call DAOManager to get DAO
-                   IAspiraDAO dao = AspiraDAO.getDAO();
-                    AirQualityReadings  aqr = null;
-                    // Please change dao api, we want this api to return Air Quality Reading object i.e date, time, small particle value
-                    //dao.importNAirQualityReadingsAfter(aqr, _lastRead, polltime); // return a boolean if we need it
-                    
-                    ParticleReading _pr = aqr.getLastReading();               
-                    if(_pr.getDateTime().equals(__lastRead)) 
-                    {
-                        // If no new reading that means something is wrong with DylosLogger
-                        connected = "false";
-                        zone = "red";
+                //System.out.println("Executing  Air Quality Zone Checker Timer Task!");           
+                // Now we need to call DAOManager to get DAO
+                IAspiraDAO dao = AspiraDAO.getDAO();
+                AirQualityReadings  aqr = dao.findAirQualityReadingsForPatientTail(__patientId, __numReadings);
+
+                ParticleReading _pr = aqr.getLastReading();               
+                if(_pr.getDateTime().equals(__lastRead)) {
+                    // If no new reading that means something is wrong with DylosLogger
+                    __connected = false;
+                    __zone = Zones.UNKNOWN;
+                } else {
+                    __lastRead = _pr.getDateTime();
+                    Iterator<ParticleReading> iterator = aqr.iterator();
+                    Zones z = Zones.RED;
+                    while (iterator.hasNext() && z != Zones.GREEN) {
+                        _pr = iterator.next();
+                        if (_pr.getSmallParticleCount() < __yellowZoneThreshold) {
+                            z = Zones.GREEN;
+                        } else if (_pr.getSmallParticleCount() < __redZoneThreshold) {
+                            z = Zones.YELLOW;
+                        }
                     }
-                    else
-                    {
-                        int yellowcount = 0, redcount = 0, greencount =0;
-                        __lastRead = _pr.getDateTime();
-                       Iterator<ParticleReading> iterator = aqr.iterator();
-                        while (iterator.hasNext()) {
-                            _pr = iterator.next();
-                            if (_pr.getSmallParticleCount() < yellowZoneThreshold) {
-                                if(_pr.getSmallParticleCount() < redZoneThreshold)
-                                    redcount++;
-                                else
-                                    yellowcount++;
-                             }
-                            else
-                                greencount++;
-                    }
-                    if(greencount > yellowcount && greencount > redcount)
-                            zone = "green";
-                    else if(yellowcount > greencount && yellowcount > redcount)
-                        zone = "yellow";
-                    else
-                        zone = "red";
-                    } 
-                    EditAirQualityStatus(connected, zone);
+                    __zone = z;
+                }                
+                editAirQualityStatus();
             }
             catch (Throwable t) {
-                            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, t);
+                Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, t);
             }
         }
     }
@@ -89,76 +78,69 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
     @Override
     public boolean init(Properties p) {
         boolean rval = true;
-        // check we have deviceId, patientId, and file
-        __props = new Properties();
-        String deviceId  = p.getProperty("deviceid");
-        String patientId = p.getProperty("patientid");
-        String config   = p.getProperty("configfile");
-        String statusfile = p.getProperty("airqualitystatusfile");
-        if (deviceId != null && patientId != null && config != null) {
-            __props.setProperty("deviceid", deviceId);
-            __props.setProperty("patientid", patientId);
-            __props.setProperty("configfile", config);
-            __props.setProperty("airqualitystatusfile", statusfile);
-        } else {
-            rval = false;
+        try {
+            // check we have deviceId, patientId, and file
+            String patientId = p.getProperty("patientid");
+            String pollingTime = p.getProperty("airQualityNumReadings");
+            String yellowThreshold = p.getProperty("yellowZoneThreshhold");
+            String redThreshold = p.getProperty("redZoneThreshhold");
+            String statusfile  = p.getProperty("airqualitystatusfile");
+
+            if (patientId != null && pollingTime != null &&
+                    yellowThreshold != null && redThreshold != null && statusfile != null) {
+                // convert those needing conversion
+                __patientId = patientId;
+                __numReadings = new Integer(pollingTime);
+                __yellowZoneThreshold = new Integer(yellowThreshold);
+                __redZoneThreshold = new Integer(redThreshold);                
+                __airQualityStatusFile = statusfile;
+            } else {
+                rval = false;
+            }
+            _isInitialized = rval;
+        } catch (Throwable t) {
+            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, "Cannot parse Zone properties", t);
+            _isInitialized = false;
         }
-        _isInitialized = rval;
         return rval;
     }
-    
-    public void getZonesAndPollTime()
-    {
-           try
-           {
-                String configfile = __props.getProperty("configfile");
-                JSONParser parser = new JSONParser();  
-                Object obj = parser.parse(new FileReader(configfile));
-                JSONObject configObject =  (JSONObject) obj;
-                JSONObject config =  (JSONObject) configObject.get("config");
-                JSONObject airQualityconfig = (JSONObject) config.get("airQualityConfig");
-                long  pollingTime =  (Long) airQualityconfig.get("monitorServicePollingTime");
-                yellowZoneThreshold = (Long) airQualityconfig.get("yellowZone");
-                redZoneThreshold = (Long) airQualityconfig.get("redZone");
-               
-                // We get polltime in milliseconds, need to convert it into minutes      
-               no_of_readings = (int) (pollingTime/60000);
-                
-                // Making sure that we are monitoring atleast one reading
-                if(no_of_readings == 0) {
-                   no_of_readings = 1;
-               }
-           }
-           catch(Throwable th)
-           {
-                Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, th);
-           }
-    }
-    
-    public void EditAirQualityStatus(String connected, String zone)
-    {
-        try
-        {
-                String statusfile = __props.getProperty("airqualitystatusfile");
-                JSONParser parser = new JSONParser();  
-                Object obj = parser.parse(new FileReader(statusfile));
-                JSONObject statusObject =  (JSONObject) obj;
-                JSONObject airQualitystatus =  (JSONObject) statusObject.get("airQualityMeter");
-                airQualitystatus.put("isConnected",connected);
-                airQualitystatus.put("readingZone",zone);
-                File file = new File(__props.getProperty("airqualitystatusfile"));
-                FileOutputStream fop=new FileOutputStream(file);
-                String jsonString = statusObject.toString();
-                if(jsonString!=null) {
-                    fop.write(jsonString.getBytes());
-                }
-                fop.flush();
-                fop.close();
+
+    // XXX Not convinced this really works
+    private void editAirQualityStatus() {
+        FileReader fr = null;
+        FileOutputStream fop = null;
+        try {
+            JSONParser parser = new JSONParser(); 
+            fr = new FileReader(__airQualityStatusFile);
+            Object obj = parser.parse(fr);
+            JSONObject statusObject =  (JSONObject) obj;
+            JSONObject airQualitystatus =  (JSONObject) statusObject.get("airQualityMeter");
+            if (__connected) {
+                airQualitystatus.put("isConnected","true");
+            } else {
+                airQualitystatus.put("isConnected","false");
+            }
+            airQualitystatus.put("readingZone", ZoneDescriptors[__zone.ordinal()]);
+            fr.close();
+            File file = new File(__airQualityStatusFile);
+            fop = new FileOutputStream(file);
+            String jsonString = statusObject.toString();
+            if(jsonString!=null) {
+                fop.write(jsonString.getBytes());
+            }
+            fop.flush();
+            fop.close();
         }
-    catch(Throwable th)
-    {
+        catch(Throwable th) {
             Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, th);
+        } finally {
+            try {
+                if (fr != null) fr.close();
+                if (fop != null) fop.close();
+            } catch (Throwable t2) {
+                Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, t2);
+            }
+        }
     }
-  }
-    
+
 }

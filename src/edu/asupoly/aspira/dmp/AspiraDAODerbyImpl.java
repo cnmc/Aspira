@@ -23,6 +23,7 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvents;
 
 /**
  * @author kevinagary
@@ -645,16 +646,6 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
 
     /* (non-Javadoc)
-     * @see edu.asupoly.aspira.dmp.IAspiraDAO#importReadings(edu.asupoly.aspira.model.AirQualityReadings, edu.asupoly.aspira.model.SpirometerReadings, boolean)
-     */
-    @Override
-    public boolean importReadings(AirQualityReadings aqImport, SpirometerReadings spImport, boolean overwrite) 
-            throws DMPException {
-        // TODO
-        return false;
-    }
-
-    /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#addManualSpirometerReading(edu.asupoly.aspira.model.SpirometerReading, boolean)
      */
     @Override
@@ -973,4 +964,31 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
     private String __jdbcURL;
     private Properties __derbyProperties;
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, Date start,
+            Date end) throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId)
+            throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, int groupId)
+            throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean importUIEvents(UIEvents toImport, boolean overwrite)
+            throws DMPException {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

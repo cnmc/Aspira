@@ -9,21 +9,18 @@ import edu.asupoly.aspira.dmp.devicelogs.UIEventLogParser;
 import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 import edu.asupoly.aspira.model.UIEventsFactory;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
  * This task should wake up and read the ui interaction logs since the
  * last time we read them - so we have to store the last event or timestamp
- * XXX
  */
 public class UIInteractionMonitorTask extends AspiraTimerTask {
 
     private Date __lastRead;
     private Properties __props;
-    
+
     public UIInteractionMonitorTask() {
         super();
         // is there a property to read here?
@@ -41,20 +38,16 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
                 // logfile so we have to not push those that come after lastReading
                 if (uie != null) {
                     UIEvents uieAfter = uie.getUIEventsAfter(__lastRead, false);
-                    if (uieAfter == null) {
-                        System.out.println("No UI Event  after " + __lastRead);
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date date = new Date();
-                        uieAfter.addEvent(new UIEvent(__props.getProperty("patientid"), dateFormat.format(date), "There is no ui interaction to log"));
-                    } else {
-                        System.out.println("UI Event after " + __lastRead + " " + uieAfter.size());
-                        UIEvent ue = uieAfter.getLastUIEvent();
+                    if (uieAfter != null) {
+                        UIEvent ue = uieAfter.getLastEvent();
                         __lastRead = ue.getDate();
+
+                        // Now we need to call DAOManager to get DAO
+                        IAspiraDAO dao = AspiraDAO.getDAO();
+                        dao.importUIEvents(uieAfter, true); // return a boolean if we need it 
+                        // Log how many we imported here
+                        Logger.getLogger(UIInteractionMonitorTask.class.getName()).log(Level.INFO, "Imported UIEvents " + uieAfter.size());
                     }
-                    // Now we need to call DAOManager to get DAO
-                    IAspiraDAO dao = AspiraDAO.getDAO();
-                    //NEED DAO API 
-                    // XXX Log how many we imported here
                 }
             } catch (Throwable t) {
                 Logger.getLogger(UIInteractionMonitorTask.class.getName()).log(Level.SEVERE, null, t);

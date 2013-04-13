@@ -5,6 +5,8 @@ import edu.asupoly.aspira.dmp.devicelogs.UIEventLogParser;
 import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 import edu.asupoly.aspira.model.UIEventsFactory;
+
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,33 +19,25 @@ import org.junit.Test;
  * @author DJ
  */
 public  final class UIEventLogParserTest {
-    
-    private UIEvents __eventReadings = new UIEvents("patient_one");
+
+    private UIEvents __eventReadings = new UIEvents();
     Properties p = new Properties();
 
     @Before
     public void setUp() throws DeviceLogException {
         try {
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:22 MST", "User was shown dynamic reading alert"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:22 MST", "User Started taking reading"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:26 MST", "in PEFValue text box, user entered 5"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:26 MST", "in PEFValue text box, user entered 54"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:26 MST", "in PEFValue text box, user entered 545"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:27 MST", "in PEFValue text box, user entered 545."));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:27 MST", "in PEFValue text box, user entered 545.2"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:28 MST", "User completed PEF reading"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:32 MST", "in FEVValue text box, user entered 1"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:32 MST",  "in FEVValue text box, user entered 12"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:32 MST", "in FEVValue text box, user entered 121"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:33 MST", "in FEVValue text box, user entered 121."));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:33 MST", "in FEVValue text box, user entered 121.2"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:34 MST", "User finished taking reading"));
-        __eventReadings.addEvent(new UIEvent("patient_one", "Sat Mar 30 2013 05:11:37 MST","User was shown dynamic reading alert"));
-        
-        p.put("patientid", "patient_one");
-        p.put("uilogfile", "devicelogsamples/sample.txt");
+            int groupId = (int)System.currentTimeMillis();
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "alert", "application home", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:22 MST"), groupId));
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "click", "Fish Bowl", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:22 MST"), groupId));
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "navigation", "application", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:26 MST"), groupId));
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "data entry", "PEFValue text box", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:26 MST"), groupId));
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "click", "Fish Bowl", "tease", UIEvent.formatDate("Sat Mar 30 2013 05:11:27 MST"), groupId));
+            __eventReadings.addEvent(new UIEvent("device1","patient1", "0.1", "click", "alert", "dismissed", UIEvent.formatDate("Sat Mar 30 2013 05:11:28 MST"), groupId));
+
+            p.put("patientid", "patient1");
+            p.put("uilogfile", "devicelogsamples/sample.txt");
         }
-        catch (DeviceLogException ex) {
+        catch (Throwable ex) {
             Logger.getLogger(UIEventLogParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
