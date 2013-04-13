@@ -30,4 +30,22 @@ public class Clinician implements java.io.Serializable {
     public String[] getPatientIds() {
         return __patients.toArray(new String[0]);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Clinician && __clinicianId.equals(((Clinician)obj).__clinicianId);
+    }
+    @Override
+    public int hashCode() {
+        return __clinicianId.hashCode();
+    }
+    @Override
+    public String toString() {
+        StringBuffer pstr = new StringBuffer();
+        String[] p = getPatientIds();
+        if (p != null) {
+            for (int i = 0; i < p.length; i++) pstr.append("\n\tpatient id: " + p[i]);
+        }
+        return "Clinician id: " + __clinicianId + "\nPatients:" + pstr.toString();
+    }
 }

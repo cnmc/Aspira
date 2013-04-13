@@ -23,6 +23,7 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 
 /**
@@ -127,10 +128,14 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             c = DriverManager.getConnection(__jdbcURL);
             ps = c.prepareStatement(__derbyProperties.getProperty("sql.getAirQualityMonitors"));
             rs = ps.executeQuery();
+            
             while (rs.next()) {
-               devices.add(new AirQualityMonitor(rs.getString("serialid"), rs.getString("vendor"),
-                            rs.getString("model"), rs.getString("description")
-                           ));
+                String patientId = rs.getString("patientid");
+                if (patientId == null) patientId = "";
+                
+                AirQualityMonitor aqm = new AirQualityMonitor(rs.getString("serialid"), rs.getString("vendor"),
+                        rs.getString("model"), rs.getString("description"), patientId);                
+                devices.add(aqm);                          
             }
             return devices.toArray(new AirQualityMonitor[0]);
         } catch (SQLException se) {
@@ -457,7 +462,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     
     /**
-     * Used by findAirQualityReadings methods, parameterized behavior
+     * Used by findSpirometerReadings methods, parameterized behavior
      * @param patientId
      * @param count - pass in MAXINT if not seeking the tail/head
      * @param query - pass in the query from the properties
@@ -493,6 +498,81 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                        rs.getInt("measureid"), rs.getBoolean("manual"),
                        rs.getInt("pefvalue"), rs.getFloat("fev1value"),
                        rs.getInt("error"), rs.getInt("bestvalue"), rs.getInt("groupid")));
+               count--;
+            }
+            return rval;
+        } catch (SQLException se) {
+            // XXX log a DB problem
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
+    }
+    
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId)
+            throws DMPException {
+        if (patientId == null) return null;
+        return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findUIEventsForPatient"),      
+                null, null);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, int groupId)
+            throws DMPException {
+        if (patientId == null || groupId < 0) return null;
+        return __findUIEventsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findUIEventsForPatientByGroup"),      
+                null, null);
+    }
+    
+    /**
+     * Used by findSpirometerReadings methods, parameterized behavior
+     * @param patientId
+     * @param count - pass in MAXINT if not seeking the tail/head
+     * @param query - pass in the query from the properties
+     * @param begin - null if no start date
+     * @param end   - null if no end date
+     * @return
+     * @throws DMPException
+     */
+    private UIEvents __findUIEventsForPatientByQuery(String patientId, 
+            int groupId, int count, String query, Date begin, Date end) throws DMPException {
+        if (query == null || query.trim().length() == 0) return null;
+        
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        UIEvents rval = new UIEvents();
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(query);
+            ps.setString(1, patientId);
+            if (begin != null) {
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                if (end != null) {
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                }
+            } else if (groupId != NO_GROUP_IDENTIFIER) {
+                ps.setInt(2,  groupId);
+            }
+            rs = ps.executeQuery();
+            while (rs.next() && count > 0) {
+               rval.addEvent(new UIEvent(rs.getString("deviceid"), rs.getString("patientid"),
+                       rs.getString("version"), rs.getString("eventtype"),
+                       rs.getString("eventtarget"), rs.getString("eventvalue"),
+                       new Date(rs.getTimestamp("eventtime").getTime()),                       
+                       rs.getInt("groupid")));
                count--;
             }
             return rval;
@@ -645,6 +725,67 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         return true;
     }
 
+    @Override
+    public boolean importUIEvents(UIEvents toImport, boolean overwrite) throws DMPException {
+        Connection c = null;
+        PreparedStatement ps = null;
+        PreparedStatement psgroup = null;
+        UIEvent next = null;
+        ResultSet rs = null;
+        int id = -1; // in case get unique fails
+        
+        if (toImport == null || toImport.size() == 0) return true;
+        
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.importUIEvents"));
+            psgroup = c.prepareStatement(__derbyProperties.getProperty("sql.getUniqueId"));
+            
+            // every import is a batch insert of particle readings, so we track those imports in
+            // a particular table
+            rs = psgroup.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+            
+            Iterator<UIEvent> iter = toImport.iterator();
+            while (iter.hasNext()) {
+                next = iter.next();
+                ps.setString(1, next.getDeviceId());
+                ps.setString(2, next.getPatientId());
+                ps.setString(3,  next.getVersion());
+                ps.setString(4, next.getEventType());
+                ps.setString(5,  next.getEventTarget());
+                ps.setString(6,  next.getEventValue());
+                // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
+                ps.setTimestamp(7, new java.sql.Timestamp(next.getDate().getTime()));
+                ps.setInt(8, id);
+                ps.executeUpdate();
+                ps.clearParameters();
+            }
+            c.commit();
+        } catch (SQLException se) {
+            // XXX need to log it here            
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            // XXX The unknown happened, log it
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (psgroup != null) psgroup.close();
+                if (c != null) {
+                    c.rollback();
+                    c.close();
+                }
+            } catch (SQLException se2) {
+                // XXX log it and give up
+            }
+        }
+        return true;
+    }
+    
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#addManualSpirometerReading(edu.asupoly.aspira.model.SpirometerReading, boolean)
      */
@@ -969,26 +1110,5 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             Date end) throws DMPException {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public UIEvents findUIEventsForPatient(String patientId)
-            throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public UIEvents findUIEventsForPatient(String patientId, int groupId)
-            throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean importUIEvents(UIEvents toImport, boolean overwrite)
-            throws DMPException {
-        // TODO Auto-generated method stub
-        return false;
     }
 }

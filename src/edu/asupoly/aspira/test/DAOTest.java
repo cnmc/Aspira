@@ -1,5 +1,7 @@
 package edu.asupoly.aspira.test;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,12 +16,15 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvent;
+import edu.asupoly.aspira.model.UIEvents;
 
 public class DAOTest {
     private SpirometerReadings __spReadings = null;
     private AirQualityReadings __aqReadings = null;
     private SpirometerReadings __sp2Readings = null;
     private AirQualityReadings __aq2Readings = null;
+    private UIEvents __eventReadings = null;
     private Patient __patient1 = null;
     private Patient __patient2 = null;
     private Clinician __clinician1 = null;
@@ -35,6 +40,8 @@ public class DAOTest {
         __aqReadings = new AirQualityReadings();
         __sp2Readings = new SpirometerReadings();
         __aq2Readings = new AirQualityReadings();
+        __eventReadings = new UIEvents();
+        
         //String anonId, String sex, String rH, String rL, 
         // String vH, String vL,  String btype, String bvalue, String pN
         __patient1 = new Patient("patient_1", "M", "500", "100", "300", "100", "bvType", "400", "patient one notes");
@@ -43,10 +50,10 @@ public class DAOTest {
         __clinician1.addPatient(__patient1);
         __clinician2 = new Clinician("clinc_2");
         __clinician2.addPatient(__patient2);
-        __spirometer1 = new Spirometer("serial1", "vendor1", "model1", "desc1", __patient1);
-        __spirometer2 = new Spirometer("serial2", "vendor2", "model2", "desc2", __patient2);
-        __aqm1 = new AirQualityMonitor("serial1", "vendor1", "model1", "desc1", __patient1);
-        __aqm2 = new AirQualityMonitor("serial2", "vendor2", "model2", "desc2", __patient2);
+        __spirometer1 = new Spirometer("serial1", "vendor1", "model1", "desc1", __patient1.getPatientId());
+        __spirometer2 = new Spirometer("serial2", "vendor2", "model2", "desc2", __patient2.getPatientId());
+        __aqm1 = new AirQualityMonitor("serial1", "vendor1", "model1", "desc1", __patient1.getPatientId());
+        __aqm2 = new AirQualityMonitor("serial2", "vendor2", "model2", "desc2", __patient2.getPatientId());
         
         __aqReadings.addReading(new ParticleReading("device_1", "patient_1", "02/13/13", "00:31", "169900", "5700"));
         __aqReadings.addReading(new ParticleReading("device_1", "patient_1", "02/13/13", "00:32", "166300", "5700"));
@@ -89,6 +96,14 @@ public class DAOTest {
         __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T20:30:00-07:00", "15", "58", "0.87", "0", "503"));
         __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-25T09:59:00-07:00", "16", "419", "2.69", "0", "503"));
         __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-27T13:14:00-07:00", "17", "123", "0.89", "0", "503"));
+
+        int groupId = (int)System.currentTimeMillis();
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "alert", "application home", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:22 MST"), groupId));
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "click", "Fish Bowl", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:22 MST"), groupId));
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "navigation", "application", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:26 MST"), groupId));
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "data entry", "PEFValue text box", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:26 MST"), groupId));
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "click", "Fish Bowl", "tease", UIEvent.formatDate("Sat Mar 30 2013 05:11:27 MST"), groupId));
+        __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "click", "alert", "dismissed", UIEvent.formatDate("Sat Mar 30 2013 05:11:28 MST"), groupId));
     }
 
     @Test
@@ -110,6 +125,66 @@ public class DAOTest {
             theDAO.addOrModifySpirometer(__spirometer2, false);
             theDAO.importAirQualityReadings(__aq2Readings, true);
             theDAO.importSpirometerReadings(__sp2Readings, true);
+            theDAO.importUIEvents(__eventReadings, true);
+            
+            System.out.println("Done with imports, now going to read");
+            
+            Patient[] patients = theDAO.getPatients();
+            assertTrue(patients.length >= 2);
+            assertTrue(patients[0].equals(__patient1));
+            assertTrue(patients[1].equals(__patient2));
+            System.out.println("Patients OK");
+            
+            /** XXX Clinicians are not getting right Patient id assoc, skipping for now
+            Clinician[] clinicians = theDAO.getClinicians();
+            System.out.println("Clinician 1 test data: " + __clinician1.toString());
+            System.out.println("\nClinician 2 test data: " + __clinician2.toString());
+            System.out.println("***\nClinicians found: " + clinicians.length);
+            for (int i = 0; i < clinicians.length; i++) System.out.println("Clinician " + i + " " + clinicians[i].toString());
+            assertTrue(clinicians.length >= 2);
+            assertTrue(clinicians[0].equals(__clinician1));
+            assertTrue(clinicians[1].equals(__clinician2));
+            System.out.println("Clinicians OK");
+            */
+            
+            AirQualityMonitor[] aqms = theDAO.getAirQualityMonitors();
+            System.out.println("AQM 1 test data: " + __aqm1.toString());
+            System.out.println("\nAQM 2 test data: " + __aqm2.toString());
+            System.out.println("***\nAQMs found: " + aqms.length);
+            for (int i = 0; i < aqms.length; i++) System.out.println("AQM " + i + " " + aqms[i].toString());
+            assertTrue(aqms.length >= 2);
+            assertTrue(aqms[0].equals(__aqm1));
+            assertTrue(aqms[1].equals(__aqm2));
+            System.out.println("AQMs OK");
+            
+            Spirometer[] sps = theDAO.getSpirometers();
+            System.out.println("Spirometer 1 test data: " + __spirometer1.toString());
+            System.out.println("\nSpirometer 2 test data: " + __spirometer2.toString());
+            System.out.println("***\nSPs found: " + sps.length);
+            for (int i = 0; i < sps.length; i++) System.out.println("Spirometer " + i + " " + sps[i].toString());
+            assertTrue(sps.length >= 2);
+            assertTrue(sps[0].equals(__spirometer1));
+            assertTrue(sps[1].equals(__spirometer2));
+            System.out.println("Spirometers OK");
+            
+            AirQualityReadings aqrs1 = theDAO.findAirQualityReadingsForPatient("patient_1");
+            AirQualityReadings aqrs2 = theDAO.findAirQualityReadingsForPatient("patient_2");
+            SpirometerReadings sps1  = theDAO.findSpirometerReadingsForPatient("patient_1");
+            SpirometerReadings sps2  = theDAO.findSpirometerReadingsForPatient("patient_2");
+            UIEvents events = theDAO.findUIEventsForPatient("patient_1");
+            
+            assertTrue(aqrs1.equals(__aqReadings));
+            System.out.println("AQRs1 OK");
+            assertTrue(aqrs2.equals(__aq2Readings));
+            System.out.println("AQRs2 OK");
+            assertTrue(sps1.equals(__spReadings));
+            System.out.println("SPs1 OK");
+            assertTrue(sps2.equals(__sp2Readings));
+            System.out.println("SPs2 OK");
+            System.out.println("Events found in DB for Patient1: " + events.size());
+            System.out.println("Events found in Object for Patient1: " + __eventReadings.size());
+            assertTrue(events.equals(__eventReadings));
+            System.out.println("Events OK");
         } catch (DMPException e) {
             e.printStackTrace();
         }

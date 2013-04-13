@@ -10,15 +10,15 @@ public class AirQualityMonitor implements java.io.Serializable {
     private String __assignedToPatient;
     
     public AirQualityMonitor(String serialId, String vendor, String model, String description) {
-        this(serialId, vendor, model, description, null);
+        this(serialId, vendor, model, description, "");
     }
 
-    public AirQualityMonitor(String serialId, String vendor, String model, String description, Patient p) {
+    public AirQualityMonitor(String serialId, String vendor, String model, String description, String pid) {
         __serialId = serialId;
         __vendor = vendor;
         __model = model;
         __description = description;
-        __assignedToPatient = p.getPatientId();
+        __assignedToPatient = pid;
     }
     
     public String getSerialId() {
@@ -39,5 +39,22 @@ public class AirQualityMonitor implements java.io.Serializable {
 
     public String getAssignedToPatient() {
         return __assignedToPatient;
+    }
+    
+    public void setAssignedToPatient(String pid) {
+        __assignedToPatient = pid;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof AirQualityMonitor && __serialId.equals(((AirQualityMonitor)obj).__serialId);
+    }
+    @Override
+    public int hashCode() {
+        return __serialId.hashCode();
+    }
+    @Override
+    public String toString() {
+        return "AQM id: " + __serialId + "\nPatient:" + __assignedToPatient;
     }
 }
