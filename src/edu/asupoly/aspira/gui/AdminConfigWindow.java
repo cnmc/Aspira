@@ -530,10 +530,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         		JSONObject minObject;
         		JSONObject maxObject;
         		JSONObject animationObject;
+        		JSONObject dynamicObject;
         		try {
 					jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
 					configObject = (JSONObject)jo.get("config");
 					alertObject = (JSONObject)configObject.get("alertInfo");
+					
+					configObject.put("pushURL", urlField.getText());
 					
 					alertObject.put("blinkAlarm", blinkCB.isSelected());
 					alertObject.put("soundAlarm", soundCB.isSelected());
@@ -541,11 +544,43 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 					configObject.put("pushURL", urlField.getText());
 					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
 					
+					configObject.put("alertInfo", alertObject);
+					
 					animationObject = (JSONObject)configObject.get("animation");
 					
-					animationObject.put("startDate",sdf.parse(startDateField.getText()).getTime() );
-					animationObject.put("endDate",sdf.parse(endDateField.getText()).getTime() );
-					animationObject.put("totalSteps", rewardField.getText());
+					animationObject.put("startDateMilliSec",sdf.parse(startDateField.getText()).getTime() );
+					animationObject.put("endDateMilliSec",sdf.parse(endDateField.getText()).getTime() );
+					animationObject.put("totalStages", Long.getLong(rewardField.getText()));
+					configObject.put("animation", animationObject);
+					deviceObject = (JSONObject)configObject.get("device");
+					deviceObject.put("serial", serialField.getText());
+					deviceObject.put("vendor", vendorField.getText());
+					deviceObject.put("name", deviceField.getText());
+					configObject.put("device", deviceObject);
+					
+					minObject = (JSONObject)configObject.get("minValues");
+					maxObject = (JSONObject)configObject.get("maxValues");
+					minObject.put("PEFValue", pefLowerRangeField.getText());
+					minObject.put("FEVValue", fevLowerRangeField.getText());
+					maxObject.put("PEFValue", pefUpperRangeField.getText());
+					maxObject.put("FEVValue", fevUpperRangeField.getText());
+					
+					dynamicObject = (JSONObject)configObject.get("dynamicAlerts");
+					dynamicObject.put("enabled", chckbxEnableDynamicAlerts.isSelected());
+					configObject.put("dynamicAlerts", dynamicObject);
+					
+					
+					configObject.put("minValues", minObject);
+					configObject.put("maxValues", maxObject);
+					
+					jo.put("config", configObject);
+					
+					FileWriter fw = new FileWriter("Config\\config.json");
+					fw.write(jo.toJSONString());
+					fw.flush();
+					fw.close();
+					
+					
 					
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
@@ -632,7 +667,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                         
                                                                                                                                                                                                                                 resetConfigButton.setText("Reset");
                                                                                                                                                                                                                                         
-                                                                                                                                                                                                                                        JCheckBox chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
+                                                                                                                                                                                                                                        chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
                                                                                                                                                                                                                                         
                                                                                                                                                                                                                                         JSONObject dynamicObject = (JSONObject)configObject.get("dynamicAlerts");
                                                                                                                                                                                                                                         chckbxEnableDynamicAlerts.setSelected((boolean)dynamicObject.get("enabled"));
@@ -680,9 +715,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                         
                                                                                                                                                                                                                                         JLabel fevUpperLabel = new JLabel("Upper");
                                                                                                                                                                                                                                         
-                                                                                                                                                                                                                                        fevUpperField = new JTextField();
-                                                                                                                                                                                                                                        fevUpperField.setColumns(10);
-                                                                                                                                                                                                                                        fevUpperField.setText("" + maxObject.get("FEVValue"));
+                                                                                                                                                                                                                                        fevUpperRangeField = new JTextField();
+                                                                                                                                                                                                                                        fevUpperRangeField.setColumns(10);
+                                                                                                                                                                                                                                        fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
                                                                                                                                                                                                                                         
                                                                                                                                                                                                                                         JSONObject deviceObject = (JSONObject)configObject.get("device");
                                                                                                                                                                                                                                         
@@ -747,7 +782,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                         							.addPreferredGap(ComponentPlacement.UNRELATED)
                                                                                                                                                                                                                                         							.addComponent(fevUpperLabel)
                                                                                                                                                                                                                                         							.addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                                                                                        							.addComponent(fevUpperField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                        							.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
                                                                                                                                                                                                                                         						.addGroup(configPanelLayout.createSequentialGroup()
                                                                                                                                                                                                                                         							.addComponent(lblCurrentStandardDeviation)
                                                                                                                                                                                                                                         							.addPreferredGap(ComponentPlacement.RELATED)
@@ -874,7 +909,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                         				.addComponent(lblLower)
                                                                                                                                                                                                                                         				.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                         				.addComponent(fevUpperLabel)
-                                                                                                                                                                                                                                        				.addComponent(fevUpperField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                        				.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                         				.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                                                                                                                                                                                                         			.addPreferredGap(ComponentPlacement.RELATED)
                                                                                                                                                                                                                                         			.addComponent(chckbxEnableDynamicAlerts)
@@ -1781,13 +1816,14 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JButton btnOther;
     private JButton btnAlbInhal;
     private JTextField fevLowerRangeField;
-    private JTextField fevUpperField;
+    private JTextField fevUpperRangeField;
     private JLabel lblSerial;
     private JTextField serialField;
     private JLabel lblVendor;
     private JTextField vendorField;
     private JLabel lblDevice;
     private JTextField deviceField;
+    JCheckBox chckbxEnableDynamicAlerts;
     // End of variables declaration
     
     private class MedicineCheckBoxListener implements ItemListener{
