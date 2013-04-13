@@ -1,89 +1,58 @@
-﻿function readMedicationfile1() {
-    var allMedicationArray = new Array();
-    var currMedName;
-    var currMedDesc;
-    AsthmaGlobals.medicationArray = new Array();
-    var getFile = Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("medicationReminder.txt").then(function (datafile) {
-
-        try {
-            var getLines= Windows.Storage.FileIO.readLinesAsync(datafile).then(function (lines) {
-              
-                lines.forEach(function (line) {
-                    if (line.indexOf("Medicine Name") != -1) {
-                        currMedName = line.substring(line.indexOf(":"), line.length);
-                    } else if (line.indexOf("Medicine Description") != -1) {
-                        currMedDesc = line.substring(line.indexOf(":"), line.length);
-                    } else {
-                        var medicatnObj = new medicationClass(line, currMedName, currMedDesc);
-                        AsthmaGlobals.medicationArray.push(medicatnObj);
-                    }
-                });
-
-       });
-       WinJS.Promise.join(getLines);
-        } catch (e) {
-            console.log(e.message);
-        }
-    });
-    WinJS.Promise.join(getFile);
-   
-}
-
-
-function medicationClass(time, name, description) {
-    this.time = time;
-    this.name = name;
-    this.description = description;
-}
-function whichTime(morning, evening){
-    var date = new Date();
-    if (Number(String(morning).substring(0,1))  > date.getHours() && 
-        Number(String(morning).substring(0,1))  >= date.getMinutes()){
-        return
-    }
-}
-function setMedicationTimeout(time) {
+﻿
+function setMedicationTimeout() {
     var retString = "";
     var allMedicationStr = String(AsthmaGlobals.medicationArray);
-   var MedicationInfoArray = allMedicationStr.split(";");
-   var morningTime = String(MedicationInfoArray[0]).split("-")[1].trim();
-   var eveningTime = String(MedicationInfoArray[1]).split("-")[1].trim();
-   var alertTextArrayIndex = 3;
-   var date = new Date();
-   if (Number(String(morningTime).substring(0,2))  > date.getHours() ){
-       alertTextArrayIndex = 3;
-   }else if  (Number(String(eveningTime).substring(0,2))  > date.getHours()) {
-       alertTextArrayIndex = 5;
-   }
-
-   var alertText = MedicationInfoArray[alertTextArrayIndex];
-    if (allMedicationArray == null) {
-        goToSleep(1000);
+    var MedicationInfoArray = allMedicationStr.split(";");
+    var morningTime = String(MedicationInfoArray[0]).split("-")[1].trim();
+    var eveningTime = String(MedicationInfoArray[1]).split("-")[1].trim();
+   
+    var alertTextArrayIndex = 3;
+    var date = new Date();
+    var nextMedicationHour = null;
+    if ( Number(String(morningTime).substring(0, 2)) >= date.getHours() &&
+        Number(String(morningTime).substring(2,4)) > date.getMinutes()) {
+        alertTextArrayIndex = 3;
+        nextMedicationHour = morningTime;
+    } else if ( Number(String(eveningTime).substring(0, 2)) >= date.getHours() &&
+        Number(String(eveningTime).substring(2, 4)) > date.getMinutes()) {
+        alertTextArrayIndex = 5;
+        nextMedicationHour = eveningTime;
     }
-    for (var i = 0; i < allMedicationArray.length; i++) {
-        if (allMedicationArray[i].time == time) {
-            if (retString != "") {
-                retString += "and ";
-            }
-            retString += allMedicationArray[i].name + " : " + allMedicationArray[i].description;
-        }
+    if (MedicationInfoArray.length >= 7) {
+        AsthmaGlobals.symptomsMedicationText = MedicationInfoArray[7];
     }
-    return retString;
-}
-function goToSleep(time) {
-    
+    if (MedicationInfoArray[alertTextArrayIndex] != undefined || MedicationInfoArray[alertTextArrayIndex] != null
+        || MedicationInfoArray[alertTextArrayIndex] != "") {
+        AsthmaGlobals.medicationAlertText = MedicationInfoArray[alertTextArrayIndex];
+    } else {
+        AsthmaGlobals.medicationAlertText = null;
+    }
+    var nextMedicationObj = new Date();// create the date obj of the time we next reading has to be taken
+    // if no reading was found for the day then schedule it for tomorrow
+    if (nextMedicationHour == null) {
+        nextMedicationHour = morningTime;
+        nextMedicationObj.setDate(nextMedicationObj.getDate() + 1);
+    }
+
+    nextMedicationObj.setHours(nextMedicationHour.substr(0, 2), nextMedicationHour.substr(2, 2), 00, 00);
+ 
+    // Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeText"] =
+    //  displayHours + ":" + nextReadingHour.substr(2, 2) + " " + ampm;
+    var timeout = nextMedicationObj.getTime() - new Date().getTime();
+    if (Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] != null ||
+        Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] != undefined) {
+        clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"]);
+    }
+    //if (AsthmaGlobals.medicationAlertText != null) {
+        Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] = setTimeout(
+      initateDynamicAlert, timeout, "medication");
+    //} else {
+    //    if (Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"] != null ||
+    //        (Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"] != undefined)) {
+    //        clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"]);
+    //    }
+    //    Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"] = setTimeout(
+    //  setMedicationTimeout, timeout+3000);
+    //}
 }
 
-//function getMedicationText(time) {
-//    var currMedObjs = getMedicationObjs(time);
-//    var retString = "";
-//    if (currMedObjs.length > 0) {
-//        for (var i = 0; i < currMedObjs.length; i++) {
-//            if (retString != "") {
-//                retString += "and ";
-//            }
-//            retString += currMedObjs[i].name + " : " + currMedObjs[i].description;
-//        }
-//    }
-//    return retString;
-//}

@@ -38,7 +38,8 @@
 		"yellowZone": 456,
 		"redZone":679,
 		"standardDeviation":2.02,
-		"mean":1.00
+		"mean":1.00,
+		"airQualityMonitoringEnabled":true
 	  }
    }
 }

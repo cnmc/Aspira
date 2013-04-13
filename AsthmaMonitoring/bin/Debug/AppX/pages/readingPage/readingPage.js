@@ -131,12 +131,16 @@
           
     }
     function logPressNo() {
+        document.getElementById("symptomBox").removeNode(true);
         AsthmaGlobals.symptomQuestion = true;
+        AsthmaGlobals.hasSymptoms = false;
         appendLog("click", "sympton button", "No");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"]="No"
     }
     function logPressYes() {
         AsthmaGlobals.symptomQuestion = true;
+        AsthmaGlobals.hasSymptoms = true;
+        document.getElementById("symptomBox").removeNode(true);
         appendLog("click", "sympton button", "Yes");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes"
     }

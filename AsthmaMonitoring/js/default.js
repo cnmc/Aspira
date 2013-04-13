@@ -24,7 +24,10 @@
         "allTeaseImgArray": null,
         "changeMoodSleepyTimeoutId": null,
         "symptomQuestion": false,
-        "medicationArray" : null
+        "medicationArray": null,
+        "symptomsMedicationText": null,
+        "medicationAlertText": null,
+        "hasSymptoms":false
     });
    
     app.addEventListener("activated", function (eventObject) {

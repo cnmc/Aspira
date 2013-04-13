@@ -15,7 +15,9 @@
             enableSubsequentReading();
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
            this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
-           
+            if (AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == false) {
+                $("#rightItem").hide();
+            }
             //writeLogfile();
             document.getElementById("nextReadingContent").innerHTML =
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
@@ -38,10 +40,10 @@
             }
             //set next medication alert
             setMedicationTimeout();
-            if (AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertTime != undefined) {
-                Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"] = setTimeout(
-              initateDynamicAlert, calculateNextmedicationTimeout());
+            if (AsthmaGlobals.hasSymptoms == true && AsthmaGlobals.symptomsMedicationText != undefined) {
+                initateDynamicAlert("symptoms", AsthmaGlobals.symptomsMedicationText);
             }
+           
         },
         
        
@@ -222,7 +224,7 @@ function initateDynamicAlert(type, description) {
     if (description != undefined) {
         content += description;
     } else {
-        content += AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertText;
+        content += AsthmaGlobals.medicationAlertText;
     }
     content += "</div>";
     if (type != "scheduledReading") {
@@ -238,25 +240,29 @@ function initateDynamicAlert(type, description) {
         content += "</div>";
     }
     content += "</div>";
-    $("#dynamicInfoBox").append(content);
-    if (type != "scheduledReading") {
-        if (type == "dynamicReading") {
-            appendLog("alert", "application", "dynamic alert");
-            document.getElementById("done").onclick = takeDynamicReading;
-        } else {
-            appendLog("alert", "application", "medication");
+    if (type == "medication" && AsthmaGlobals.medicationAlertText != null && String(AsthmaGlobals.medicationAlertText).trim() != "" && AsthmaGlobals.medicationAlertText != "\r\n"
+         && AsthmaGlobals.medicationAlertText != "\n") {
+        $("#dynamicInfoBox").append(content);
+        if (type != "scheduledReading") {
+            if (type == "dynamicReading") {
+                appendLog("alert", "application", "dynamic alert");
+                document.getElementById("done").onclick = takeDynamicReading;
+            } else {
+                appendLog("alert", "application", "medication");
 
-            document.getElementById("done").onclick = alertActionComplete;
+                document.getElementById("done").onclick = alertActionComplete;
 
+            }
+
+            document.getElementById("dismiss").onclick = dismissAlert;
         }
-    
-        document.getElementById("dismiss").onclick = dismissAlert;
     }
+    setMedicationTimeout();
 }
 
 function dismissAlert() {
     changeFishMood("sleepy");
-   
+    setMedicationTimeout();
     if (document.getElementById("dynamicAlertBox") != null || document.getElementById("dynamicAlertBox") != undefined) {
         document.getElementById("dynamicAlertBox").removeNode(true);
         appendLog("click", "alert", "dismissed");
@@ -265,52 +271,53 @@ function dismissAlert() {
 
 function alertActionComplete() {
     changeFishMood("sleepy");
+    setMedicationTimeout();
     appendLog("click", "alert", "done");
     document.getElementById("dynamicAlertBox").removeNode(true);
 }
 
-function calculateNextmedicationTimeout() {
-    getProperties();
-    var medicationReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertTime;
-    medicationReadingTimeArray.sort();
-    var currHour = new Date().getHours();
-    var currMins = new Date().getMinutes();
-    var nextMedicationHour = null;
-    for (var i = 0; i < medicationReadingTimeArray.length ; i++) {
-        //get the largest hour from the array
-        if (currHour < String(medicationReadingTimeArray[i]).substr(0, 2)) {
-            nextMedicationHour = String(medicationReadingTimeArray[i]);
-            break;
-        } else if (currHour <= String(medicationReadingTimeArray[i]).substr(0, 2)
-            && currMins < String(medicationReadingTimeArray[i]).substr(2, 2)) {
-            //else if it is the same hour and min when compared to time right now
-            nextMedicationHour = String(medicationReadingTimeArray[i]);
-            break;
-        }
+//function calculateNextmedicationTimeout() {
+//    getProperties();
+//    var medicationReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.medicationAlertTime;
+//    medicationReadingTimeArray.sort();
+//    var currHour = new Date().getHours();
+//    var currMins = new Date().getMinutes();
+//    var nextMedicationHour = null;
+//    for (var i = 0; i < medicationReadingTimeArray.length ; i++) {
+//        //get the largest hour from the array
+//        if (currHour < String(medicationReadingTimeArray[i]).substr(0, 2)) {
+//            nextMedicationHour = String(medicationReadingTimeArray[i]);
+//            break;
+//        } else if (currHour <= String(medicationReadingTimeArray[i]).substr(0, 2)
+//            && currMins < String(medicationReadingTimeArray[i]).substr(2, 2)) {
+//            //else if it is the same hour and min when compared to time right now
+//            nextMedicationHour = String(medicationReadingTimeArray[i]);
+//            break;
+//        }
 
-    }
-    var nextMedicationObj = new Date();// create the date obj of the time we next reading has to be taken
-    // if no reading was found for the day then schedule it for tomorrow
-    if (nextMedicationHour == null) {
-        nextMedicationHour = String(medicationReadingTimeArray[0]);
-        nextMedicationObj.setDate(nextMedicationObj.getDate() + 1);
-    }
+//    }
+//    var nextMedicationObj = new Date();// create the date obj of the time we next reading has to be taken
+//    // if no reading was found for the day then schedule it for tomorrow
+//    if (nextMedicationHour == null) {
+//        nextMedicationHour = String(medicationReadingTimeArray[0]);
+//        nextMedicationObj.setDate(nextMedicationObj.getDate() + 1);
+//    }
 
-    nextMedicationObj.setHours(nextMedicationHour.substr(0, 2), nextMedicationHour.substr(2, 2), 00, 00);
-    var displayHours = nextMedicationObj.getHours();
-    if (displayHours == 0) {
-        displayHours = "00";
-    }
-    var ampm = "am";
-    if (displayHours >= 12) {
-        if (displayHours > 12)
-            displayHours -= 12;
-        ampm = "pm";
-    }
-   // Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeText"] =
-      //  displayHours + ":" + nextReadingHour.substr(2, 2) + " " + ampm;
-    return nextMedicationObj.getTime() - new Date().getTime();
-}
+//    nextMedicationObj.setHours(nextMedicationHour.substr(0, 2), nextMedicationHour.substr(2, 2), 00, 00);
+//    var displayHours = nextMedicationObj.getHours();
+//    if (displayHours == 0) {
+//        displayHours = "00";
+//    }
+//    var ampm = "am";
+//    if (displayHours >= 12) {
+//        if (displayHours > 12)
+//            displayHours -= 12;
+//        ampm = "pm";
+//    }
+//   // Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeText"] =
+//      //  displayHours + ":" + nextReadingHour.substr(2, 2) + " " + ampm;
+//    return nextMedicationObj.getTime() - new Date().getTime();
+//}
 
 function teaseListener() {
     appendLog("click", "Fish Bowl", "tease");
@@ -373,46 +380,3 @@ function calculatePrevReadingTimeout() {
     
     return new Date().getTime() - prevReadingObj.getTime();
 }
-/*
-function getAdjacentReadingTimeouts() {
-    var spiroReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.spiroReadingTime;
-   
-    var readingPrev = null;
-    var hasEntered = false;
-
-    
-    for (var i = 0; i < spiroReadingTimeArray.length ; i++) {
-        var todaysDate = new Date();
-        if (hasEntered) {
-            todaysDate.setDate(todaysDate.getDate()+1);
-        }
-        var getReadingHour = String(spiroReadingTimeArray[i]);
-        todaysDate.setHours(getReadingHour.substr(0, 2), getReadingHour.substr(2, 2), 00, 00);
-        if (readingPrev != null) {
-            Windows.Storage.ApplicationData.current.localSettings.values["spiroReadingTimeout" + i] =
-                                                           todaysDate.getTime() - readingPrev.getTime();
-        } 
-        readingPrev = todaysDate;
-
-        if (hasEntered) {
-            break;
-        }
-        if (i + 1 >= spiroReadingTimeArray.length) {
-            i = -1;
-            hasEntered = true;
-        }
-    }
-
-}
-
-function toggleNextReading() {
-    if (document.getElementById("leftPanel").innerHTML.trim() != "") {
-        document.getElementById("nextReadingCard").removeNode(true);
-    }
-    else {
-        document.getElementById("leftPanel").appendChild(AsthmaGlobals.nextReadingCardMarkup);
-    }
-    document.getElementById('homepageMain').setAttribute("backgroundColor", "black");
-}*/
-
-
