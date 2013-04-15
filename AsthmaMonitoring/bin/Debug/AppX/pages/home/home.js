@@ -64,13 +64,13 @@
             WinJS.Utilities.id("takeReading").removeEventListener("click", teaseListener, false);
             // User doesnt take readings, so set a timer but clear it if you leave the page
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
-            setTimeout(readingNotTaken, 60000);// set next reading not taken timer
+            setTimeout(readingNotTaken, AsthmaGlobals.fileConfig.config.alertInfo.alertLength);// set next reading not taken timer
             //2. 
             initateDynamicAlert("scheduledReading", "Tap on the bowl to take a reading !!")
             animateNextReading();
             if (AsthmaGlobals.fileConfig.config.alertInfo.sound==true){
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingSoundAlert"] =
-                setInterval(playAlert, 4000);
+                setInterval(playAlert, 6000);
             }
 
         },

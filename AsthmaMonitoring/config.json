@@ -21,7 +21,8 @@
 		 "dynamicReadingAlertText" : "The air quality doesn't seem good, please take a reading.",
 		 "intervalInTwoReadings" : 120000,
 		 "symptomBoxText": "Are You having Symptoms?",
-		 "sound": true
+		 "sound": true,
+		 "alertLength":60000
       },
       "maxValues":{
          "PEFValue":600,

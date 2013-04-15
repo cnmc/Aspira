@@ -50,8 +50,9 @@ function writeTextLogfile() {
         Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("asthmaMonitoringLog.txt").then(function (datafile) {
 
             Windows.Storage.FileIO.appendTextAsync(datafile, AsthmaGlobals.logString);
+            AsthmaGlobals.logString = null;
         });
-        AsthmaGlobals.logString = null;
+        
     }
    
 
@@ -59,6 +60,7 @@ function writeTextLogfile() {
 
 function appendLog(eventType, target, value) {
     //getLogFile();
+
     var bufferedLogString = new String();
    // var bufferedLogArray = new Array(); 
     if (AsthmaGlobals.logString != undefined && AsthmaGlobals.logString != null) {
