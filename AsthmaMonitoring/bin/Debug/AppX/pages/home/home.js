@@ -10,8 +10,10 @@
             WinJS.Utilities.id("helpLogin").listen("click", this.helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
           
-           // getMedicationText("0300");
+            // getMedicationText("0300");
             WinJS.Utilities.id("takeReading").removeEventListener("click", takeReading, false);
+            waitForConfigFileToLoad();
+            waitForFileToLoad();
             enableSubsequentReading();
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
            this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
@@ -22,9 +24,8 @@
             document.getElementById("nextReadingContent").innerHTML =
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
             AsthmaGlobals.intervalOn = false;//declaring a global var
-            Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setInterval(
-              this.checkAirQuality, 3000);//check air qulity regularly
-            //Now Animating ;D
+           
+        //Now Animating ;D
 
             //1. if user just completed the reading then show the fish happy but 
                 //2. change mood back to normal in some time
@@ -42,8 +43,18 @@
             setMedicationTimeout();
             if (AsthmaGlobals.hasSymptoms == true && AsthmaGlobals.symptomsMedicationText != undefined) {
                 initateDynamicAlert("symptoms", AsthmaGlobals.symptomsMedicationText);
+                AsthmaGlobals.hasSymptoms = false;
             }
-           
+            if (AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == true) {
+                var readingInterval = 0;
+                if (AsthmaGlobals.airQualityConfig == null) {
+                    readingInterval = 30000;
+                } else {
+                    readingInterval = AsthmaGlobals.airQualityConfig.airQualityMeter.frequencyReadingThisFile;
+                }
+                Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setInterval(
+                  this.checkAirQuality, readingInterval);//check air qulity regularly
+            }
         },
         
        
@@ -84,7 +95,7 @@
                 imageSrc += "disconnected";
             }
             imageSrc += ".png";
-          
+            if (document.getElementById("trafficSignal") != undefined)
             document.getElementById("trafficSignal").setAttribute("src", imageSrc);
             //var timeElapsedLastDynamicReading = new Date().getTime() - AsthmaGlobals.airQualityConfig.airQualityMeter.lastDynamicReadingTakenAt;
             // check for reading zone are we in alert zone? 
@@ -108,6 +119,36 @@
     });
 })();
 // animate reading box
+function waitForFileToLoad() {
+    var check = false;
+    var count = 0;
+    while (!check) {
+        if (AsthmaGlobals.airQualityConfig != null) {
+            return;
+        }
+        if (count == 5000 || count == 10000 || count == 15000) {
+            getAirQualityProperties();
+        } if (count > 15000) {
+            break;
+        }
+        count++;
+    }
+}
+function waitForConfigFileToLoad() {
+    var check = false;
+    var count = 0;
+    while (!check) {
+        if (AsthmaGlobals.fileConfig != null) {
+            return;
+        }
+        if (count == 5000 || count == 10000 || count == 15000) {
+            getProperties();
+        } if (count > 15000) {
+            break;
+        }
+        count++;
+    }
+}
 function animateNextReading() {
 
     $("#nextReadingCard").animate({ marginLeft: "+=50px"}, 1000, "swing");
@@ -224,7 +265,9 @@ function calculateNextReadingTimeout() {
 } 
 function initateDynamicAlert(type, description) {
     changeFishMood("attentive");
-    var content = "<div id='dynamicAlertBox' class='dynamicAlertBox' >"
+    var id = AsthmaGlobals.idCount;
+    AsthmaGlobals.idCount = AsthmaGlobals.idCount + 1;
+    var content = "<div id='dynamicAlertBox"+id+"' class='dynamicAlertBox' >"
     content += "<div class='dynamicContent'>";
     if (description != undefined) {
         content += description;
@@ -234,12 +277,12 @@ function initateDynamicAlert(type, description) {
     content += "</div>";
     if (type != "scheduledReading") {
     content += "<div class='buttonPanel'>";
-    content += "<button id='dismiss' class='button-left'>Dismiss</button>";
+    content += "<span id='dismiss" + id + "' class='button-left'></span>";
    
         if (type == "dynamicReading") {
-            content += "<button id='done' class='button-right'>Take Reading</button>";
+            content += "<span id='takeReading" + id + "' class='button-right'></span>";
         } else {
-            content += "<button id='done' class='button-right'>Done</button>";
+            content += "<span id='done" + id + "' class='button-right'></span>";
         }
     
         content += "</div>";
@@ -248,52 +291,56 @@ function initateDynamicAlert(type, description) {
     if (type == "medication" && AsthmaGlobals.medicationAlertText != null && String(AsthmaGlobals.medicationAlertText).trim() != "" && AsthmaGlobals.medicationAlertText != "\r\n"
          && AsthmaGlobals.medicationAlertText != "\n") {
         $("#dynamicInfoBox").append(content);
-        if (type != "scheduledReading") {
-            if (type == "dynamicReading") {
-                appendLog("alert", "application", "dynamic alert");
-                document.getElementById("done").onclick = takeDynamicReading;
-            } else {
-                appendLog("alert", "application", "medication");
-
-                document.getElementById("done").onclick = alertActionComplete;
-
-            }
-
-            document.getElementById("dismiss").onclick = dismissAlert;
-        }
-    } else if (type != "medication") {
+            appendLog("alert", "application", "medication");
+         //   document.getElementById("done").onclick = alertActionComplete;
+            var dismissBtn = "<button id='dismiss" + id + "' class='button-left' onclick='dismissAlert(" + id + ")'>Dismiss</button>";
+            $("#dismiss"+id).append(dismissBtn);
+            var doneBtn = "<button id='done" + id + "' class='button-right' onclick='alertActionComplete(" + id + ")'>Done</button>";
+            $("#done"+id).append(doneBtn);
+        // document.getElementById("dismiss").onclick = dismissAlert;
+        
+    } else {
         $("#dynamicInfoBox").append(content);
         if (type != "scheduledReading") {
             if (type == "dynamicReading") {
                 appendLog("alert", "application", "dynamic alert");
-                document.getElementById("done").onclick = takeDynamicReading;
-            } else {
-                appendLog("alert", "application", "medication");
+                var takeReadingBtn = "<button id='takeReading" + id + "' class='button-left' onclick='takeDynamicReading();'>Take Reading</button>";
+                $("#takeReading" + id).append(takeReadingBtn);
+                //document.getElementById("done").onclick = takeDynamicReading;
+                var doneBtn = "<button id='dismiss" + id + "' class='button-right' onclick='dismissAlert(" + id + ")'>Dismiss</button>";
+                $("#dismiss" + id).append(doneBtn);
+                // document.getElementById("done").onclick = alertActionComplete;
 
-                document.getElementById("done").onclick = alertActionComplete;
-
+            } else if (type = "symptoms") {
+                appendLog("alert", "application", "symptom med Reminder");
+                var dismissBtn = "<button id='dismiss" + id + "' class='button-left' onclick='dismissAlert(" + id + ")'>Dismiss</button>";
+                $("#dismiss" + id).append(dismissBtn);
+                var doneBtn = "<button id='done" + id + "' class='button-right' onclick='alertActionComplete(" + id + ")'>Done</button>";
+                $("#done" + id).append(doneBtn);
             }
 
-            document.getElementById("dismiss").onclick = dismissAlert;
+          //  document.getElementById("dismiss").onclick = dismissAlert;
         }
     }
     setMedicationTimeout();
 }
 
-function dismissAlert() {
+function dismissAlert(id) {
     changeFishMood("sleepy");
     setMedicationTimeout();
-    if (document.getElementById("dynamicAlertBox") != null || document.getElementById("dynamicAlertBox") != undefined) {
-        document.getElementById("dynamicAlertBox").removeNode(true);
+    var divID = "dynamicAlertBox" + id;
+    if (document.getElementById(divID) != null || document.getElementById(divID) != undefined) {
+        document.getElementById(divID).removeNode(true);
         appendLog("click", "alert", "dismissed");
     }
 }
 
-function alertActionComplete() {
+function alertActionComplete(id) {
     changeFishMood("sleepy");
+    var divID = "dynamicAlertBox" + id;
     setMedicationTimeout();
     appendLog("click", "alert", "done");
-    document.getElementById("dynamicAlertBox").removeNode(true);
+    document.getElementById(divID).removeNode(true);
 }
 
 //function calculateNextmedicationTimeout() {

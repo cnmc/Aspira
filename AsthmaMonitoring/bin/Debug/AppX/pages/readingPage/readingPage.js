@@ -125,7 +125,7 @@
             content += "</div>";
         
         content += "</div>";
-        $("#middleContent").append(content);
+        $("#symptomBoxDiv").append(content);
         document.getElementById("yes").onclick = logPressYes;
         document.getElementById("no").onclick = logPressNo;
           

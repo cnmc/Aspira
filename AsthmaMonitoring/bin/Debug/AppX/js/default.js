@@ -27,7 +27,8 @@
         "medicationArray": null,
         "symptomsMedicationText": null,
         "medicationAlertText": null,
-        "hasSymptoms":false
+        "hasSymptoms": false,
+        "idCount":0
     });
    
     app.addEventListener("activated", function (eventObject) {

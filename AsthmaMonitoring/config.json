@@ -6,14 +6,14 @@
       "animation":{
          "totalStages":10,
          "totalDays":30,
-         "startDateMilliSec":1363760353383,
+         "startDateMilliSec":1363494545698,
          "currMood":"normal",
 		 "switchMoodSleepy":60000
       },
       "alertInfo":{
          "spiroReadingTime":[
-            "0049",
-            "0050",
+            "1353",
+            "1354",
             "1751",
             "1914",
             "1312"

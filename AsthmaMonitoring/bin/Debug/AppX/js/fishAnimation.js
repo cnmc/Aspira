@@ -63,11 +63,13 @@ function calculateImageToShow() {
     var totalDays = AsthmaGlobals.fileConfig.config.animation.totalDays;
     var totalStages = AsthmaGlobals.fileConfig.config.animation.totalStages;
     var daysElasped = (todaysDate - startDate) / (1000 * 60 * 60 * 24);
-    var nextStageDayCount =Math.round( totalDays / totalStages);
+    var nextStageDayCount = Math.round(totalDays / totalStages);
+    var whichStage = 0;
     for (var i = 0; i <= totalDays; i += nextStageDayCount) {
         if (daysElasped <= i) {
-            return i ;
+            return whichStage ;
         }
+        whichStage++;
     }
 
 }
