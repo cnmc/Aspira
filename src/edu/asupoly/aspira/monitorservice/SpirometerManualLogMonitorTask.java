@@ -29,6 +29,7 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
+            Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Monitoring Service: running Spirometer Manual Log Monitor Task");
             try {
                 //System.out.println("Executing Spirometer Manual Log Timer Task!");
                 SpirometerTextReadingFactory strf = new SpirometerTextLogParser();  // need to property-ize
@@ -36,17 +37,19 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
                 // need to push these to DAO, but in the simple way we are reading in the whole
                 // logfile so we have to not push those that come after lastReading
                 if (spr != null) {
-                    SpirometerReadings sprAfter = spr.getSpirometerReadingsAfter(__lastRead);
+                    SpirometerReadings sprAfter = spr.getSpirometerReadingsAfter(__lastRead, false);
                     if (sprAfter == null) {
-                        //System.out.println("No Spirometer Readings after " + __lastRead);
+                        Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Manual Spirometer Task: nothing to process");                                                
                     } else {
-                        //System.out.println("Readings after " + __lastRead + " " + sprAfter.size());
+                        Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Manual Spirometer Task: processing records " + sprAfter.toString()); 
                         SpirometerReading sp = sprAfter.getLastReading();
-                        __lastRead = sp.getMeasureDate();
+                        if (sp != null) {
+                            // Now we need to call DAOManager to get DAO
+                            IAspiraDAO dao = AspiraDAO.getDAO();
+                            dao.importSpirometerReadings(sprAfter, true); // return a boolean if we need it
+                            __lastRead = sp.getMeasureDate();
+                        }
                     }
-                    // Now we need to call DAOManager to get DAO
-                    IAspiraDAO dao = AspiraDAO.getDAO();
-                    dao.importSpirometerReadings(sprAfter, true); // return a boolean if we need it
                 }
             } catch (Throwable t) {
                 Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.SEVERE, null, t);

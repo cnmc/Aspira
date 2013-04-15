@@ -16,8 +16,10 @@ import edu.asupoly.aspira.model.ParticleReading;
  * This task should wake up and read the air quality logs since the
  * last time we read them - so we have to store the last reading or timestamp
  */
-public class AirQualityMonitorTask extends AspiraTimerTask {
-
+public class AirQualityMonitorTask extends AspiraTimerTask {    
+    
+    private static final Logger LOGGER = Logger.getLogger(AirQualityMonitorTask.class.getName());
+    
     private Date __lastRead;
     private Properties __props;
     
@@ -30,6 +32,7 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
+            LOGGER.log(Level.INFO, "MonitorService: executing AQMonitor Task");
             try {
                 // System.out.println("Executing timer task!");
                 AirQualityReadingsFactory aqrf = new DylosLogParser();  // need to property-ize
@@ -40,17 +43,25 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
                     AirQualityReadings aqrAfter = aqr.getAirQualityAfter(__lastRead, false);
                     if (aqrAfter != null) {
                         ParticleReading pr = aqrAfter.getLastReading();
-                        __lastRead = pr.getDateTime();
+                        if (pr != null) {
+                            __lastRead = pr.getDateTime();
 
-                        // Now we need to call DAOManager to get DAO
-                        IAspiraDAO dao = AspiraDAO.getDAO();
-                        dao.importAirQualityReadings(aqrAfter, true); // return a boolean if we need it
-                        // Log how many we imported here
-                        Logger.getLogger(AirQualityMonitorTask.class.getName()).log(Level.INFO, "Imported AQ Readings " + aqrAfter.size());
+                            // Now we need to call DAOManager to get DAO
+                            IAspiraDAO dao = AspiraDAO.getDAO();
+                            dao.importAirQualityReadings(aqrAfter, true); // return a boolean if we need it
+                            // Log how many we imported here
+                            LOGGER.log(Level.INFO, "Imported AQ Readings " + aqrAfter.size());
+                        } else {
+                            LOGGER.log(Level.INFO, "No last ParticleReading");
+                        } 
+                    } else {
+                        LOGGER.log(Level.INFO, "No AQ Readings to import");
                     }
+                } else {
+                    LOGGER.log(Level.INFO, "No AQ logfile to parse");
                 }
             } catch (Throwable t) {
-                Logger.getLogger(AirQualityMonitorTask.class.getName()).log(Level.SEVERE, null, t);
+                LOGGER.log(Level.SEVERE, null, t);
             }
         }
     }

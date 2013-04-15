@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -28,6 +30,7 @@ public final class AspiraDAO implements IAspiraDAO {
     private static String PROPERTY_FILENAME = "properties/dao.properties";
     private static String DAO_CLASS_PROPERTY_KEY = "daoClassName";
     private static final String PUSH_URL_PROPERTY_KEY = "push.url";
+    private static final Logger LOGGER = Logger.getLogger(AspiraDAO.class.getName());
     
     private static AspiraDAO  __singletonDAOWrapper;
     private AspiraDAOBaseImpl __dao = null;
@@ -62,8 +65,8 @@ public final class AspiraDAO implements IAspiraDAO {
             __dao = (AspiraDAOBaseImpl)daoClass.newInstance();
             __dao.init(__daoProperties);
         } catch (Throwable t1) {
-            // XXX log
-            t1.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Throwable in constructor for AspiraDAO");
+            //t1.printStackTrace();
             throw new DMPException(t1);
         }
         // all impls need to figure out if they need to push
@@ -80,10 +83,10 @@ public final class AspiraDAO implements IAspiraDAO {
                 pushURL = new URL(url);
                 return true;
             } catch (MalformedURLException mfe) {
-                // XXX a MalformedURLException the most likely cause, log it
+                LOGGER.log(Level.SEVERE, "Malformed URL AspiraDAO.setURL");
                 return false;
             } catch (Throwable t) {
-                // XXX Anything else we did not imagine
+                LOGGER.log(Level.SEVERE, "Throwable in AspiraDAO.setURL");
                 return false;
             }
         }
@@ -172,8 +175,6 @@ public final class AspiraDAO implements IAspiraDAO {
             throws DMPException {
         return __dao.findAirQualityReadingsForPatientTail(patientId, head);
     }
-    
-    // XXX The writes are more interesting as we want to push if we have a URL to push to
     
     @Override
     public boolean importAirQualityReadings(AirQualityReadings toImport,

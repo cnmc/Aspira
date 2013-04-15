@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SpirometerReading implements java.io.Serializable, Comparable<SpirometerReading> {
     private static final long serialVersionUID = 9002395112333017198L;
@@ -29,6 +31,12 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     private int    bestValue;
     private int    groupId;
 
+    @Override
+    public String toString() {
+        return "SpirometerReading(deviceId, patientId, measureId, date, manual, pef, fev1, error, bv, group) (" + deviceId + ", " +
+                pid + ", " + measureID + ", " + measureDate + ", " + (manual ? "TRUE" : "FALSE") + ", " + pefValue + ", " +
+                fev1Value + ", " + error + ", " + bestValue + ", " + groupId + ")";
+    }
     @Override
     public int compareTo(SpirometerReading other) {
         return measureDate.compareTo(other.measureDate);
@@ -74,7 +82,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         return measureDate.hashCode();
     }
 
-    public SpirometerReading(String deviceId, String id, String mdate, String mid, String pef, String fev, String err,String bvalue) throws DeviceLogException {
+    public SpirometerReading(String deviceId, String id, String mdate, String mid, boolean manual, String pef, String fev, String err, String bvalue) throws DeviceLogException {
         try{
             this.deviceId = deviceId;
             this.pid = id;
@@ -88,8 +96,8 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             this.measureDate = df.parse(mdate);
             this.measureID = Integer.valueOf(mid.trim()).intValue();
-            this.manual = false;  // hardwire this to false as this constructor only exists for device readings
-            pefValue = Integer.valueOf(pef.trim()).intValue();
+            this.manual = manual;  // hardwire this to false as this constructor only exists for device readings
+            pefValue = Float.valueOf(pef.trim()).intValue();  // yes parse as float but return cast as int
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
@@ -97,6 +105,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         }
         catch(Throwable th)
         {
+            Logger.getLogger(SpirometerReading.class.getName()).log(Level.SEVERE, "Unable to create SpirometerReading", th);
             throw new DeviceLogException(th);
         }
     }

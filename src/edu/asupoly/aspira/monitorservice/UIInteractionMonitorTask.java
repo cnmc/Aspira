@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * last time we read them - so we have to store the last event or timestamp
  */
 public class UIInteractionMonitorTask extends AspiraTimerTask {
+    private static final Logger LOGGER = Logger.getLogger(UIInteractionMonitorTask.class.getName());
 
     private Date __lastRead;
     private Properties __props;
@@ -30,8 +31,9 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
+            LOGGER.log(Level.INFO, "MonitoringService: UIMonitor executing");
             try {
-                System.out.println("Executing UI Interaction Monitor Timer Task!");
+                //System.out.println("Executing UI Interaction Monitor Timer Task!");
                 UIEventsFactory uief = new UIEventLogParser();  // need to property-ize
                 UIEvents uie = uief.createUIEvents(__props);
                 // need to push these to DAO, but in the simple way we are reading in the whole
@@ -40,17 +42,25 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
                     UIEvents uieAfter = uie.getUIEventsAfter(__lastRead, false);
                     if (uieAfter != null) {
                         UIEvent ue = uieAfter.getLastEvent();
-                        __lastRead = ue.getDate();
+                        if (ue != null) {
+                            __lastRead = ue.getDate();
 
-                        // Now we need to call DAOManager to get DAO
-                        IAspiraDAO dao = AspiraDAO.getDAO();
-                        dao.importUIEvents(uieAfter, true); // return a boolean if we need it 
-                        // Log how many we imported here
-                        Logger.getLogger(UIInteractionMonitorTask.class.getName()).log(Level.INFO, "Imported UIEvents " + uieAfter.size());
+                            // Now we need to call DAOManager to get DAO
+                            IAspiraDAO dao = AspiraDAO.getDAO();
+                            dao.importUIEvents(uieAfter, true); // return a boolean if we need it 
+                            // Log how many we imported here
+                            LOGGER.log(Level.INFO, "Imported UIEvents " + uieAfter.size());
+                        } else {
+                            LOGGER.log(Level.INFO, "No last UIEvent");
+                        } 
+                    } else {
+                        LOGGER.log(Level.INFO, "No UI Events to import");
                     }
+                } else {
+                    LOGGER.log(Level.INFO, "No UI eventfile to parse");
                 }
             } catch (Throwable t) {
-                Logger.getLogger(UIInteractionMonitorTask.class.getName()).log(Level.SEVERE, null, t);
+                LOGGER.log(Level.SEVERE, "UI Monitor Task throwable: " + edu.asupoly.aspira.GlobalHelper.stackToString(t));
             }
         }
     }

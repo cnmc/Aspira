@@ -10,6 +10,8 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.asupoly.aspira.dmp.DMPException;
 
@@ -37,7 +39,7 @@ public final class MonitoringService {
             try {
                 __theMonitoringService = new MonitoringService();
             } catch (Throwable t) {
-                // XXX log here
+                Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, "MonitorService unable to initialize");
                 __theMonitoringService = null;
             }
         }
@@ -62,6 +64,7 @@ public final class MonitoringService {
         __timer.cancel();
         // If the singleton accessor is called again it will fire up another Timer
         MonitoringService.__theMonitoringService = null;
+        Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, "Shutting down MonitorService");
     }
     
     /**
@@ -80,7 +83,8 @@ public final class MonitoringService {
             defaultInterval = Integer.parseInt(__props.getProperty(DEFAULT_INTERVAL_KEY));
             maxTimerTasks = Integer.parseInt(__props.getProperty(MAX_TIMERTASKS_KEY));
         } catch (NumberFormatException nfe) {
-            // XXX log a bad prop format but use defaults and continue
+            Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                    "NFE Problem initializing MonitorService from properties, continuing with defaults\n" + nfe.getMessage());
             defaultInterval = DEFAULT_INTERVAL;
             maxTimerTasks   = DEFAULT_MAX_TIMER_TASKS;
         } catch (NullPointerException npe) {
@@ -88,16 +92,19 @@ public final class MonitoringService {
                 npe.printStackTrace();
                 throw new DMPException(npe);
             }
-            // XXX log an unassigned required prop but use defaults and continue
+            Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                    "NPE Problem initializing MonitorService from properties, continuing with defaults\n" + npe.getMessage());
             defaultInterval = DEFAULT_INTERVAL;
             maxTimerTasks   = DEFAULT_MAX_TIMER_TASKS;
         }
         catch (IOException ie) {
-            // XXX log a problem with reading the properties file as a whole, gotta bail
+            Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                    "IO Problem initializing MonitorService from properties, aborting\n" + ie.getMessage());
             throw new DMPException(ie);
         }
         catch (Throwable t1) {
-            // XXX log something else happened
+            Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                    "Unknown problem initializing MonitorService from properties, aborting\n" + t1.getMessage());
             throw new DMPException(t1);
         } finally {
             try {
@@ -105,7 +112,8 @@ public final class MonitoringService {
                     isr.close();
                 }
             } catch (Throwable t) {
-                // XXX Log we may have an open file descriptor here
+                Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                        "Unable to close properties input stream" + t.getMessage());
             }
         }
 
@@ -123,7 +131,8 @@ public final class MonitoringService {
                         interval = Integer.parseInt(intervalProp);
                     } catch (NumberFormatException nfe) {
                         interval = defaultInterval;
-                        // XXX log the incorrect interval
+                        Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                                "NFE initializing MonitorService task from properties, using default\n" + nfe.getMessage());
                     }
                 } else { // no interval specified, use default
                     interval = defaultInterval;
@@ -135,12 +144,17 @@ public final class MonitoringService {
                     __tasks.put(TASK_KEY_PREFIX+i, nextTask);
                     // fire up the task 1 second from now
                     __timer.scheduleAtFixedRate(nextTask, 1000L, interval*1000L); // repeat task in seconds
+                    Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                            "Created timer task " + (TASK_KEY_PREFIX+i) + " for task class " + taskClassName);
                 } else {
-                    // XXX need to log that we were not able to init the task and so could not start it
+                    Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                            "1. Unable to initialize MonitorService task from properties, skipping\n");
                 }
             } catch (Throwable t) {
                 // something prevented us from creating the task, skip it
-                // XXX need to log it here
+                Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
+                        "2. Unable to initialize MonitorService task from properties, skipping\n" + 
+                                edu.asupoly.aspira.GlobalHelper.stackToString(t));
             }
             i++;
             taskClassName = __props.getProperty(TASK_KEY_PREFIX+i);

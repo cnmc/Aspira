@@ -83,7 +83,7 @@ public class AirQualityReadings implements java.io.Serializable {
 
     public ParticleReading getFirstReading() {
         ParticleReading rval = null;
-        if (__readings != null) {
+        if (__readings != null && !__readings.isEmpty()) {
             rval = __readings.first();
         }
         return rval;
@@ -91,7 +91,7 @@ public class AirQualityReadings implements java.io.Serializable {
     
     public ParticleReading getLastReading() {
         ParticleReading rval = null;
-        if (__readings != null) {
+        if (__readings != null && !__readings.isEmpty()) {
             rval = __readings.last();
         }
         return rval;
@@ -99,6 +99,7 @@ public class AirQualityReadings implements java.io.Serializable {
     
     public AirQualityReadings getFirstNReadings(int n) {
         if (n <= 0) return null;
+        if (__readings == null || __readings.isEmpty()) return null; 
         
         AirQualityReadings rval = new AirQualityReadings();
         Iterator<ParticleReading> iter = __readings.iterator();
@@ -111,6 +112,7 @@ public class AirQualityReadings implements java.io.Serializable {
  
     public AirQualityReadings getLastNReadings(int n) {
         if (n <= 0) return null;
+        if (__readings == null || __readings.isEmpty()) return null; 
         
         AirQualityReadings rval = new AirQualityReadings();
         int size = __readings.size() - n;
@@ -129,6 +131,7 @@ public class AirQualityReadings implements java.io.Serializable {
     
     public AirQualityReadings getAirQualityReadingsForPatient(String patientId) {
         if (patientId == null) return null;
+        if (__readings == null || __readings.isEmpty()) return null; 
         
         ParticleReading pr = null;
         AirQualityReadings aqr = new AirQualityReadings();
@@ -158,7 +161,7 @@ public class AirQualityReadings implements java.io.Serializable {
      * @return an Iterator with all values in ascending order or null
      */
     public Iterator<ParticleReading> iterator() {
-        if (__readings != null) {
+        if (__readings != null && !__readings.isEmpty()) {
             return __readings.iterator();
         }
         return null;
@@ -206,6 +209,9 @@ public class AirQualityReadings implements java.io.Serializable {
      * the Spirometer Reading is from the same device and patient
      */
     public boolean addReading(ParticleReading pr) {
+        if (__readings == null) {
+            __readings = new TreeSet<ParticleReading>();
+        }
         return __readings.add(pr);
     }
     
@@ -213,7 +219,10 @@ public class AirQualityReadings implements java.io.Serializable {
      * This is useful for merging maps but note the "other" maps readings could overwrite
      * your own.
      */
-    public boolean addReadings(AirQualityReadings other) {       
+    public boolean addReadings(AirQualityReadings other) {
+        if (__readings == null) {
+            __readings = new TreeSet<ParticleReading>();
+        }
         return __readings.addAll(other.__readings);
     }
     

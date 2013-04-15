@@ -42,6 +42,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
+            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "Monitoring Service: running AQ Zone Checker Task");
             try {
                 //System.out.println("Executing  Air Quality Zone Checker Timer Task!");           
                 // Now we need to call DAOManager to get DAO
@@ -61,8 +62,10 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                         _pr = iterator.next();
                         if (_pr.getSmallParticleCount() < __yellowZoneThreshold) {
                             z = Zones.GREEN;
+                            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "AQ Zone GREEN");
                         } else if (_pr.getSmallParticleCount() < __redZoneThreshold) {
                             z = Zones.YELLOW;
+                            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "AQ Zone YELLOW");
                         }
                     }
                     __zone = z;

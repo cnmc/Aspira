@@ -5,6 +5,7 @@
  */
 package edu.asupoly.aspira.dmp.devicelogs;
 
+import edu.asupoly.aspira.GlobalHelper;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerTextReadingFactory;
@@ -48,17 +49,24 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
                 fev = st.nextToken().trim();
                 finput = br.readLine();
                 // For now sending measure id as -1, error as 0 and best value as -1
-                SpirometerReading pr = new SpirometerReading(deviceId, patientId,  _date, "-1",  pef, fev, "0", "-1");
-                _spReadings.addReading(pr);
+                try {  // if it doesn't work we'll skip it                    
+                    _spReadings.addReading(new SpirometerReading(deviceId, patientId, _date, "-1",  true,
+                        pef, fev, "0", "0"));
+                } catch (Throwable it) {
+                    Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
+                            "In SpirometerReadingTextParser inner " + GlobalHelper.stackToString(it));
+                }
             }
         }
         catch (Throwable t) {
-            Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, null, t);
+            Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
+                    "In SpirometerReadingTextParser " + GlobalHelper.stackToString(t));
         } finally {
             try {
                 if (br != null) br.close();
             } catch (IOException ie) {
-                // XXX log it and swallow hard
+                Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
+                        "Could not close spirometer text logfile ");
             }
         }
         return _spReadings;

@@ -23,6 +23,7 @@ public class UIEvents implements java.io.Serializable {
     
     public UIEvents getUIEventsForPatient(String patientId) {
         if (patientId == null) return null;
+        if (__events == null || __events.isEmpty()) return null;
         
         UIEvent e = null;
         UIEvents events = new UIEvents();
@@ -44,7 +45,8 @@ public class UIEvents implements java.io.Serializable {
      */
     public UIEvents getUIEventsBefore(Date d, boolean inclusive) {
         if (d == null) return null;
- 
+        if (__events == null || __events.isEmpty()) return null;
+        
         SortedSet<UIEvent> sm = __events.headSet(new UIEvent("","","","","","",d,0), inclusive);
         if (sm != null) {
             return __constructEvents(sm.iterator());  
@@ -54,6 +56,7 @@ public class UIEvents implements java.io.Serializable {
     
     public UIEvents getUIEventsAfter(Date d, boolean inclusive) {
         if (d == null) return null;
+        if (__events == null || __events.isEmpty()) return null;
         
         SortedSet<UIEvent> sm = __events.tailSet(new UIEvent("","","","","","",d,0), inclusive);
         if (sm != null) {
@@ -66,7 +69,7 @@ public class UIEvents implements java.io.Serializable {
                                        Date end,   boolean inclend) {
         SortedSet<UIEvent> res  = null;
         
-        if (start != null && end != null && __events != null) { 
+        if (start != null && end != null && __events != null && !__events.isEmpty()) { 
             res = __events.subSet(new UIEvent("","","","","","",start,0), inclstart, 
                                   new UIEvent("","","","","","",end,0), inclend);
             return res.iterator();
@@ -75,7 +78,7 @@ public class UIEvents implements java.io.Serializable {
 
     public UIEvent getFirstEvent() {
         UIEvent rval = null;
-        if (__events != null) {
+        if (__events != null && !__events.isEmpty()) {
             rval = __events.first();
         }
         return rval;
@@ -83,7 +86,7 @@ public class UIEvents implements java.io.Serializable {
     
     public UIEvent getLastEvent() {
         UIEvent rval = null;
-        if (__events != null) {
+        if (__events != null && !__events.isEmpty()) {
             rval = __events.last();
         }
         return rval;
@@ -154,6 +157,10 @@ public class UIEvents implements java.io.Serializable {
      */
     public boolean addEvent(UIEvent e) {
         if (e == null) return false;
+        
+        if (__events == null) {
+            __events = new TreeSet<UIEvent>();
+        }
         return __events.add(e);
     }
     
@@ -163,6 +170,10 @@ public class UIEvents implements java.io.Serializable {
      */
     public boolean addEvents(UIEvents other) {
         if (other == null || other.__events == null) return false;
+        if (__events == null) {
+            __events = new TreeSet<UIEvent>();
+        }
+        
         return __events.addAll(other.__events);
     }
     

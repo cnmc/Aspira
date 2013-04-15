@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -33,6 +35,9 @@ import edu.asupoly.aspira.model.UIEvents;
 public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
     private static final int NO_GROUP_IDENTIFIER = -2;
+    private static final Logger LOGGER = Logger.getLogger(AspiraDAODerbyImpl.class.getName());
+    private static final String CLASS  = "AspiraDAODerbyImpl";
+    
     /**
      * 
      */
@@ -63,10 +68,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
            }
            return patients.toArray(new Patient[0]);
        } catch (SQLException se) {
-           // XXX log a DB problem
+           LOGGER.logp(Level.SEVERE, CLASS, "getPatients", "SQL Error");
            throw new DMPException(se);
        } catch (Throwable t) {
-           // XXX The unknown happened, log it
+           LOGGER.logp(Level.SEVERE, CLASS, "getPatients", "Throwable");
            throw new DMPException(t);
        } finally {
            try {
@@ -74,7 +79,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                if (ps != null) ps.close();
                if (c != null) c.close();
            } catch (SQLException se2) {
-               // XXX log it and give up
+               LOGGER.logp(Level.INFO, CLASS, "getPatients", "SQL Close Error in finally");
            }
        }
     }
@@ -99,10 +104,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return devices.toArray(new Spirometer[0]);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "getSpirometers", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "getSpirometers", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -110,7 +115,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "getSpirometers", "SQL close in finally block");
             }
         }
     }
@@ -139,10 +144,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return devices.toArray(new AirQualityMonitor[0]);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "getAirQualityMonitors", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "getAirQualityMonitors", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -150,7 +155,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "getAirQualityMonitors", "SQL close in finally block");
             }
         }
     }
@@ -188,10 +193,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }           
             return clinicians.toArray(new Clinician[0]);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "getClinicians", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "getClinicians", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -199,7 +204,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "getClinicians", "SQL close in finally block");
             }
         }
     }
@@ -224,10 +229,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "findSpirometersForPatient", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "findSpirometersForPatient", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -235,7 +240,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "findSpirometersForPatient", "SQL close in finally block");
             }
         }
     }
@@ -261,10 +266,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "findAirQualityMonitorForPatient", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "findAirQualityMonitorForPatient", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -272,7 +277,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "findAirQualityMonitorForPatient", "SQL close in finally block");
             }
         }
     }
@@ -296,10 +301,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "findClinicianForPatient", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "findClinicianForPatient", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -307,7 +312,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "findClinicianForPatient", "SQL close in finally block");
             }
         }
     }
@@ -411,10 +416,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "__findAirQualityReadingsForPatientByQuery", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "__findAirQualityReadingsForPatientByQuery", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -422,7 +427,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "__findAirQualityReadingsForPatientByQuery", "SQL close in finally block");
             }
         }
     }
@@ -504,10 +509,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "__findSpirometerReadingsForPatientByQuery", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "__findSpirometerReadingsForPatientByQuery", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -515,9 +520,19 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "__findSpirometerReadingsForPatientByQuery", "SQL close in finally block");
             }
         }
+    }
+    
+    @Override
+    public UIEvents findUIEventsForPatient(String patientId, Date start,
+            Date end) throws DMPException {
+        if (patientId == null || start == null || end == null) return null;
+        
+        return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
+                __derbyProperties.getProperty("sql.findUIEventsForPatientBetween"),      
+                start, end);
     }
     
     @Override
@@ -539,7 +554,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     
     /**
-     * Used by findSpirometerReadings methods, parameterized behavior
+     * Used by findUIEvents methods, parameterized behavior
      * @param patientId
      * @param count - pass in MAXINT if not seeking the tail/head
      * @param query - pass in the query from the properties
@@ -573,16 +588,16 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                rval.addEvent(new UIEvent(rs.getString("deviceid"), rs.getString("patientid"),
                        rs.getString("version"), rs.getString("eventtype"),
                        rs.getString("eventtarget"), rs.getString("eventvalue"),
-                       new Date(rs.getTimestamp("eventtime").getTime()),                       
+                       new Date(rs.getTimestamp("eventtime").getTime()),
                        rs.getInt("groupid")));
                count--;
             }
             return rval;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "__findUIEventsForPatientByQuery", "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "__findUIEventsForPatientByQuery", "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -590,7 +605,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "__findUIEventsForPatientByQuery", "SQL close in finally block");
             }
         }
     }
@@ -609,7 +624,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         ResultSet rs = null;
         int id = -1; // in case get unique fails
         
-        if (toImport == null || toImport.size() == 0) return true;
+        if (toImport == null || toImport.size() == 0) return false;
         
         try {
             c = DriverManager.getConnection(__jdbcURL);
@@ -638,10 +653,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             c.commit();
         } catch (SQLException se) {
-            // XXX log a db error
+            LOGGER.logp(Level.SEVERE, CLASS, "importAirQualityReadings on " + next.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "importAirQualityReadings on " + next.toString(), "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -653,7 +668,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "importAirQualityReadings", "SQL close in finally block");
             }
         }
         return true;
@@ -671,7 +686,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         ResultSet rs = null;
         int id = -1; // in case get unique fails
         
-        if (toImport == null || toImport.size() == 0) return true;
+        if (toImport == null || toImport.size() == 0) return false;
         
         try {
             c = DriverManager.getConnection(__jdbcURL);
@@ -704,12 +719,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             c.commit();
         } catch (SQLException se) {
-            // XXX log a db error
-            System.out.println("SpirometerReading to import: " + next.toString());
-            se.printStackTrace();
+            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings on " + next.toString(), "SQL Error");            
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings on " + next.toString(), "Throwable");            
             throw new DMPException(t);
         } finally {
             try {
@@ -721,7 +734,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "importSpirometerReadings", "SQL close in finally block");
             }
         }
         return true;
@@ -736,7 +749,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         ResultSet rs = null;
         int id = -1; // in case get unique fails
         
-        if (toImport == null || toImport.size() == 0) return true;
+        if (toImport == null || toImport.size() == 0) return false;
         
         try {
             c = DriverManager.getConnection(__jdbcURL);
@@ -767,10 +780,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             c.commit();
         } catch (SQLException se) {
-            // XXX need to log it here            
+            LOGGER.logp(Level.SEVERE, CLASS, "importUIEvents on " + next.toString(), "SQL Error");            
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "importUIEvents on " + next.toString(), "Throwable");            
             throw new DMPException(t);
         } finally {
             try {
@@ -782,7 +795,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "XXX", "SQL close in finally block");
             }
         }
         return true;
@@ -816,10 +829,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
             c.commit();
         } catch (SQLException se) {
-            // XXX log a db error
+            LOGGER.logp(Level.SEVERE, CLASS, "addManualSpirometerReading on " + next.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "addManualSpirometerReading on " + next.toString(), "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -829,7 +842,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "importUIEvents", "SQL close in finally block");
             }
         }
         return true;
@@ -871,10 +884,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             psdml.setString(9,  p.getPatientId());
             return (psdml.executeUpdate() == 1);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifyPatient on " + p.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifyPatient on " + p.toString(), "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -883,7 +896,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "addOrModifyPatient", "SQL close in finally block");
             }
         }
     }
@@ -922,10 +935,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
             return (psdml.executeUpdate() == 1);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifySpirometer on " + s.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifySpirometer on " + s.toString(), "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -934,7 +947,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "addOrModifySpirometer", "SQL close in finally block");
             }
         }
     }
@@ -974,10 +987,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             
             return (psdml.executeUpdate() == 1);
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifyAQM on " + aqm.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "addOrModifyAQM on " + aqm.toString(), "Throwable");            
             throw new DMPException(t);
         } finally {
             try {
@@ -986,7 +999,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "addOrModifyAQM", "SQL close in finally block");
             }
         }
     }
@@ -1028,10 +1041,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             } 
             return true;
         } catch (SQLException se) {
-            // XXX log a DB problem
+            LOGGER.logp(Level.SEVERE, CLASS, "addClinician on " + cl.toString(), "SQL Error");
             throw new DMPException(se);
         } catch (Throwable t) {
-            // XXX The unknown happened, log it
+            LOGGER.logp(Level.SEVERE, CLASS, "addClinician on " + cl.toString(), "Throwable");
             throw new DMPException(t);
         } finally {
             try {
@@ -1041,7 +1054,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml2 != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                // XXX log it and give up
+                LOGGER.logp(Level.INFO, CLASS, "XXX", "SQL close in finally block");
             }
         }
     }
@@ -1066,7 +1079,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement();
                 if (key.startsWith("sql") || key.startsWith("derby")) {
-                    System.out.println("found property with key, value\t" + key + ", " + p.getProperty(key));
+                    LOGGER.log(Level.INFO, CLASS, "found property with key, value\t" + key + ", " + p.getProperty(key));                    
                     __derbyProperties.setProperty(key, p.getProperty(key));
                 }
             }
@@ -1080,7 +1093,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             __derbyProperties.setProperty("jdbc.driver", jdbcDriver);
             __derbyProperties.setProperty("jdbc.url", jdbcURL);
         } catch (Throwable t) {
-            // XXX log here
+            LOGGER.logp(Level.SEVERE, CLASS, "Initializing DAO", "Throwable");
             throw new DMPException(t);
         }
     }
@@ -1100,17 +1113,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (s != null) s.close();
                 if (c != null) c.close();
             } catch (SQLException se) {
-                // XX log here
+                LOGGER.logp(Level.SEVERE, CLASS, "__testConnection", "SQL Error");
             }
         }
     }
 
     private String __jdbcURL;
     private Properties __derbyProperties;
-    @Override
-    public UIEvents findUIEventsForPatient(String patientId, Date start,
-            Date end) throws DMPException {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }
