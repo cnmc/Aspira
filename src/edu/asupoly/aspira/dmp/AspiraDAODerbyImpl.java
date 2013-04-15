@@ -172,18 +172,20 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             while (rs.next()) {
                 String clinicianId = rs.getString("clinicianid");
                 // now get any Patients we may have to add
-                if (cl == null) {
+                if (cl == null || !cl.getClinicianId().equals(clinicianId)) {
                     cl = new Clinician(clinicianId);
+                    clinicians.add(cl);
                 }
                 String patientId = rs.getString("patientid");
                 if (patientId != null) {
                     Patient patients[] = getPatients();
                     for (Patient p : patients) {
-                        cl.addPatient(p);
+                        if (patientId.equals(p.getPatientId())) {
+                            cl.addPatient(p);
+                        }
                     }
-                }          
-               clinicians.add(cl);
-            }
+                }                     
+            }           
             return clinicians.toArray(new Clinician[0]);
         } catch (SQLException se) {
             // XXX log a DB problem

@@ -135,7 +135,6 @@ public class DAOTest {
             assertTrue(patients[1].equals(__patient2));
             System.out.println("Patients OK");
             
-            /** XXX Clinicians are not getting right Patient id assoc, skipping for now
             Clinician[] clinicians = theDAO.getClinicians();
             System.out.println("Clinician 1 test data: " + __clinician1.toString());
             System.out.println("\nClinician 2 test data: " + __clinician2.toString());
@@ -145,7 +144,6 @@ public class DAOTest {
             assertTrue(clinicians[0].equals(__clinician1));
             assertTrue(clinicians[1].equals(__clinician2));
             System.out.println("Clinicians OK");
-            */
             
             AirQualityMonitor[] aqms = theDAO.getAirQualityMonitors();
             System.out.println("AQM 1 test data: " + __aqm1.toString());
