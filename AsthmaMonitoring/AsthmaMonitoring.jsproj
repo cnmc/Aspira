@@ -56,6 +56,8 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="airQualityStatus.json" />
+    <Content Include="asthmaMonitoringLog.txt" />
+    <Content Include="audio\readingAlert.mp3" />
     <Content Include="config.json" />
     <Content Include="css\default.css" />
     <Content Include="css\fishAnimation.css" />
@@ -143,6 +145,7 @@
     <Content Include="js\medicationConfig.js" />
     <Content Include="js\navigator.js" />
     <Content Include="js\configurationProperties.js" />
+    <Content Include="medicationReminder.txt" />
     <Content Include="pages\adminPage\adminPage.css" />
     <Content Include="pages\adminPage\adminPage.html" />
     <Content Include="pages\adminPage\adminPage.js" />

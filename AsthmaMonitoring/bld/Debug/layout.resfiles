@@ -1,4 +1,6 @@
 airQualityStatus.json
+asthmaMonitoringLog.txt
+audio\readingAlert.mp3
 config.json
 css\default.css
 css\fishAnimation.css
@@ -87,6 +89,7 @@ js\jquery1.8.js
 js\logSpirometerReading.js
 js\medicationConfig.js
 js\navigator.js
+medicationReminder.txt
 pages\adminPage\adminPage.css
 pages\adminPage\adminPage.html
 pages\adminPage\adminPage.js
