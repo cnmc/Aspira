@@ -1,0 +1,8 @@
+Morning - 0800;
+Evening - 1500;
+Morning;
+Qvar - Desc 1, Medicine 4 - Desc 2, Singulair - Desc 3;
+Evening;
+Advair (inhaler) - Desc 1, Medicine 1 - Desc 2,  - Desc 3;
+With Symptoms;
+Advair (inhaler) - Desc 1, Other: fakisol - Desc 2,  - Desc 3;
