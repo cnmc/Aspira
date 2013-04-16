@@ -4,6 +4,6 @@
 		"readingZone": "yellow",
 		"takeDynamicReadingOn1" : "yellow",
 		"takeDynamicReadingOn2" : "red",
-		"frequencyReadingThisFile": 300000
+		"frequencyReadingThisFile": 10000
 	}
 }

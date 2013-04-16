@@ -31,7 +31,7 @@
                     else if (document.getElementById("FEVValue")) {
                         //it is in the fev sreen now and appending onclick event according to that
                         confirmBtnMarkup.onclick = function () {
-                            if (AsthmaGlobals.symptomQuestion == true) {
+                           // if (AsthmaGlobals.symptomQuestion == true) {
                                 //change the mood of the fish to happy
                                 AsthmaGlobals.currMood = "happy";
                                 // setProperties();
@@ -39,8 +39,10 @@
                                     document.getElementById("FEVValue").value;
                                 createSpirometerLog();
                                 AsthmaGlobals.canTakeReading = false;
-                                WinJS.Navigation.navigate("/pages/home/home.html");
-                            }
+                                askSymptonsView();
+                                document.getElementById("FEVValue").disabled = "disabled";
+                                document.getElementById('confirmButton').removeNode(true);
+                           // }
                         };
                     }
                     document.getElementById('inputBoxDivision').appendChild(confirmBtnMarkup);
@@ -71,7 +73,7 @@
                 document.getElementById("PEFValue").id = "FEVValue"
                 document.getElementById("FEVValue").value = "";
                 document.getElementById("confirmButton").removeNode(true);
-                askSymptonsView();
+               
         },
         
         updateLayout: function (element, viewState, lastViewState) {
@@ -135,14 +137,16 @@
         AsthmaGlobals.symptomQuestion = true;
         AsthmaGlobals.hasSymptoms = false;
         appendLog("click", "sympton button", "No");
-        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"]="No"
+        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "No";
+        WinJS.Navigation.navigate("/pages/home/home.html");
     }
     function logPressYes() {
         AsthmaGlobals.symptomQuestion = true;
         AsthmaGlobals.hasSymptoms = true;
         document.getElementById("symptomBox").removeNode(true);
         appendLog("click", "sympton button", "Yes");
-        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes"
+        Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes";
+        WinJS.Navigation.navigate("/pages/home/home.html");
     }
 
   
