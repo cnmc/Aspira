@@ -239,4 +239,16 @@ public final class AspiraDAO implements IAspiraDAO {
             throws DMPException {
         return __dao.importUIEvents(toImport, overwrite);
     }
+
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatientTail(
+            String patientId, int tail) throws DMPException {
+        return __dao.findSpirometerReadingsForPatientTail(patientId, tail);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatientTail(String patientId, int tail)
+            throws DMPException {
+        return __dao.findUIEventsForPatientTail(patientId, tail);
+    }
 }
