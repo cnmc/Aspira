@@ -1,8 +1,8 @@
 Morning - 0800;
 Evening - 1500;
 Morning;
-Qvar - Desc 1, Medicine 4 - Desc 2, Singulair - Desc 3;
+Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
 Evening;
-Advair (inhaler) - Desc 1, Medicine 1 - Desc 2,  - Desc 3;
+Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
 With Symptoms;
-Advair (inhaler) - Desc 1, Other: fakisol - Desc 2,  - Desc 3;
+Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
