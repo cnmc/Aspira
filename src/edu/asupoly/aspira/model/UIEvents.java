@@ -37,6 +37,25 @@ public class UIEvents implements java.io.Serializable {
         return events;   
     }
     
+    public UIEvents getLastNReadings(int n) {
+        if (n <= 0) return null;
+        if (__events == null || __events.isEmpty()) return null; 
+        
+        UIEvents rval = new UIEvents();
+        int size = __events.size() - n;
+        Iterator<UIEvent> iter = __events.iterator();
+        // skip first n, none if n > number of readings we have
+        while (iter.hasNext() && size > 0) {
+            iter.next();
+            size--;
+        }
+        while (iter.hasNext() && n > 0) {
+            rval.addEvent(iter.next());
+            n--;
+        }      
+        return rval;
+    }
+    
     /**
      * Get all Events before a given minute
      * @param d

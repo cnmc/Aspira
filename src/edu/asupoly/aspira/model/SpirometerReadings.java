@@ -73,6 +73,25 @@ public class SpirometerReadings implements java.io.Serializable {
         return spr;   
     }
     
+    public SpirometerReadings getLastNReadings(int n) {
+        if (n <= 0) return null;
+        if (__readings == null || __readings.isEmpty()) return null; 
+        
+        SpirometerReadings rval = new SpirometerReadings();
+        int size = __readings.size() - n;
+        Iterator<SpirometerReading> iter = __readings.iterator();
+        // skip first n, none if n > number of readings we have
+        while (iter.hasNext() && size > 0) {
+            iter.next();
+            size--;
+        }
+        while (iter.hasNext() && n > 0) {
+            rval.addReading(iter.next());
+            n--;
+        }      
+        return rval;
+    }
+    
     /**
      * Get the Spirometer reading at a specific minute
      * @param d

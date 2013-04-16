@@ -19,14 +19,10 @@ import java.util.logging.Logger;
 public class UIInteractionMonitorTask extends AspiraTimerTask {
     private static final Logger LOGGER = Logger.getLogger(UIInteractionMonitorTask.class.getName());
 
-    private Date __lastRead;
     private Properties __props;
 
     public UIInteractionMonitorTask() {
         super();
-        // is there a property to read here?
-        // Hardwire the initial last date to something in the past
-        __lastRead = new Date(0L); // Jan 1 1970, 00:00:00
     }
 
     public void run() {
@@ -39,11 +35,11 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
                 // need to push these to DAO, but in the simple way we are reading in the whole
                 // logfile so we have to not push those that come after lastReading
                 if (uie != null) {
-                    UIEvents uieAfter = uie.getUIEventsAfter(__lastRead, false);
+                    UIEvents uieAfter = uie.getUIEventsAfter(_lastRead, false);
                     if (uieAfter != null) {
                         UIEvent ue = uieAfter.getLastEvent();
                         if (ue != null) {
-                            __lastRead = ue.getDate();
+                            _lastRead = ue.getDate();
 
                             // Now we need to call DAOManager to get DAO
                             IAspiraDAO dao = AspiraDAO.getDAO();
@@ -79,6 +75,22 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
             rval = false;
         }
         _isInitialized = rval;
+        
+        // This section tries to initialize the last reading date
+        _lastRead = new Date(0L);  // Jan 1 1970, 00:00:00
+        try {
+            IAspiraDAO dao = AspiraDAO.getDAO();
+            UIEvents uiEvents = dao.findUIEventsForPatientTail(__props.getProperty("patientid"), 1);
+            if (uiEvents != null) {
+                UIEvent e = uiEvents.getFirstEvent();
+                if (e != null) {
+                    _lastRead = e.getDate();
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Unable to get last reading time");
+        }
+        
         return rval;
     }
 }

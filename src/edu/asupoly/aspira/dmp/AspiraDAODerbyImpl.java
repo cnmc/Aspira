@@ -445,6 +445,16 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 null, null);
     }
 
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatientTail(String patientId, int tail)
+            throws DMPException {
+        if (patientId == null) return null;
+        
+        return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
+                __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientTail"),
+                null, null);
+    }
+    
     /* (non-Javadoc)
      * @see edu.asupoly.aspira.dmp.IAspiraDAO#findSpirometerReadingsForPatient(java.lang.String, java.util.Date, java.util.Date)
      */
@@ -533,6 +543,15 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findUIEventsForPatientBetween"),      
                 start, end);
+    }
+    
+    @Override
+    public UIEvents findUIEventsForPatientTail(String patientId, int tail) throws DMPException {
+       if (patientId == null) return null;
+        
+        return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
+                __derbyProperties.getProperty("sql.findUIEventsForPatientTail"),
+                null, null);
     }
     
     @Override

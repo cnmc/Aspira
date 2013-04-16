@@ -20,14 +20,10 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
     
     private static final Logger LOGGER = Logger.getLogger(AirQualityMonitorTask.class.getName());
     
-    private Date __lastRead;
     private Properties __props;
     
     public AirQualityMonitorTask() {
         super();
-        // is there a property to read here?
-        // Hardwire the initial last date to something in the past
-        __lastRead = new Date(0L); // Jan 1 1970, 00:00:00
     }
 
     public void run() {
@@ -40,11 +36,11 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
                 // need to push these to DAO, but in the simple way we are reading in the whole
                 // logfile so we have to not push those that come after lastReading
                 if (aqr != null) {
-                    AirQualityReadings aqrAfter = aqr.getAirQualityAfter(__lastRead, false);
+                    AirQualityReadings aqrAfter = aqr.getAirQualityAfter(_lastRead, false);
                     if (aqrAfter != null) {
                         ParticleReading pr = aqrAfter.getLastReading();
                         if (pr != null) {
-                            __lastRead = pr.getDateTime();
+                            _lastRead = pr.getDateTime();
 
                             // Now we need to call DAOManager to get DAO
                             IAspiraDAO dao = AspiraDAO.getDAO();
@@ -82,6 +78,22 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
             rval = false;
         }
         _isInitialized = rval;
+        
+        // This section tries to initialize the last reading date
+        _lastRead = new Date(0L);  // Jan 1 1970, 00:00:00
+        try {
+            IAspiraDAO dao = AspiraDAO.getDAO();
+            AirQualityReadings aqr = dao.findAirQualityReadingsForPatientTail(__props.getProperty("patientid"), 1);
+            if (aqr != null) {
+                ParticleReading e = aqr.getFirstReading();
+                if (e != null) {
+                    _lastRead = e.getDateTime();
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Unable to get last reading time");
+        }
+        
         return rval;
     }
 }

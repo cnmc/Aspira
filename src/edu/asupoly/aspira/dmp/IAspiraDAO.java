@@ -37,9 +37,11 @@ public interface IAspiraDAO {
     SpirometerReadings findSpirometerReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId) throws DMPException;
     SpirometerReadings findSpirometerReadingsForPatient(String patientId,int groupId) throws DMPException;
+    SpirometerReadings findSpirometerReadingsForPatientTail(String patientId, int tail) throws DMPException;
     UIEvents findUIEventsForPatient(String patientId, Date start, Date end) throws DMPException;
     UIEvents findUIEventsForPatient(String patientId) throws DMPException;
     UIEvents findUIEventsForPatient(String patientId,int groupId) throws DMPException;
+    UIEvents findUIEventsForPatientTail(String patientId, int tail) throws DMPException;
     
     // CUD operations
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;

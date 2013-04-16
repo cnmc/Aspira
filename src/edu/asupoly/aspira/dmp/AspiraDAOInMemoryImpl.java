@@ -187,6 +187,23 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         return aqr.getLastNReadings(tail);
     }
 
+
+    @Override
+    public SpirometerReadings findSpirometerReadingsForPatientTail(
+            String patientId, int tail) throws DMPException {
+        SpirometerReadings aqr = __spReadings.getSpirometerReadingsForPatient(patientId);
+        if (aqr == null) return null;
+        return aqr.getLastNReadings(tail);
+    }
+
+    @Override
+    public UIEvents findUIEventsForPatientTail(String patientId, int tail)
+            throws DMPException {
+        UIEvents aqr = __events.getUIEventsForPatient(patientId);
+        if (aqr == null) return null;
+        return aqr.getLastNReadings(tail);
+    }
+    
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientHead(
             String patientId, int head) throws DMPException {

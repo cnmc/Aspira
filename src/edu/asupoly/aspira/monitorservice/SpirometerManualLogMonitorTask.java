@@ -6,6 +6,9 @@ import edu.asupoly.aspira.dmp.devicelogs.SpirometerTextLogParser;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerTextReadingFactory;
+import edu.asupoly.aspira.model.UIEvent;
+import edu.asupoly.aspira.model.UIEvents;
+
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -17,19 +20,16 @@ import java.util.logging.Logger;
  */
 public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
 
-    private Date __lastRead;
+    private static final Logger LOGGER = Logger.getLogger(SpirometerManualLogMonitorTask.class.getName());
     private Properties __props;
     
     public SpirometerManualLogMonitorTask() {
         super();
-        // is there a property to read here?
-        // Hardwire the initial last date to something in the past
-        __lastRead = new Date(0L); // Jan 1 1970, 00:00:00
     }
 
     public void run() {
         if (_isInitialized) {
-            Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Monitoring Service: running Spirometer Manual Log Monitor Task");
+            LOGGER.log(Level.INFO, "Monitoring Service: running Spirometer Manual Log Monitor Task");
             try {
                 //System.out.println("Executing Spirometer Manual Log Timer Task!");
                 SpirometerTextReadingFactory strf = new SpirometerTextLogParser();  // need to property-ize
@@ -37,22 +37,22 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
                 // need to push these to DAO, but in the simple way we are reading in the whole
                 // logfile so we have to not push those that come after lastReading
                 if (spr != null) {
-                    SpirometerReadings sprAfter = spr.getSpirometerReadingsAfter(__lastRead, false);
+                    SpirometerReadings sprAfter = spr.getSpirometerReadingsAfter(_lastRead, false);
                     if (sprAfter == null) {
-                        Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Manual Spirometer Task: nothing to process");                                                
+                        LOGGER.log(Level.INFO, "Manual Spirometer Task: nothing to process");                                                
                     } else {
-                        Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.INFO, "Manual Spirometer Task: processing records " + sprAfter.toString()); 
+                        LOGGER.log(Level.INFO, "Manual Spirometer Task: processing records " + sprAfter.toString()); 
                         SpirometerReading sp = sprAfter.getLastReading();
                         if (sp != null) {
                             // Now we need to call DAOManager to get DAO
                             IAspiraDAO dao = AspiraDAO.getDAO();
                             dao.importSpirometerReadings(sprAfter, true); // return a boolean if we need it
-                            __lastRead = sp.getMeasureDate();
+                            _lastRead = sp.getMeasureDate();
                         }
                     }
                 }
             } catch (Throwable t) {
-                Logger.getLogger(SpirometerManualLogMonitorTask.class.getName()).log(Level.SEVERE, null, t);
+                LOGGER.log(Level.SEVERE, null, t);
             }
         }
     }
@@ -73,6 +73,21 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
             rval = false;
         }
         _isInitialized = rval;
+        
+        // This section tries to initialize the last reading date
+        _lastRead = new Date(0L);  // Jan 1 1970, 00:00:00
+        try {
+            IAspiraDAO dao = AspiraDAO.getDAO();
+            SpirometerReadings sps = dao.findSpirometerReadingsForPatientTail(__props.getProperty("patientid"), 1);
+            if (sps != null) {
+                SpirometerReading e = sps.getFirstReading();
+                if (e != null) {
+                    _lastRead = e.getMeasureDate();
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.log(Level.WARNING, "Unable to get last reading time");
+        }
         return rval;
     }
 }
