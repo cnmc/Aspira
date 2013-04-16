@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,6 +31,7 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -640,43 +642,246 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 medPannelSaveButton = new javax.swing.JButton();
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 medPannelSaveButton.addActionListener(new ActionListener() {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 	public void actionPerformed(ActionEvent e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String morningLine = new String();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String eveningLine = new String();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String withSymptomLine = new String();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		ArrayList<String> morningList = new ArrayList<String>();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		ArrayList<String> eveningList = new ArrayList<String>();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		ArrayList<String> withSymptomList = new ArrayList<String>();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String newLine;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		if(albInhalCB.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Albuterol (inhaler) - " + aiDescField.getText();
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(aimCheck.isSelected()){
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat("Albuterol (inhaler) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat(aiDescField.getText() + ", ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(aieCheck.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat("Albuterol (inhaler) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(aiwsCheck.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat("Albuterol (inhaler) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		if(albNebCB.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Albuterol (nebulizer) - " + anDescField.getText();
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(anmCheck.isSelected()){
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat("Albuterol (nebulizer) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(aneCheck.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat("Albuterol (nebulizer) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			if(anwsCheck.isSelected())
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat("Albuterol (nebulizer) - ");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 			}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(floDiskCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Flovent (diskus) - " + fdDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fdmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fdeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fdwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(floInhalCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Flovent (inhaler) - " + fiDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fimCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fieCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(fiwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(qvarCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Qvar - " + qDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(qmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(qeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(qmwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(adDiskCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Advair (diskus) - " + adDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(admCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(adeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(adwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(adInhalCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Advair (inhaler) - " + adiDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(adimCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(adieCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(adiwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(budesonideCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Budesonide - " + bDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(bmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(bmeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(bmwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(pulmiTwistCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Pulmicort (twisthaler) - " + ptDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(ptmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(pteCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(ptwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(pulmiNebCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Pulmicort (nebulizer) - " + pnDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(pnmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(pneCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(pnwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(singulairCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Singulair - " + sDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(smCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(smeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(smwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(otherMedCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			newLine = "Other: " +otherMedField.getText() +" - " + oDescField.getText();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(omCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(oeCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(owsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomList.add(newLine);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		writeMedFile(morningList, eveningList, withSymptomList);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	private void writeMedFile(ArrayList<String> morningList, ArrayList<String> eveningList, ArrayList<String> wsList)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		BufferedWriter bw;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		try {
+																																																																																																																															bw = new BufferedWriter(new FileWriter("Config\\medicationReminder.txt"));
+																																																																																																																															bw.write("Morning - 0800;\n");
+																																																																																																																															bw.write("Evening - 1500;\n");
+																																																																																																																															bw.write("Morning;\n");
+																																																																																																																															if(morningList.size() == 0)
+																																																																																																																																bw.write("\n");
+																																																																																																																															else
+																																																																																																																															{
+																																																																																																																																for(int i = 0; i < morningList.size(); i++){
+																																																																																																																																	if(i != 0)
+																																																																																																																																		bw.write(", ");
+																																																																																																																																	bw.write(morningList.get(i));
+																																																																																																																																}
+																																																																																																																																	bw.write(";\n");
+																																																																																																																															}
+																																																																																																																															bw.write("Evening;\n");
+																																																																																																																															if(eveningList.size() == 0)
+																																																																																																																																bw.write("\n");
+																																																																																																																															else
+																																																																																																																															{
+																																																																																																																																for(int i = 0; i < eveningList.size(); i++){
+																																																																																																																																	if(i != 0)
+																																																																																																																																		bw.write(", ");
+																																																																																																																																	bw.write(eveningList.get(i));
+																																																																																																																																}
+																																																																																																																																	bw.write(";\n");
+																																																																																																																															}
+																																																																																																																															bw.write("With Symptoms;\n");
+																																																																																																																															if(wsList.size() == 0)
+																																																																																																																																bw.write("\n");
+																																																																																																																															else
+																																																																																																																															{
+																																																																																																																																for(int i = 0; i < wsList.size(); i++){
+																																																																																																																																	if(i != 0)
+																																																																																																																																		bw.write(", ");
+																																																																																																																																	bw.write(wsList.get(i));
+																																																																																																																																}
+																																																																																																																																	bw.write(";\n");
+																																																																																																																															}
+																																																																																																																															bw.close();
+																																																																																																																														} catch (IOException e) {
+																																																																																																																															JOptionPane.showMessageDialog(AdminConfigWindow.this, "medicationReminder.txt write error", "File error", JOptionPane.ERROR_MESSAGE);
+																																																																																																																															return;
+																																																																																																																														}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 	}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 });
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 medResetClearButton = new javax.swing.JButton();
@@ -847,8 +1052,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       sDescField = new JTextField();
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       sDescField.setColumns(10);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      textField_11 = new JTextField();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      textField_11.setColumns(20);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      oDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      oDescField.setColumns(20);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       MedicationPanelLayout.setHorizontalGroup(
@@ -892,7 +1097,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       							.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       								.addComponent(pnDescField)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       								.addComponent(sDescField)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(textField_11, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(oDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       						.addComponent(albInhalCB))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       					.addGap(18)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
@@ -1028,7 +1233,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       				.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       				.addComponent(otherMedCB)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(oDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       				.addComponent(omCheck)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       				.addComponent(oeCheck)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       				.addComponent(owsCheck))
@@ -1342,7 +1547,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     {
     	BufferedReader br;
     	try {
-			br = new BufferedReader(new FileReader("Config\\medlist.txt"));
+			br = new BufferedReader(new FileReader("Config\\medicationReminder.txt"));
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(this, "Medicine list could not be found", "File not found", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -1364,6 +1569,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "The medicine file is missing data", "Empty file", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+    	
+    	if(morningLine.contains(";"))
+    		morningLine = morningLine.substring(0,morningLine.indexOf(';'));
+    	if(eveningLine.contains(";"))
+    		eveningLine = eveningLine.substring(0,eveningLine.indexOf(';'));
+    	if(withSymptomsLine.contains(";"))
+    		withSymptomsLine = withSymptomsLine.substring(0,withSymptomsLine.indexOf(';'));
+    	String delimiter = "[,]+";
+    	String[] morningTokens = morningLine.split(delimiter);
     	
     	smwsCheck.setEnabled(false);
     	pnwsCheck.setEnabled(false);
@@ -1461,173 +1675,248 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     	pulmiNebCB.setSelected(false);
     	singulairCB.setSelected(false);
     	
-    	if(morningLine.contains("Albuterol (inhaler)"))
-    	{
-    		albInhalCB.setSelected(true);
-    		aimCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Albuterol (nebulizer)"))
-    	{
-    		albNebCB.setSelected(true);
-    		anmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Flovent (diskus)"))
-    	{
-    		floDiskCB.setSelected(true);
-    		fdmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Flovent (inhaler)"))
-    	{
-    		floInhalCB.setSelected(true);
-    		fimCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Qvar"))
-    	{
-    		qvarCB.setSelected(true);
-    		qmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Advair (diskus)"))
-    	{
-    		adDiskCB.setSelected(true);
-    		admCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Advair (inhailer)"))
-    	{
-    		adInhalCB.setSelected(true);
-    		adimCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Budesonide"))
-    	{
-    		budesonideCB.setSelected(true);
-    		bmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Pulmicort (twisthaler)"))
-    	{
-    		pulmiTwistCB.setSelected(true);
-    		ptmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Pulmicort (nebulizer)"))
-    	{
-    		pulmiNebCB.setSelected(true);
-    		pnmCheck.setSelected(true);	
-    	}
-    	if(morningLine.contains("Singulair"))
-    	{
-    		singulairCB.setSelected(true);
-    		smCheck.setSelected(true);	
-    	}
-    	
-    	
-    	if(eveningLine.contains("Albuterol (inhaler)"))
-    	{
-    		albInhalCB.setSelected(true);
-    		aieCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Albuterol (nebulizer)"))
-    	{
-    		albNebCB.setSelected(true);
-    		aneCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Flovent (diskus)"))
-    	{
-    		floDiskCB.setSelected(true);
-    		fdeCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Flovent (inhaler)"))
-    	{
-    		floInhalCB.setSelected(true);
-    		fieCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Qvar"))
-    	{
-    		qvarCB.setSelected(true);
-    		qeCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Advair (diskus)"))
-    	{
-    		adDiskCB.setSelected(true);
-    		adeCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Advair (inhailer)"))
-    	{
-    		adInhalCB.setSelected(true);
-    		adieCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Budesonide"))
-    	{
-    		budesonideCB.setSelected(true);
-    		bmeCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Pulmicort (twisthaler)"))
-    	{
-    		pulmiTwistCB.setSelected(true);
-    		pteCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Pulmicort (nebulizer)"))
-    	{
-    		pulmiNebCB.setSelected(true);
-    		pneCheck.setSelected(true);	
-    	}
-    	if(eveningLine.contains("Singulair"))
-    	{
-    		singulairCB.setSelected(true);
-    		smeCheck.setSelected(true);	
+    	omCheck.setSelected(false);
+    	omCheck.setEnabled(false);
+    	oeCheck.setSelected(false);
+    	oeCheck.setEnabled(false);
+    	owsCheck.setSelected(false);
+    	owsCheck.setEnabled(false);
+    	oDescField.setEnabled(false);
+    	otherMedField.setEnabled(false);
+    	for(int i = 0; i < morningTokens.length; i++){
+	    	if(morningTokens[i].contains("Albuterol (inhaler)"))
+	    	{
+	    		albInhalCB.setSelected(true);
+	    		aimCheck.setSelected(true);	
+	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Albuterol (nebulizer)"))
+	    	{
+	    		albNebCB.setSelected(true);
+	    		anmCheck.setSelected(true);
+	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Flovent (diskus)"))
+	    	{
+	    		floDiskCB.setSelected(true);
+	    		fdmCheck.setSelected(true);	
+	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Flovent (inhaler)"))
+	    	{
+	    		floInhalCB.setSelected(true);
+	    		fimCheck.setSelected(true);
+	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Qvar"))
+	    	{
+	    		qvarCB.setSelected(true);
+	    		qmCheck.setSelected(true);
+	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Advair (diskus)"))
+	    	{
+	    		adDiskCB.setSelected(true);
+	    		admCheck.setSelected(true);
+	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Advair (inhaler)"))
+	    	{
+	    		adInhalCB.setSelected(true);
+	    		adimCheck.setSelected(true);
+	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Budesonide"))
+	    	{
+	    		budesonideCB.setSelected(true);
+	    		bmCheck.setSelected(true);
+	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Pulmicort (twisthaler)"))
+	    	{
+	    		pulmiTwistCB.setSelected(true);
+	    		ptmCheck.setSelected(true);
+	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Pulmicort (nebulizer)"))
+	    	{
+	    		pulmiNebCB.setSelected(true);
+	    		pnmCheck.setSelected(true);
+	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Singulair"))
+	    	{
+	    		singulairCB.setSelected(true);
+	    		smCheck.setSelected(true);
+	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(morningTokens[i].contains("Other:"))
+	    	{
+	    		otherMedCB.setSelected(true);
+	    		omCheck.setSelected(true);
+	    		String omName = morningTokens[i].substring(morningTokens[i].indexOf(':')+2,
+	    				morningTokens[i].indexOf('-'));
+	    		otherMedField.setText(omName);
+	    		oDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
     	}
     	
-    	if(withSymptomsLine.contains("Albuterol (inhaler)"))
-    	{
-    		albInhalCB.setSelected(true);
-    		aiwsCheck.setSelected(true);	
+    	String[] eveningTokens = eveningLine.split(delimiter);
+    	for(int i = 0; i < eveningTokens.length; i++){
+	    	if(eveningTokens[i].contains("Albuterol (inhaler)"))
+	    	{
+	    		albInhalCB.setSelected(true);
+	    		aieCheck.setSelected(true);
+	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Albuterol (nebulizer)"))
+	    	{
+	    		albNebCB.setSelected(true);
+	    		aneCheck.setSelected(true);	
+	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Flovent (diskus)"))
+	    	{
+	    		floDiskCB.setSelected(true);
+	    		fdeCheck.setSelected(true);	
+	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Flovent (inhaler)"))
+	    	{
+	    		floInhalCB.setSelected(true);
+	    		fieCheck.setSelected(true);	
+	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Qvar"))
+	    	{
+	    		qvarCB.setSelected(true);
+	    		qeCheck.setSelected(true);
+	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Advair (diskus)"))
+	    	{
+	    		adDiskCB.setSelected(true);
+	    		adeCheck.setSelected(true);	
+	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Advair (inhaler)"))
+	    	{
+	    		adInhalCB.setSelected(true);
+	    		adieCheck.setSelected(true);
+	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Budesonide"))
+	    	{
+	    		budesonideCB.setSelected(true);
+	    		bmeCheck.setSelected(true);
+	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Pulmicort (twisthaler)"))
+	    	{
+	    		pulmiTwistCB.setSelected(true);
+	    		pteCheck.setSelected(true);	
+	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Pulmicort (nebulizer)"))
+	    	{
+	    		pulmiNebCB.setSelected(true);
+	    		pneCheck.setSelected(true);	
+	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Singulair"))
+	    	{
+	    		singulairCB.setSelected(true);
+	    		smeCheck.setSelected(true);	
+	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(eveningTokens[i].contains("Other:"))
+	    	{
+	    		otherMedCB.setSelected(true);
+	    		oeCheck.setSelected(true);
+	    		String omName = eveningTokens[i].substring(eveningTokens[i].indexOf(':')+2,
+	    				eveningTokens[i].indexOf('-'));
+	    		otherMedField.setText(omName);
+	    		oDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
+	    	}
     	}
-    	if(withSymptomsLine.contains("Albuterol (nebulizer)"))
-    	{
-    		albNebCB.setSelected(true);
-    		anwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Flovent (diskus)"))
-    	{
-    		floDiskCB.setSelected(true);
-    		fdwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Flovent (inhaler)"))
-    	{
-    		floInhalCB.setSelected(true);
-    		fiwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Qvar"))
-    	{
-    		qvarCB.setSelected(true);
-    		qmwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Advair (diskus)"))
-    	{
-    		adDiskCB.setSelected(true);
-    		adwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Advair (inhailer)"))
-    	{
-    		adInhalCB.setSelected(true);
-    		adiwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Budesonide"))
-    	{
-    		budesonideCB.setSelected(true);
-    		bmwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Pulmicort (twisthaler)"))
-    	{
-    		pulmiTwistCB.setSelected(true);
-    		ptwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Pulmicort (nebulizer)"))
-    	{
-    		pulmiNebCB.setSelected(true);
-    		pnwsCheck.setSelected(true);	
-    	}
-    	if(withSymptomsLine.contains("Singulair"))
-    	{
-    		singulairCB.setSelected(true);
-    		smwsCheck.setSelected(true);	
+    	
+    	String[] withSymptomsTokens = withSymptomsLine.split(delimiter);
+    	for(int i = 0; i < withSymptomsTokens.length; i++){
+	    	if(withSymptomsTokens[i].contains("Albuterol (inhaler)"))
+	    	{
+	    		albInhalCB.setSelected(true);
+	    		aiwsCheck.setSelected(true);
+	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Albuterol (nebulizer)"))
+	    	{
+	    		albNebCB.setSelected(true);
+	    		anwsCheck.setSelected(true);
+	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Flovent (diskus)"))
+	    	{
+	    		floDiskCB.setSelected(true);
+	    		fdwsCheck.setSelected(true);
+	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Flovent (inhaler)"))
+	    	{
+	    		floInhalCB.setSelected(true);
+	    		fiwsCheck.setSelected(true);
+	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Qvar"))
+	    	{
+	    		qvarCB.setSelected(true);
+	    		qmwsCheck.setSelected(true);
+	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Advair (diskus)"))
+	    	{
+	    		adDiskCB.setSelected(true);
+	    		adwsCheck.setSelected(true);
+	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Advair (inhaler)"))
+	    	{
+	    		adInhalCB.setSelected(true);
+	    		adiwsCheck.setSelected(true);
+	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Budesonide"))
+	    	{
+	    		budesonideCB.setSelected(true);
+	    		bmwsCheck.setSelected(true);
+	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Pulmicort (twisthaler)"))
+	    	{
+	    		pulmiTwistCB.setSelected(true);
+	    		ptwsCheck.setSelected(true);
+	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Pulmicort (nebulizer)"))
+	    	{
+	    		pulmiNebCB.setSelected(true);
+	    		pnwsCheck.setSelected(true);
+	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Singulair"))
+	    	{
+	    		singulairCB.setSelected(true);
+	    		smwsCheck.setSelected(true);
+	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    	}
+	    	if(withSymptomsTokens[i].contains("Other:"))
+	    	{
+	    		otherMedCB.setSelected(true);
+	    		owsCheck.setSelected(true);
+	    		String omName = withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf(':')+2,
+	    				withSymptomsTokens[i].indexOf('-'));
+	    		otherMedField.setText(omName);
+	    		oDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
+	    	}
     	}
     	
     	smwsCheck.setEnabled(singulairCB.isSelected());
@@ -1677,6 +1966,12 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     	fdDescField.setEnabled(floDiskCB.isSelected());
     	anDescField.setEnabled(albNebCB.isSelected());
     	aiDescField.setEnabled(albInhalCB.isSelected());
+    	
+    	omCheck.setEnabled(otherMedCB.isSelected());
+    	oeCheck.setEnabled(otherMedCB.isSelected());
+    	owsCheck.setEnabled(otherMedCB.isSelected());
+    	oDescField.setEnabled(otherMedCB.isSelected());
+    	otherMedField.setEnabled(otherMedCB.isSelected());
     	
     	try {
 			br.close();
@@ -1860,7 +2155,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 	private JTextField ptDescField;
 	private JTextField pnDescField;
 	private JTextField sDescField;
-	private JTextField textField_11;
+	private JTextField oDescField;
 	private JLabel pefRangeLabel;
 	private JLabel fevRangeLabel;
 	private JLabel lblLower;
@@ -1926,6 +2221,12 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         	fdDescField.setEnabled(floDiskCB.isSelected());
         	anDescField.setEnabled(albNebCB.isSelected());
         	aiDescField.setEnabled(albInhalCB.isSelected());
+        	
+        	omCheck.setEnabled(otherMedCB.isSelected());
+        	oeCheck.setEnabled(otherMedCB.isSelected());
+        	owsCheck.setEnabled(otherMedCB.isSelected());
+        	oDescField.setEnabled(otherMedCB.isSelected());
+        	otherMedField.setEnabled(otherMedCB.isSelected());
          }
     }
 }
