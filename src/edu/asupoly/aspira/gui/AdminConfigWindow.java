@@ -29,10 +29,14 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Dimension;
 
 /*
  * To change this template, choose Tools | Templates
@@ -53,6 +57,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
      * @throws FileNotFoundException 
      */
     public AdminConfigWindow() throws FileNotFoundException, IOException, org.json.simple.parser.ParseException, ParseException {
+    	setAlwaysOnTop(true);
         initComponents();
     }
 
@@ -66,41 +71,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() throws FileNotFoundException, IOException, org.json.simple.parser.ParseException, ParseException {
+		
 
-        JSONParser parser = new JSONParser();
-        JSONObject jo;
-        jo = (JSONObject)parser.parse(new FileReader("Config\\config.json"));
-        JSONObject configObject = (JSONObject)jo.get("config");
-
-
-        albInhalTD = new TimeDialog(this);
-        albNebTD = new TimeDialog(this);
-        floDiskTD = new TimeDialog(this);
-        floInhalTD = new TimeDialog(this);
-        qvarTD = new TimeDialog(this);
-        adDiskTD = new TimeDialog(this);
-        adInhalTD = new TimeDialog(this);
-        budeTD = new TimeDialog(this);
-        pulmiTwistTD = new TimeDialog(this);
-        pulmiNebTD = new TimeDialog(this);
-        singTD = new TimeDialog(this);
-        otherTD = new TimeDialog(this);
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        PatientPanel = new javax.swing.JPanel();
-        pidLabel = new javax.swing.JLabel();
-        pidField = new javax.swing.JTextField();
-        rpdLabel = new javax.swing.JLabel();
-        readOneTimeLabel = new javax.swing.JLabel();
-        read1TimeField = new javax.swing.JTextField();
-        read1TimeCB = new javax.swing.JComboBox();
-        readTwoTimeLabel = new javax.swing.JLabel();
-        read2TimeField = new javax.swing.JTextField();
-        read2TimeCB = new javax.swing.JComboBox();
-        read3TimeLabel = new javax.swing.JLabel();
-        read3TimeField = new javax.swing.JTextField();
-        read3TimeCB = new javax.swing.JComboBox();
-        savePatientInfo = new javax.swing.JButton();
-        resetPatientInfo = new javax.swing.JButton();
+        jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
         logPanel = new javax.swing.JPanel();
         lastSpiroLogHeader = new javax.swing.JLabel();
         lastSpiroLogArea = new javax.swing.JLabel();
@@ -132,172 +106,341 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         userPushHeader = new javax.swing.JLabel();
         userPushArea = new javax.swing.JLabel();
         userDateTimeHeader = new javax.swing.JLabel();
-        savePatientInfo.addActionListener(new PatientSaveButtonHandler());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Administrator Config Window"); // NOI18N
-
-        pidLabel.setText("Patient ID: ");
-
-        pidField.setText((String)configObject.get("patientID"));
-
-        rpdLabel.setText("Readings per day: 3");
-
-        readOneTimeLabel.setText("Reading 1 Time:");
-
-        JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
-        JSONArray readingArray = (JSONArray)alertObject.get("spiroReadingTime");
-
-        SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
-        SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm");
-
-        Date reading = readingTimeFormat.parse((String)readingArray.get(0));
-        Date noon = readingTimeFormat.parse("1200");
-        int amOrPM = reading.compareTo(noon);
-
-
-
-        read1TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        read1TimeField.setText(displayFormat.format(reading));
-        read1TimeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                read1TimeFieldActionPerformed(evt);
-            }
+        
+        configPanel = new javax.swing.JPanel();
+        soundCB = new javax.swing.JCheckBox();
+        alarmSoundPromptLabel = new javax.swing.JLabel();
+        alarmLengthField = new javax.swing.JTextField();
+        alarmTimeUnitsLabel = new javax.swing.JLabel();
+        startDateLabel = new javax.swing.JLabel();
+        spiroRangeLabel = new javax.swing.JLabel();
+        lowerTextLabel = new javax.swing.JLabel();
+        pefLowerRangeField = new javax.swing.JTextField();
+        upperRangeLabel = new javax.swing.JLabel();
+        pefUpperRangeField = new javax.swing.JTextField();
+        startDateField = new javax.swing.JTextField();
+        saveConfigButton = new javax.swing.JButton();
+        saveConfigButton.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		JSONParser parser = new JSONParser();
+        		JSONObject jo;
+        		JSONObject configObject;
+        		JSONObject alertObject;
+        		JSONObject deviceObject;
+        		JSONObject minObject;
+        		JSONObject maxObject;
+        		JSONObject animationObject;
+        		JSONObject dynamicObject;
+        		try {
+					jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+					configObject = (JSONObject)jo.get("config");
+					alertObject = (JSONObject)configObject.get("alertInfo");
+					dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+					
+					alertObject.put("sound", soundCB.isSelected());
+					alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
+					SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
+					
+					configObject.put("alertInfo", alertObject);
+					configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
+					
+					animationObject = (JSONObject)configObject.get("animation");
+					
+					animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
+					
+					animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
+					configObject.put("animation", animationObject);
+					
+					
+					minObject = (JSONObject)configObject.get("minValues");
+					maxObject = (JSONObject)configObject.get("maxValues");
+					minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
+					minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
+					maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
+					maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
+					
+					dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
+					
+					double curRed = Double.parseDouble(redZoneField.getText());
+					double curYellow = Double.parseDouble(yellowZoneField.getText());
+					
+					if(red != curRed)
+						dynamicObject.put("redZone", curRed);
+					if(yellow != curYellow)
+						dynamicObject.put("yellowZone", curYellow);
+					
+					configObject.put("minValues", minObject);
+					configObject.put("maxValues", maxObject);
+					
+					jo.put("config", configObject);
+					
+					FileWriter fw = new FileWriter("Config\\config.json");
+					fw.write(jo.toJSONString());
+					fw.flush();
+					fw.close();
+					
+					readingsHandled();
+					
+					
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (org.json.simple.parser.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch(ParseException e2){
+					// TODO write code
+				}
+        	}
         });
-
-        read1TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
-
-        if(amOrPM>=0)
-            read1TimeCB.setSelectedIndex(0);
-        else
-            read1TimeCB.setSelectedIndex(1);
-
-        reading = readingTimeFormat.parse((String)readingArray.get(1));
-        amOrPM = reading.compareTo(noon);
-
-        readTwoTimeLabel.setText("Reading 2 Time:");
-
-        read2TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        read2TimeField.setText(displayFormat.format(reading));
-        read2TimeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readTwoTimeFieldActionPerformed(evt);
-            }
+        resetConfigButton = new javax.swing.JButton();
+        resetConfigButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		readingInit();
+        		configInit();
+        	}
         });
-
-        read2TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
-        if(amOrPM < 0)
-            read2TimeCB.setSelectedIndex(0);
-        else
-            read2TimeCB.setSelectedIndex(1);
-        read2TimeCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                read2TimeCBActionPerformed(evt);
-            }
-        });
-
-        read3TimeLabel.setText("Reading 3 Time:");
-
-        reading = readingTimeFormat.parse((String)readingArray.get(2));
-        amOrPM = reading.compareTo(noon);
-
-        read3TimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        read3TimeField.setText(displayFormat.format(reading));
-        read3TimeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                read3TimeFieldActionPerformed(evt);
-            }
-        });
-
-        read3TimeCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AM", "PM" }));
-        if(amOrPM < 0)
-            read3TimeCB.setSelectedIndex(0);
-        else
-            read3TimeCB.setSelectedIndex(1);
-        read3TimeCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                read3TimeCBActionPerformed(evt);
-            }
-        });
-
-        savePatientInfo.setText("Save");
-        savePatientInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                savePatientInfoActionPerformed(evt);
-            }
-        });
-
-        resetPatientInfo.setText("Reset");
-
-        javax.swing.GroupLayout PatientPanelLayout = new javax.swing.GroupLayout(PatientPanel);
-        PatientPanel.setLayout(PatientPanelLayout);
-        PatientPanelLayout.setHorizontalGroup(
-                PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(PatientPanelLayout.createSequentialGroup()
-                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(savePatientInfo)
-                                .addGroup(PatientPanelLayout.createSequentialGroup()
-                                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addGroup(PatientPanelLayout.createSequentialGroup()
-                                                        .addContainerGap()
-                                                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                .addGroup(PatientPanelLayout.createSequentialGroup()
-                                                                        .addComponent(pidLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(pidField, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addComponent(rpdLabel)))
-                                                                        .addGroup(PatientPanelLayout.createSequentialGroup()
-                                                                                .addGap(32, 32, 32)
-                                                                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                                        .addComponent(readOneTimeLabel)
-                                                                                        .addComponent(readTwoTimeLabel)
-                                                                                        .addComponent(read3TimeLabel))
-                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                .addComponent(read2TimeField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                                                .addComponent(read1TimeField)
-                                                                                                .addComponent(read3TimeField, javax.swing.GroupLayout.Alignment.TRAILING))))
-                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                        .addComponent(read1TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                                        .addComponent(resetPatientInfo)
-                                                                                                        .addContainerGap(353, Short.MAX_VALUE))
-                );
-        PatientPanelLayout.setVerticalGroup(
-                PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(PatientPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(pidLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(pidField))
-                                .addGap(18, 18, 18)
-                                .addComponent(rpdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(readOneTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(read1TimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(read1TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(read2TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(read2TimeField)
-                                                .addComponent(readTwoTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(read3TimeCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(read3TimeField)
-                                                        .addComponent(read3TimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
-                                                        .addGroup(PatientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                .addComponent(savePatientInfo)
-                                                                .addComponent(resetPatientInfo))
-                                                                .addContainerGap())
-                );
-
-        jTabbedPane1.addTab("Patient", PatientPanel);
+                                                                                
+                                                                                JLabel lblTrialLength = new JLabel("Trial length:");
+                                                                                
+                                                                                trialLengthField = new JTextField();
+                                                                                trialLengthField.setColumns(10);
+                                                                                
+                                                                                lblWeeks = new JLabel("weeks");
+                                                                                
+                                                                                lblSpirometerDeviceId = new JLabel("Spirometer device id:");
+                                                                                
+                                                                                deviceIDField = new JTextField();
+                                                                                deviceIDField.setColumns(10);
+                                                                                        
+                                                                                        lblReading = new JLabel("Reading 1:");
+                                                                                        
+                                                                                        lblReading_1 = new JLabel("Reading 2:");
+                                                                                        
+                                                                                        lblReading_2 = new JLabel("Reading 3:");
+                                                                                        
+                                                                                        read1Field = new JTextField();
+                                                                                        read1Field.setColumns(10);
+                                                                                        
+                                                                                        read2Field = new JTextField();
+                                                                                        read2Field.setColumns(10);
+                                                                                        
+                                                                                        read3Field = new JTextField();
+                                                                                        read3Field.setColumns(10);
+                                                                                        
+                                                                                        read1TimeCB = new JComboBox();
+                                                                                        read1TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+                                                                                        
+                                                                                        read2TimeCB = new JComboBox();
+                                                                                        read2TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+                                                                                        
+                                                                                        read3TimeCB = new JComboBox();
+                                                                                        read3TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+                                                                                        chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
+                                                                                        lblMean = new JLabel("Current mean particle read:");
+                                                                                        lblStdDeviation = new JLabel("Current standard deviation:");
+                                                                                        standardDeviationDisplay = new JLabel();
+                                                                                        lblYellowZone = new JLabel("Yellow Zone:");
+                                                                                        lblRedZone = new JLabel("Red Zone:");
+                                                                                        yellowZoneField = new JTextField();
+                                                                                        redZoneField = new JTextField();
+                                                                                        meanParticleDisplay = new JLabel();
+                                                                                        readingInit();
+                                                                                        configInit();
+                                                                                        chckbxEnableDynamicAlerts.addItemListener(new ItemListener() {
+                                                                                        	public void itemStateChanged(ItemEvent e) {
+                                                                                        		
+                                                                                        		lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                                        		
+                                                                                        		
+                                                                                        		
+                                                                                        	}
+                                                                                        });
+                                                                                
+                                                                                        javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
+                                                                                        configPanelLayout.setHorizontalGroup(
+                                                                                        	configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        		.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        			.addContainerGap()
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        				.addComponent(soundCB)
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addGap(68)
+                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                        						.addComponent(lblRedZone)
+                                                                                        						.addComponent(lblYellowZone))
+                                                                                        					.addGap(18)
+                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        						.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        						.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addComponent(alarmSoundPromptLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                        					.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(alarmTimeUnitsLabel))
+                                                                                        				.addComponent(chckbxEnableDynamicAlerts)
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addComponent(lblStdDeviation)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addGap(239)
+                                                                                        					.addComponent(saveConfigButton)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(resetConfigButton))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addComponent(lblMean)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addComponent(spiroRangeLabel)
+                                                                                        					.addGap(18)
+                                                                                        					.addComponent(pefRangeLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(lowerTextLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                        					.addGap(12)
+                                                                                        					.addComponent(upperRangeLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                        					.addGap(10)
+                                                                                        					.addComponent(fevRangeLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(lblLower)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                                                                                        					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                        					.addComponent(fevUpperLabel)
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addComponent(lblSpirometerDeviceId)
+                                                                                        					.addGap(18)
+                                                                                        					.addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        				.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                        						.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                        							.addComponent(lblReading_2)
+                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        							.addComponent(read3Field, 0, 0, Short.MAX_VALUE))
+                                                                                        						.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                        							.addComponent(lblReading_1)
+                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        							.addComponent(read2Field, 0, 0, Short.MAX_VALUE))
+                                                                                        						.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                        							.addComponent(lblReading)
+                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        							.addComponent(read1Field, 0, 0, Short.MAX_VALUE))
+                                                                                        						.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                        							.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        								.addComponent(startDateLabel)
+                                                                                        								.addComponent(lblTrialLength))
+                                                                                        							.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        							.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                        								.addComponent(trialLengthField, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                                                                        								.addComponent(startDateField, Alignment.LEADING))))
+                                                                                        					.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        					.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        						.addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        						.addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        						.addComponent(lblWeeks)
+                                                                                        						.addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                                                                        			.addContainerGap(144, Short.MAX_VALUE))
+                                                                                        );
+                                                                                        configPanelLayout.setVerticalGroup(
+                                                                                        	configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                        		.addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        			.addGap(12)
+                                                                                        			.addComponent(soundCB)
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(alarmTimeUnitsLabel))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(startDateLabel)
+                                                                                        				.addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(trialLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(lblTrialLength)
+                                                                                        				.addComponent(lblWeeks))
+                                                                                        			.addGap(45)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblReading)
+                                                                                        				.addComponent(read1Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblReading_1)
+                                                                                        				.addComponent(read2Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblReading_2)
+                                                                                        				.addComponent(read3Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addGap(65)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblSpirometerDeviceId)
+                                                                                        				.addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(spiroRangeLabel)
+                                                                                        				.addComponent(pefRangeLabel)
+                                                                                        				.addComponent(lowerTextLabel)
+                                                                                        				.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(upperRangeLabel)
+                                                                                        				.addComponent(fevRangeLabel)
+                                                                                        				.addComponent(lblLower)
+                                                                                        				.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(fevUpperLabel)
+                                                                                        				.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addComponent(chckbxEnableDynamicAlerts)
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblMean)
+                                                                                        				.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblStdDeviation)
+                                                                                        				.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addGap(3)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        				.addComponent(lblYellowZone))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(lblRedZone)
+                                                                                        				.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                        			.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                                                                                        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        				.addComponent(resetConfigButton)
+                                                                                        				.addComponent(saveConfigButton)))
+                                                                                        );
+                                                                                        configPanel.setLayout(configPanelLayout);
+                                                                                        
+                                                                                                jTabbedPane1.addTab("App Config", configPanel);
 
         lastSpiroLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lastSpiroLogHeader.setText("Last spirometer log:");
@@ -341,1266 +484,1207 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
         logPanel.setLayout(logPanelLayout);
         logPanelLayout.setHorizontalGroup(
-                logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(logPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lastACLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(userInterLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                .addComponent(spiroServerPushHeader)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                        .addComponent(spiroDateTimeHeader)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                .addComponent(spiroExportedHeader)
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                        .addComponent(acExportedHeader)
-                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                        .addComponent(acExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                .addComponent(acPushHeader)
-                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                        .addComponent(acDateTimeHeader)
-                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                        .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                .addComponent(userDateTimeHeader)
-                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                        .addComponent(userExportHeader)
-                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                                                        .addComponent(userExportArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                                .addComponent(userPushHeader)
-                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                                .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                                                        .addComponent(spiroPushButton)
-                                                                                                                                        .addComponent(spiroExportButton)
-                                                                                                                                        .addComponent(acExportButton)
-                                                                                                                                        .addComponent(acPushButton)
-                                                                                                                                        .addComponent(userExportButton)
-                                                                                                                                        .addComponent(userPushButton))))
-                                                                                                                                        .addContainerGap(427, Short.MAX_VALUE))
-                );
-        logPanelLayout.setVerticalGroup(
-                logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(logPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastACLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(userInterLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(spiroServerPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
                                 .addComponent(spiroDateTimeHeader)
-                                .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(spiroServerPushHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                .addComponent(spiroExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                        .addGap(4, 4, 4)
-                                                                        .addComponent(spiroPushButton)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(spiroExportButton)))
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(lastACLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                .addComponent(acDateTimeHeader)
-                                                                                .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                                        .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                        .addComponent(acPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                                                .addComponent(acExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                .addComponent(acExportedArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                        .addGap(4, 4, 4)
-                                                                                                                        .addComponent(acPushButton)
-                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                        .addComponent(acExportButton)))
-                                                                                                                        .addGap(18, 18, 18)
-                                                                                                                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                        .addComponent(userInterLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                                                                .addComponent(userDateTimeHeader)
-                                                                                                                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                                                                                        .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                                                        .addComponent(userPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                                                                                                .addComponent(userExportHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                                                                .addComponent(userExportArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                                                                                                        .addGap(4, 4, 4)
-                                                                                                                                                                        .addComponent(userPushButton)
-                                                                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                                                                                        .addComponent(userExportButton)))
-                                                                                                                                                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(spiroExportedHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acExportedHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(acExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(acDateTimeHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userDateTimeHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userExportHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(userExportArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(logPanelLayout.createSequentialGroup()
+                                .addComponent(userPushHeader)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spiroPushButton)
+                            .addComponent(spiroExportButton)
+                            .addComponent(acExportButton)
+                            .addComponent(acPushButton)
+                            .addComponent(userExportButton)
+                            .addComponent(userPushButton))))
+                .addContainerGap(427, Short.MAX_VALUE))
+        );
+        logPanelLayout.setVerticalGroup(
+            logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spiroDateTimeHeader)
+                    .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spiroServerPushHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spiroExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(spiroPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spiroExportButton)))
+                .addGap(18, 18, 18)
+                .addComponent(lastACLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lastACLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(acDateTimeHeader)
+                    .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(acPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(acExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(acExportedArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(acPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(acExportButton)))
+                .addGap(18, 18, 18)
+                .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userInterLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(userDateTimeHeader)
+                    .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(userExportHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userExportArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(userPushButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userExportButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         jTabbedPane1.addTab("Logs", logPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 681, GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                );
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 782, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(19, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane1, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                        .addContainerGap())
-                );
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jTabbedPane1, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+        			.addContainerGap())
+        );
         getContentPane().setLayout(layout);
-        configPanel = new javax.swing.JPanel();
-        alarmTypeLabel = new javax.swing.JLabel();
-        soundCB = new javax.swing.JCheckBox();
-        blinkCB = new javax.swing.JCheckBox();
-        alarmSoundPromptLabel = new javax.swing.JLabel();
-        alarmLengthField = new javax.swing.JTextField();
-        alarmTimeUnitsLabel = new javax.swing.JLabel();
-        urlToPushLabel = new javax.swing.JLabel();
-        urlField = new javax.swing.JTextField();
-        testURLButton = new javax.swing.JButton();
-        ProvisioningLabel = new javax.swing.JLabel();
-        startDateLabel = new javax.swing.JLabel();
-        endDateLabel = new javax.swing.JLabel();
-        rewardLabel = new javax.swing.JLabel();
-        rewardField = new javax.swing.JTextField();
-        spiroRangeLabel = new javax.swing.JLabel();
-        lowerTextLabel = new javax.swing.JLabel();
-        pefLowerRangeField = new javax.swing.JTextField();
-        upperRangeLabel = new javax.swing.JLabel();
-        pefUpperRangeField = new javax.swing.JTextField();
-        pollingTimeLabel = new javax.swing.JLabel();
-        pollingTimeField = new javax.swing.JTextField();
-        pollingTimeUnitLabel = new javax.swing.JLabel();
-        startDateField = new javax.swing.JTextField();
-        endDateField = new javax.swing.JTextField();
-        saveConfigButton = new javax.swing.JButton();
-        saveConfigButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JSONParser parser = new JSONParser();
-                JSONObject jo;
-                JSONObject configObject;
-                JSONObject alertObject;
-                JSONObject deviceObject;
-                JSONObject minObject;
-                JSONObject maxObject;
-                JSONObject animationObject;
-                JSONObject dynamicObject;
-                try {
-                    jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
-                    configObject = (JSONObject)jo.get("config");
-                    alertObject = (JSONObject)configObject.get("alertInfo");
-
-                    configObject.put("pushURL", urlField.getText());
-
-                    alertObject.put("blinkAlarm", blinkCB.isSelected());
-                    alertObject.put("soundAlarm", soundCB.isSelected());
-                    alertObject.put("alarmLength", alarmLengthField.getText());
-                    configObject.put("pushURL", urlField.getText());
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YY");
-
-                    configObject.put("alertInfo", alertObject);
-
-                    animationObject = (JSONObject)configObject.get("animation");
-
-                    animationObject.put("startDateMilliSec",sdf.parse(startDateField.getText()).getTime() );
-                    animationObject.put("endDateMilliSec",sdf.parse(endDateField.getText()).getTime() );
-                    animationObject.put("totalStages", Long.getLong(rewardField.getText()));
-                    configObject.put("animation", animationObject);
-                    deviceObject = (JSONObject)configObject.get("device");
-                    deviceObject.put("serial", serialField.getText());
-                    deviceObject.put("vendor", vendorField.getText());
-                    deviceObject.put("name", deviceField.getText());
-                    configObject.put("device", deviceObject);
-
-                    minObject = (JSONObject)configObject.get("minValues");
-                    maxObject = (JSONObject)configObject.get("maxValues");
-                    minObject.put("PEFValue", pefLowerRangeField.getText());
-                    minObject.put("FEVValue", fevLowerRangeField.getText());
-                    maxObject.put("PEFValue", pefUpperRangeField.getText());
-                    maxObject.put("FEVValue", fevUpperRangeField.getText());
-
-                    dynamicObject = (JSONObject)configObject.get("dynamicAlerts");
-                    dynamicObject.put("enabled", chckbxEnableDynamicAlerts.isSelected());
-                    configObject.put("dynamicAlerts", dynamicObject);
-
-
-                    configObject.put("minValues", minObject);
-                    configObject.put("maxValues", maxObject);
-
-                    jo.put("config", configObject);
-
-                    FileWriter fw = new FileWriter("Config\\config.json");
-                    fw.write(jo.toJSONString());
-                    fw.flush();
-                    fw.close();
-
-
-
-                } catch (FileNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (org.json.simple.parser.ParseException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch(ParseException e2){
-                    // TODO write code
-                }
-            }
-        });
-        resetConfigButton = new javax.swing.JButton();
-
-        blinkCB.addItemListener(new AlarmCheckBoxListener());
-        soundCB.addItemListener(new AlarmCheckBoxListener());
-
-        alarmTypeLabel.setText("Alarm Type: ");
-
-        soundCB.setSelected((boolean)alertObject.get("soundAlarm"));
-        soundCB.setText("Sound");
-
-        blinkCB.setSelected((boolean)alertObject.get("blinkAlarm"));
-        blinkCB.setText("Blink");
-
-        alarmSoundPromptLabel.setText("How long alarm sounds: ");
-
-        alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        alarmLengthField.setText((String)alertObject.get("alarmLength"));
-        alarmLengthField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        alarmTimeUnitsLabel.setText("minutes");
-
-        urlToPushLabel.setText("URL to push readings: ");
-
-        urlField.setText((String)configObject.get("pushURL" +
-                ""));
-
-        testURLButton.setText("Test");
-
-        ProvisioningLabel.setText("Provisioning: ");
-
-        startDateLabel.setText("Start Date:");
-
-        endDateLabel.setText("End Date: ");
-
-        rewardLabel.setText("Reward Steps: ");
-        JSONObject animationObject = (JSONObject)configObject.get("animation");
-        rewardField.setText(""+(Long) animationObject.get("totalStages"));
-
-        spiroRangeLabel.setText("Spirometer range: ");
-        JSONObject minObject = (JSONObject)configObject.get("minValues");
-        JSONObject maxObject = (JSONObject)configObject.get("maxValues");
-        pefLowerRangeField.setText("" + minObject.get("PEFValue"));
-        pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
-        lowerTextLabel.setText("Lower");
-
-        upperRangeLabel.setText("Upper");
-
-        pollingTimeLabel.setText("Air Quality Polling: ");
-        Time pollingTime = new Time((long)configObject.get("logFileWriteFrequency"));
-        Calendar minutesGotDeprecated = GregorianCalendar.getInstance();
-        minutesGotDeprecated.setTime(pollingTime);
-
-        pollingTimeField.setText("" + pollingTime.getMinutes());
-
-        pollingTimeUnitLabel.setText("minutes");
-
-        SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
-        Date startDate = new Date((long)animationObject.get("startDateMilliSec"));
-        Date endDate = new Date((long)animationObject.get("endDateMilliSec"));
-        startDateField.setText(startAndEndFormat.format(startDate));
-
-        endDateField.setText(startAndEndFormat.format(endDate));
-
-        saveConfigButton.setText("Save");
-
-        resetConfigButton.setText("Reset");
-
-        chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
-
-        JSONObject dynamicObject = (JSONObject)configObject.get("dynamicAlerts");
-        chckbxEnableDynamicAlerts.setSelected((boolean)dynamicObject.get("enabled"));
-
-        JLabel lblCurrentMeanParticle = new JLabel("Current mean particle read:");
-        lblCurrentMeanParticle.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-        double mean = (double)dynamicObject.get("mean");
-        double deviation = (double)dynamicObject.get("deviation");
-        double yellow = mean + deviation;
-        double red = mean + 2*deviation;
-        JLabel meanParticleDisplay = new JLabel(""+ mean);
-        meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-
-        JLabel lblCurrentStandardDeviation = new JLabel("Current standard deviation:");
-        lblCurrentStandardDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
-
-        JLabel standardDeviationDisplay = new JLabel("" + deviation);
-        standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-
-        JLabel lblYellowZone = new JLabel("Yellow Zone:");
-        lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
-
-        JLabel lblRedZone = new JLabel("Red Zone:");
-        lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
-
-        yellowZoneField = new JTextField();
-        yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
-        yellowZoneField.setColumns(10);
-        yellowZoneField.setText(""+yellow);
-
-        redZoneField = new JTextField();
-        redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());;
-        redZoneField.setColumns(10);
-        redZoneField.setText(""+red);
-
-        JLabel pefRangeLabel = new JLabel("PEF");
-
-        JLabel fevRangeLabel = new JLabel("Fev1");
-
-        JLabel lblLower = new JLabel("Lower");
-
-        fevLowerRangeField = new JTextField();
-        fevLowerRangeField.setColumns(10);
-        fevLowerRangeField.setText("" + minObject.get("FEVValue"));
-
-        JLabel fevUpperLabel = new JLabel("Upper");
-
-        fevUpperRangeField = new JTextField();
-        fevUpperRangeField.setColumns(10);
-        fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
-
-        JSONObject deviceObject = (JSONObject)configObject.get("device");
-
-        lblSerial = new JLabel("Serial#:");
-
-        serialField = new JTextField();
-        serialField.setColumns(10);
-        serialField.setText((String)deviceObject.get("serial"));
-
-        lblVendor = new JLabel("Vendor:");
-
-        vendorField = new JTextField();
-        vendorField.setColumns(10);
-        vendorField.setText((String)deviceObject.get("vendor"));
-
-        lblDevice = new JLabel("Device:");
-
-        deviceField = new JTextField();
-        deviceField.setColumns(10);
-        deviceField.setText((String)deviceObject.get("name"));
-
-        javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
-        configPanelLayout.setHorizontalGroup(
-                configPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(configPanelLayout.createSequentialGroup()
-                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(configPanelLayout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING, false)
-                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                .addComponent(alarmSoundPromptLabel)
-                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                .addComponent(alarmTimeUnitsLabel))
-                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                        .addComponent(alarmTypeLabel)
-                                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(soundCB)
-                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                        .addComponent(blinkCB)))
-                                                                        .addComponent(chckbxEnableDynamicAlerts)
-                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                .addComponent(spiroRangeLabel)
-                                                                                .addGap(18)
-                                                                                .addComponent(pefRangeLabel)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(lowerTextLabel)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(12)
-                                                                                .addComponent(upperRangeLabel)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(10)
-                                                                                .addComponent(fevRangeLabel)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(lblLower)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                .addComponent(fevUpperLabel)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                        .addComponent(lblCurrentStandardDeviation)
-                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                        .addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
-                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                .addComponent(saveConfigButton)
-                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                .addComponent(resetConfigButton))
-                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                        .addComponent(urlToPushLabel)
-                                                                                                                        .addGap(18)
-                                                                                                                        .addComponent(urlField, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)))
-                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                        .addComponent(testURLButton))
-                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                        .addComponent(endDateLabel)
-                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                        .addComponent(endDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                .addComponent(ProvisioningLabel)
-                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                .addComponent(startDateLabel)
-                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                .addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                        .addComponent(lblCurrentMeanParticle)
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                        .addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))))
-                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                .addContainerGap()
-                                                                                                                                                                .addComponent(pollingTimeLabel)
-                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                .addComponent(pollingTimeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                .addComponent(pollingTimeUnitLabel))
-                                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                        .addGap(89)
-                                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                        .addComponent(lblRedZone)
-                                                                                                                                                                                        .addGap(18)
-                                                                                                                                                                                        .addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                .addComponent(lblYellowZone)
-                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                                                .addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                                                                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                        .addContainerGap()
-                                                                                                                                                                                                        .addComponent(rewardLabel)
-                                                                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                        .addComponent(rewardField, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                                .addContainerGap()
-                                                                                                                                                                                                                .addComponent(lblSerial)
-                                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                                .addComponent(serialField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                                        .addContainerGap()
-                                                                                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
-                                                                                                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                                                        .addComponent(lblVendor)
-                                                                                                                                                                                                                                        .addGap(10)
-                                                                                                                                                                                                                                        .addComponent(vendorField, 0, 0, Short.MAX_VALUE))
-                                                                                                                                                                                                                                        .addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                                                                .addComponent(lblDevice)
-                                                                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                                                                .addComponent(deviceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-                                                                                                                                                                                                                                                .addContainerGap(144, Short.MAX_VALUE))
-                );
-        configPanelLayout.setVerticalGroup(
-                configPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(configPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(alarmTypeLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(soundCB)
-                                .addComponent(blinkCB))
-                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(alarmTimeUnitsLabel))
-                                        .addGap(18)
-                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                .addComponent(urlToPushLabel)
-                                                .addComponent(urlField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(testURLButton))
-                                                .addGap(18)
-                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                        .addComponent(ProvisioningLabel)
-                                                        .addComponent(startDateLabel)
-                                                        .addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                .addComponent(endDateLabel)
-                                                                .addComponent(endDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                        .addComponent(rewardLabel)
-                                                                        .addComponent(rewardField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                .addComponent(lblSerial)
-                                                                                .addComponent(serialField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(vendorField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(lblVendor))
-                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                .addComponent(lblDevice)
-                                                                                                .addComponent(deviceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                .addGap(21)
-                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                        .addComponent(spiroRangeLabel)
-                                                                                                        .addComponent(pefRangeLabel)
-                                                                                                        .addComponent(lowerTextLabel)
-                                                                                                        .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(upperRangeLabel)
-                                                                                                        .addComponent(fevRangeLabel)
-                                                                                                        .addComponent(lblLower)
-                                                                                                        .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(fevUpperLabel)
-                                                                                                        .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                        .addComponent(chckbxEnableDynamicAlerts)
-                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                .addComponent(lblCurrentMeanParticle)
-                                                                                                                .addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                        .addComponent(lblCurrentStandardDeviation)
-                                                                                                                        .addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addGap(3)
-                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                .addComponent(lblYellowZone)
-                                                                                                                                .addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                        .addComponent(lblRedZone)
-                                                                                                                                        .addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                        .addGap(11)
-                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                .addComponent(pollingTimeLabel)
-                                                                                                                                                .addComponent(pollingTimeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addComponent(pollingTimeUnitLabel))
-                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                        .addComponent(resetConfigButton)
-                                                                                                                                                        .addComponent(saveConfigButton)))
-                );
-        configPanel.setLayout(configPanelLayout);
-
-        jTabbedPane1.addTab("App Config", configPanel);
-        MedicationPanel = new javax.swing.JPanel();
-        medPannelSaveButton = new javax.swing.JButton();
-        medResetClearButton = new javax.swing.JButton();
-        albInhalCB = new javax.swing.JCheckBox();
-        albNebCB = new javax.swing.JCheckBox();
-        floDiskCB = new javax.swing.JCheckBox();
-        floInhalCB = new javax.swing.JCheckBox();
-        qvarCB = new javax.swing.JCheckBox();
-        adDiskCB = new javax.swing.JCheckBox();
-        adInhalCB = new javax.swing.JCheckBox();
-        budesonideCB = new javax.swing.JCheckBox();
-        pulmiTwistCB = new javax.swing.JCheckBox();
-        otherMedCB = new javax.swing.JCheckBox();
-        singulairCB = new javax.swing.JCheckBox();
-        otherMedField = new javax.swing.JTextField();
-        pulmiNebCB = new javax.swing.JCheckBox();
-
-        albInhalCB.addItemListener(new MedicineCheckBoxListener());
-        albNebCB.addItemListener(new MedicineCheckBoxListener());
-        floDiskCB.addItemListener(new MedicineCheckBoxListener());
-        floInhalCB.addItemListener(new MedicineCheckBoxListener());
-        qvarCB.addItemListener(new MedicineCheckBoxListener());
-        adDiskCB.addItemListener(new MedicineCheckBoxListener());
-        adInhalCB.addItemListener(new MedicineCheckBoxListener());
-        budesonideCB.addItemListener(new MedicineCheckBoxListener());
-        pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
-        singulairCB.addItemListener(new MedicineCheckBoxListener());
-        otherMedCB.addItemListener(new MedicineCheckBoxListener());
-        pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
-
-        medPannelSaveButton.setText("Save");
-
-        medResetClearButton.setText("Reset");
-
-        albInhalCB.setText("Albuteral (inhaler)");
-
-        albNebCB.setText("Albuterol (nebulizer)");
-
-        floDiskCB.setText("Flovent (diskus)");
-
-        floInhalCB.setText("Flovent (inhaler)");
-
-        qvarCB.setText("Qvar");
-
-        adDiskCB.setText("Advair (diskus)");
-
-        adInhalCB.setText("Advair (inhaler)");
-
-        budesonideCB.setText("Budesonide");
-
-        pulmiTwistCB.setText("Pulmicort (twisthaler)");
-
-        otherMedCB.setText("Other:");
-
-        singulairCB.setText("Singulair");
-
-        otherMedField.setText("Other");
-
-        pulmiNebCB.setText("Pulmicort (nebulizer)");
-
-        lblOtherTimes = new JLabel("Times:");
-
-        albuInTimesLabel = new JLabel("Times:");
-
-        albuNebTimesLabel = new JLabel("Times:");
-
-        floDiskTimeLabel = new JLabel("Times:");
-
-        floInhalTimeLabel = new JLabel("Times:");
-
-        qvarTimeLabel = new JLabel("Times:");
-
-        adDiskusTimeLabel = new JLabel("Times:");
-
-        adInhalTimeLabel = new JLabel("Times:");
-
-        budeTimeLabel = new JLabel("Times:");
-
-        pulmiTwistTimeLabel = new JLabel("Times:");
-
-        pulmiNebTimeLabel = new JLabel("Times:");
-
-        singTimeLabel = new JLabel("Times:");
-
-        albuInhalFreField = new JTextField();
-        albuInhalFreField.setEditable(false);
-        albuInhalFreField.setText("1");
-        albuInhalFreField.setHorizontalAlignment(SwingConstants.TRAILING);
-        albuInhalFreField.setColumns(10);
-
-        albuNebFreqField = new JTextField();
-        albuNebTimesLabel.setLabelFor(albuNebFreqField);
-        albuNebFreqField.setText("1");
-        albuNebFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        albuNebFreqField.setEditable(false);
-        albuNebFreqField.setColumns(10);
-
-        floDiskFreqField = new JTextField();
-        floDiskFreqField.setText("1");
-        floDiskFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        floDiskFreqField.setEditable(false);
-        floDiskFreqField.setColumns(10);
-
-        floInhalFreqField = new JTextField();
-        floInhalFreqField.setText("1");
-        floInhalFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        floInhalFreqField.setEditable(false);
-        floInhalFreqField.setColumns(10);
-
-        qvarFreqField = new JTextField();
-        qvarFreqField.setText("1");
-        qvarFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        qvarFreqField.setEditable(false);
-        qvarFreqField.setColumns(10);
-
-        adDiskFreqField = new JTextField();
-        adDiskFreqField.setText("1");
-        adDiskFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        adDiskFreqField.setEditable(false);
-        adDiskFreqField.setColumns(10);
-
-        adInhalFreqField = new JTextField();
-        adInhalFreqField.setText("1");
-        adInhalFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        adInhalFreqField.setEditable(false);
-        adInhalFreqField.setColumns(10);
-
-        budeFreqField = new JTextField();
-        budeFreqField.setText("1");
-        budeFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        budeFreqField.setEditable(false);
-        budeFreqField.setColumns(10);
-
-        pulmTwistFreqField = new JTextField();
-        pulmTwistFreqField.setText("1");
-        pulmTwistFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        pulmTwistFreqField.setEditable(false);
-        pulmTwistFreqField.setColumns(10);
-
-        pulmNebFreqField = new JTextField();
-        pulmNebFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        pulmNebFreqField.setText("1");
-        pulmNebFreqField.setEditable(false);
-        pulmNebFreqField.setColumns(10);
-
-        singFreqField = new JTextField();
-        singFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        singFreqField.setText("1");
-        singFreqField.setEditable(false);
-        singFreqField.setColumns(10);
-
-        otherFreqField = new JTextField();
-        otherFreqField.setText("1");
-        otherFreqField.setHorizontalAlignment(SwingConstants.TRAILING);
-        otherFreqField.setEditable(false);
-        otherFreqField.setColumns(10);
-
-        lblAlbInhalDoses = new JLabel("Doses:");
-
-        lblAlbuNebDoses = new JLabel("Doses:");
-
-        lblFloDiskDoses = new JLabel("Doses:");
-
-        lblFloInhalDoses = new JLabel("Doses:");
-
-        lblQvarDoses = new JLabel("Doses:");
-
-        lblAdvairDiskDoses = new JLabel("Doses:");
-
-        lblAdvairInhaleDoses = new JLabel("Doses:");
-
-        lblBudeDoses = new JLabel("Doses:");
-
-        lblPulmiTwistDoses = new JLabel("Doses:");
-
-        lblPulmiNebDoses = new JLabel("Doses:");
-
-        lblSingulairDoses = new JLabel("Doses:");
-
-        lblOtherDoses = new JLabel("Doses:");
-
-        albInhalDoseField = new JTextField();
-        albInhalDoseField.setEnabled(false);
-        albInhalDoseField.setText("1");
-        albInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        albInhalDoseField.setColumns(10);
-
-        albNebDoseField = new JTextField();
-        albNebDoseField.setEnabled(false);
-        albNebDoseField.setText("1");
-        albNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        albNebDoseField.setColumns(10);
-
-        floDiskDoseField = new JTextField();
-        floDiskDoseField.setEnabled(false);
-        floDiskDoseField.setText("1");
-        floDiskDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        floDiskDoseField.setColumns(10);
-
-        floInhalDoseField = new JTextField();
-        floInhalDoseField.setEnabled(false);
-        floInhalDoseField.setText("1");
-        floInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        floInhalDoseField.setColumns(10);
-
-        qvarDoseField = new JTextField();
-        qvarDoseField.setEnabled(false);
-        qvarDoseField.setText("1");
-        qvarDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        qvarDoseField.setColumns(10);
-
-        adDiskDoseField = new JTextField();
-        adDiskDoseField.setEnabled(false);
-        adDiskDoseField.setText("1");
-        adDiskDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        adDiskDoseField.setColumns(10);
-
-        adInhalDoseField = new JTextField();
-        adInhalDoseField.setEnabled(false);
-        adInhalDoseField.setText("1");
-        adInhalDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        adInhalDoseField.setColumns(10);
-
-        budeDoseField = new JTextField();
-        budeDoseField.setEnabled(false);
-        budeDoseField.setText("1");
-        budeDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        budeDoseField.setColumns(10);
-
-        pulmiTwistDoseField = new JTextField();
-        pulmiTwistDoseField.setEnabled(false);
-        pulmiTwistDoseField.setText("1");
-        pulmiTwistDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        pulmiTwistDoseField.setColumns(10);
-
-        pulmiNebDoseField = new JTextField();
-        pulmiNebDoseField.setEnabled(false);
-        pulmiNebDoseField.setText("1");
-        pulmiNebDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        pulmiNebDoseField.setColumns(10);
-
-        singDoseField = new JTextField();
-        singDoseField.setEnabled(false);
-        singDoseField.setText("1");
-        singDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        singDoseField.setColumns(10);
-
-        otherDoseField = new JTextField();
-        otherDoseField.setEnabled(false);
-        otherDoseField.setText("1");
-        otherDoseField.setHorizontalAlignment(SwingConstants.TRAILING);
-        otherDoseField.setColumns(10);
-
-        btnAlbNeb = new JButton("Select Times");
-        btnAlbNeb.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                albNebTD.setVisible(true);
-            }
-        });
-        btnAlbNeb.setEnabled(false);
-
-        btnFloDisk = new JButton("Select Times");
-        btnFloDisk.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                floDiskTD.setVisible(true);
-            }
-        });
-        btnFloDisk.setEnabled(false);
-
-        btnFloInhal = new JButton("Select Times");
-        btnFloInhal.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                floInhalTD.setVisible(true);
-            }
-        });
-        btnFloInhal.setEnabled(false);
-
-        btnQvar = new JButton("Select Times");
-        btnQvar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                qvarTD.setVisible(true);
-            }
-        });
-        btnQvar.setEnabled(false);
-
-        btnAdDisk = new JButton("Select Times");
-        btnAdDisk.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                adDiskTD.setVisible(true);
-            }
-        });
-        btnAdDisk.setEnabled(false);
-
-        btnAdInhal = new JButton("Select Times");
-        btnAdInhal.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                adInhalTD.setVisible(true);
-            }
-        });
-        btnAdInhal.setEnabled(false);
-
-        btnBude = new JButton("Select Times");
-        btnBude.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                budeTD.setVisible(true);
-            }
-        });
-        btnBude.setEnabled(false);
-
-        btnPulmiTwist = new JButton("Select Times");
-        btnPulmiTwist.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                pulmiTwistTD.setVisible(true);
-            }
-        });
-        btnPulmiTwist.setEnabled(false);
-
-        btnPulmiNeb = new JButton("Select Times");
-        btnPulmiNeb.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                pulmiNebTD.setVisible(true);
-            }
-        });
-
-        btnPulmiNeb.setEnabled(false);
-
-        btnSing = new JButton("Select Times");
-        btnSing.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                singTD.setVisible(true);
-            }
-        });
-        btnSing.setEnabled(false);
-
-        btnOther = new JButton("Select Times");
-        btnOther.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                otherTD.setVisible(true);
-            }
-        });
-        btnOther.setEnabled(false);
-
-        btnAlbInhal = new JButton("Select Times");
-        btnAlbInhal.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                albInhalTD.setVisible(true);
-            }
-        });
-        btnAlbInhal.setEnabled(false);
-
-        javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
-        MedicationPanelLayout.setHorizontalGroup(
-                MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
-                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                        .addGap(258)
-                                        .addComponent(medPannelSaveButton))
-                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                .addComponent(otherMedCB)
-                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                .addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                                                .addComponent(albInhalCB)
-                                                                .addComponent(albNebCB)
-                                                                .addComponent(floDiskCB)
-                                                                .addComponent(floInhalCB)
-                                                                .addComponent(qvarCB)
-                                                                .addComponent(adDiskCB)
-                                                                .addComponent(adInhalCB)
-                                                                .addComponent(budesonideCB)
-                                                                .addComponent(pulmiTwistCB)
-                                                                .addComponent(pulmiNebCB)
-                                                                .addComponent(singulairCB))
-                                                                .addGap(18)
-                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                .addComponent(singTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                .addComponent(singFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                .addComponent(btnSing, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                        .addComponent(pulmiNebTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                        .addComponent(pulmNebFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                        .addComponent(btnPulmiNeb, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                .addComponent(pulmiTwistTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                .addComponent(pulmTwistFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                .addComponent(btnPulmiTwist, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                        .addComponent(budeTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                        .addComponent(budeFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                        .addComponent(btnBude, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                .addComponent(adInhalTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                .addComponent(adInhalFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                .addComponent(btnAdInhal, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                        .addComponent(adDiskusTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                        .addComponent(adDiskFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                        .addComponent(btnAdDisk, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                .addComponent(qvarTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                .addComponent(qvarFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                .addComponent(btnQvar, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                        .addComponent(floInhalTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                        .addComponent(floInhalFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                        .addComponent(btnFloInhal, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                .addComponent(floDiskTimeLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                .addComponent(floDiskFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                .addComponent(btnFloDisk, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                        .addComponent(albuNebTimesLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                        .addComponent(albuNebFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                        .addComponent(btnAlbNeb, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                                .addComponent(albuInTimesLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                .addComponent(albuInhalFreField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                .addComponent(btnAlbInhal))
-                                                                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                                        .addComponent(lblOtherTimes)
-                                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                        .addComponent(otherFreqField, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                        .addComponent(btnOther, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)))))
-                                                                                                                                                                        .addGap(25)
-                                                                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                .addComponent(medResetClearButton)
-                                                                                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                                                        .addGap(117)
-                                                                                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                .addComponent(lblFloInhalDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblFloDiskDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblAlbuNebDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblAlbInhalDoses)
-                                                                                                                                                                                                .addComponent(lblQvarDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblAdvairDiskDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblAdvairInhaleDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblBudeDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblPulmiTwistDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblPulmiNebDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblSingulairDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                .addComponent(lblOtherDoses, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                        .addComponent(otherDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(albInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(floInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(qvarDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(adDiskDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(adInhalDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(budeDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(pulmiTwistDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(pulmiNebDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                                        .addComponent(singDoseField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))))
-                                                                                                                                                                                                        .addContainerGap(100, Short.MAX_VALUE))
-                );
-        MedicationPanelLayout.setVerticalGroup(
-                MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(albInhalCB)
-                                .addComponent(albuInTimesLabel)
-                                .addComponent(albuInhalFreField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblAlbInhalDoses)
-                                .addComponent(albInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnAlbInhal))
-                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(albNebCB)
-                                        .addComponent(albuNebTimesLabel)
-                                        .addComponent(albuNebFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblAlbuNebDoses)
-                                        .addComponent(albNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnAlbNeb))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                .addComponent(floDiskCB)
-                                                .addComponent(floDiskTimeLabel)
-                                                .addComponent(floDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(lblFloDiskDoses)
-                                                .addComponent(floDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnFloDisk))
-                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                        .addComponent(floInhalCB)
-                                                                        .addComponent(floInhalTimeLabel)
-                                                                        .addComponent(floInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(lblFloInhalDoses)
-                                                                        .addComponent(floInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                .addComponent(qvarCB)
-                                                                                .addComponent(qvarTimeLabel)
-                                                                                .addComponent(qvarFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(lblQvarDoses)
-                                                                                .addComponent(qvarDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(btnQvar))
-                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(adDiskCB)
-                                                                                        .addComponent(adDiskusTimeLabel)
-                                                                                        .addComponent(adDiskFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(lblAdvairDiskDoses)
-                                                                                        .addComponent(adDiskDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(btnAdDisk))
-                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                .addComponent(adInhalCB)
-                                                                                                .addComponent(adInhalTimeLabel)
-                                                                                                .addComponent(adInhalFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addComponent(lblAdvairInhaleDoses)
-                                                                                                .addComponent(adInhalDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addComponent(btnAdInhal))
-                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                        .addComponent(budesonideCB)
-                                                                                                        .addComponent(budeTimeLabel)
-                                                                                                        .addComponent(budeFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(lblBudeDoses)
-                                                                                                        .addComponent(budeDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(btnBude))
-                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                .addComponent(pulmiTwistCB)
-                                                                                                                .addComponent(pulmiTwistTimeLabel)
-                                                                                                                .addComponent(pulmTwistFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addComponent(lblPulmiTwistDoses)
-                                                                                                                .addComponent(pulmiTwistDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addComponent(btnPulmiTwist))
-                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                        .addComponent(pulmiNebCB)
-                                                                                                                        .addComponent(pulmiNebTimeLabel)
-                                                                                                                        .addComponent(pulmNebFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(lblPulmiNebDoses)
-                                                                                                                        .addComponent(pulmiNebDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(btnPulmiNeb))
-                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                .addComponent(singulairCB)
-                                                                                                                                .addComponent(singTimeLabel)
-                                                                                                                                .addComponent(singFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                .addComponent(lblSingulairDoses)
-                                                                                                                                .addComponent(singDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                .addComponent(btnSing))
-                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                                                                        .addComponent(otherMedCB)
-                                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                .addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addComponent(lblOtherTimes)
-                                                                                                                                                .addComponent(otherFreqField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addComponent(lblOtherDoses)
-                                                                                                                                                .addComponent(otherDoseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                .addComponent(btnOther))))
-                                                                                                                                                .addComponent(btnFloInhal))
-                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                                                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                        .addComponent(medPannelSaveButton)
-                                                                                                                                                        .addComponent(medResetClearButton))
-                                                                                                                                                        .addContainerGap())
-                );
-        MedicationPanel.setLayout(MedicationPanelLayout);
-
-        jTabbedPane1.addTab("Medication", MedicationPanel);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                MedicationPanel = new javax.swing.JPanel();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                medPannelSaveButton = new javax.swing.JButton();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                medPannelSaveButton.addActionListener(new ActionListener() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	public void actionPerformed(ActionEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String morningLine = new String();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String eveningLine = new String();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		String withSymptomLine = new String();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(albInhalCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(aimCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat("Albuterol (inhaler) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat(aiDescField.getText() + ", ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(aieCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat("Albuterol (inhaler) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(aiwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat("Albuterol (inhaler) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		if(albNebCB.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(anmCheck.isSelected()){
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat("Albuterol (nebulizer) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				morningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(aneCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat("Albuterol (nebulizer) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				eveningLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			if(anwsCheck.isSelected())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			{
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat("Albuterol (nebulizer) - ");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				withSymptomLine.concat(aiDescField.getText() + ", " );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                medResetClearButton = new javax.swing.JButton();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                medResetClearButton.addActionListener(new ActionListener() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	public void actionPerformed(ActionEvent e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		medicineInit();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                	}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                albInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                albNebCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                floDiskCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                floInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                qvarCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                adDiskCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                adInhalCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                budesonideCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                pulmiTwistCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                otherMedCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                singulairCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                otherMedField = new javax.swing.JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                pulmiNebCB = new javax.swing.JCheckBox();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                albInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                albNebCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                floDiskCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                floInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                qvarCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                adDiskCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                adInhalCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                budesonideCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                singulairCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                otherMedCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        medPannelSaveButton.setText("Save");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                medResetClearButton.setText("Reset");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        albInhalCB.setText("Albuteral (inhaler)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                albNebCB.setText("Albuterol (nebulizer)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        floDiskCB.setText("Flovent (diskus)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                floInhalCB.setText("Flovent (inhaler)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        qvarCB.setText("Qvar");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                adDiskCB.setText("Advair (diskus)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        adInhalCB.setText("Advair (inhaler)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                budesonideCB.setText("Budesonide");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        pulmiTwistCB.setText("Pulmicort (twisthaler)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                otherMedCB.setText("Other:");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        singulairCB.setText("Singulair");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                otherMedField.setText("Other");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        pulmiNebCB.setText("Pulmicort (nebulizer)");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aiwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aieCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aimCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      anDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      anDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aiDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aiDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      anwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      aneCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      anmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fdwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fdeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fdmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fdDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fdDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fiwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fieCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fimCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      qmwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      qeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      qmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      admCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adiwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adieCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adimCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bmwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bmeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ptwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pteCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ptmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pnwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pneCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pnmCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      smwsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      smeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      smCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      owsCheck = new JCheckBox("with symptoms");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      oeCheck = new JCheckBox("evening");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      omCheck = new JCheckBox("morning");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fiDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      fiDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      qDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      qDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adiDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      adiDescField.setColumns(20);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bDescField.setColumns(20);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ptDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ptDescField.setColumns(20);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pnDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      pnDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      sDescField = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      sDescField.setColumns(10);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      textField_11 = new JTextField();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      textField_11.setColumns(20);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      MedicationPanelLayout.setHorizontalGroup(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      	MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      		.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addContainerGap()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(pulmiTwistCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(albNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(floDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(floInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(qvarCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(adDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(budesonideCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(adInhalCB))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(ptDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(bDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(adiDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(adDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(qDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(fiDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(fdDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(anDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(aiDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      									.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      										.addComponent(otherMedCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      										.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      										.addComponent(otherMedField))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      									.addComponent(pulmiNebCB, Alignment.LEADING))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(singulairCB))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(pnDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(sDescField)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      								.addComponent(textField_11, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(albInhalCB))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGap(18)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(anmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(fdmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(fimCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(qmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(admCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(adimCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(bmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(ptmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(pnmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(smCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      							.addComponent(omCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(aimCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(aneCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(aieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(fdeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(fieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(qeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(adeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(adieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(bmeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(pteCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(pneCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(smeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(oeCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(anwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(aiwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(fiwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(fdwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(qmwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(adwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(adiwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(bmwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(ptwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(pnwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(smwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      						.addComponent(owsCheck)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGap(239)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addComponent(medPannelSaveButton)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addGap(18)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      					.addComponent(medResetClearButton)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addContainerGap(215, Short.MAX_VALUE))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      MedicationPanelLayout.setVerticalGroup(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      	MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      		.addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addContainerGap()
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(albInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(aiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(aieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(aiwsCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(aimCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(albNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(anDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(anmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(aneCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(anwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(floDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fdDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fdmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fdeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fdwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(floInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fimCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(fiwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(qvarCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(qDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(qmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(qeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(qmwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adDiskCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(admCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adInhalCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adimCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adieCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(adiwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(budesonideCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(bDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(bmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(bmeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(bmwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pulmiTwistCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(ptDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(ptmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pteCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(ptwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pulmiNebCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pnDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pnmCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pneCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(pnwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(singulairCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(sDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(smCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(smeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(smwsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGap(11)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(otherMedCB)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(omCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(oeCheck)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(owsCheck))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGap(72)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(medPannelSaveButton)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      				.addComponent(medResetClearButton))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      			.addContainerGap())
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      MedicationPanel.setLayout(MedicationPanelLayout);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              jTabbedPane1.addTab("Medication", MedicationPanel);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              medicineInit();
 
         pack();
     }// </editor-fold>                        
+     public void readingInit()
+    {
+    	JSONParser parser = new JSONParser();
+		JSONObject jo;
+		try {
+			jo = (JSONObject)parser.parse(new FileReader("Config\\config.json"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		JSONObject configObject = (JSONObject)jo.get("config");
+    	JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+        JSONArray readingArray = (JSONArray)alertObject.get("spiroReadingTime");
+        
+        SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
+        SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm");
+        
+        Date reading;
+		try {
+			reading = readingTimeFormat.parse((String)readingArray.get(0));
+			read1Field.setText(displayFormat.format(reading));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+        Date noon;
+		try {
+			noon = readingTimeFormat.parse("1200");
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return;
+		}
+        int amOrPM = reading.compareTo(noon);
+        if(amOrPM < 0)
+        	read1TimeCB.setSelectedIndex(0);
+        else
+        	read1TimeCB.setSelectedIndex(1);
+        
+        try {
+			reading = readingTimeFormat.parse((String)readingArray.get(1));
+			read2Field.setText(displayFormat.format(reading));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        amOrPM = reading.compareTo(noon);
+        if(amOrPM < 0)
+        	read2TimeCB.setSelectedIndex(0);
+        else
+        	read2TimeCB.setSelectedIndex(1);
+        
+        try {
+			reading = readingTimeFormat.parse((String)readingArray.get(2));
+			read3Field.setText(displayFormat.format(reading));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        amOrPM = reading.compareTo(noon);
+        if(amOrPM < 0)
+        	read3TimeCB.setSelectedIndex(0);
+        else
+        	read3TimeCB.setSelectedIndex(1);
+    }
+     
+    public void readingsHandled()
+    {
+    	JSONParser parser = new JSONParser();
+        JSONObject jo = null;
+        JSONObject configObject = null;
+        JSONObject alertObject = null;
+        final long THIRTY_MINUTES_IN_MILLISECONDS = 1800000;
+        try {
+            jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+            configObject = (JSONObject)jo.get("config");
+            alertObject = (JSONObject)configObject.get("alertInfo");
+        } catch (FileNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        } catch (IOException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        } catch (org.json.simple.parser.ParseException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        Date reading1=null;
+        Date reading2=null;
+        Date reading3=null;
+        Boolean validInputs = true;
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        try {
+            reading1 = sdf.parse(read1Field.getText() + " " + read1TimeCB.getSelectedItem());
+        } catch (ParseException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 time is invalid",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            validInputs = false;
+        }
 
-    private void savePatientInfoActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
-    }                                               
+        try {
+            reading2 = sdf.parse(read2Field.getText() + " " + read2TimeCB.getSelectedItem());
+        } catch (ParseException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 time is invalid",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            validInputs = false;
+        }
 
-    private void read3TimeCBActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
+        try {
+            reading3 = sdf.parse(read3Field.getText() + " " + read3TimeCB.getSelectedItem());
+        } catch (ParseException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 time is invalid",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            validInputs = false;
+        }
+        
 
-    private void read3TimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
-    }                                              
+        if(validInputs)
+        {
+        	boolean readingsInOrder = true;
+        	Date reading1Adjusted = new Date(reading1.getTime()+THIRTY_MINUTES_IN_MILLISECONDS);
+        	Date reading2Adjusted = new Date(reading2.getTime()+THIRTY_MINUTES_IN_MILLISECONDS);
+        	
+            if(reading1Adjusted.compareTo(reading2)>=0){
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 must occur more than 30 minutes after reading 1",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                readingsInOrder = false;
+            }
+            else if(reading2Adjusted.compareTo(reading3)>=0)
+            {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur more 30 minutes after reading 2",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                readingsInOrder = false;
+            }
+            
+            
+            if(jo != null && readingsInOrder){
+                JSONArray readings = new JSONArray();
+                SimpleDateFormat readingFormat = new SimpleDateFormat("HHmm");
+                readings.add(readingFormat.format(reading1));
+                readings.add(readingFormat.format(reading2));
+                readings.add(readingFormat.format(reading3));
+                alertObject.put("spiroReadingTime", readings);
+                configObject.put("alertInfo", alertObject);
+                jo.put("config", configObject);
 
-    private void read2TimeCBActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
-
-    private void readTwoTimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
-    }                                                
-
-    private void read1TimeFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
-    }                                              
-
-    private void pidFieldActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
-
-    private void startDateFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
-    }                                              
-
-    private void blinkTypeCheckMouseClicked(java.awt.event.MouseEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
-
-    private void blinkTypeCheckStateChanged(javax.swing.event.ChangeEvent evt) {                                            
-
-    }                                           
-
+                try {
+                    FileWriter jsonWriter = new FileWriter("Config/config.json");
+                    jsonWriter.write(jo.toJSONString());
+                    jsonWriter.flush();
+                    jsonWriter.close();
+                } catch (IOException e1) {
+                     //TODO Auto-generated catch block
+                  e1.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public void configInit()
+    {
+    	JSONParser parser = new JSONParser();
+		JSONObject jo;
+		try {
+			jo = (JSONObject)parser.parse(new FileReader("Config\\config.json"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		} catch (org.json.simple.parser.ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		}
+		JSONObject configObject = (JSONObject)jo.get("config");
+		JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+		
+		 JSONObject animationObject = (JSONObject)configObject.get("animation");
+         JSONObject minObject = (JSONObject)configObject.get("minValues");
+         JSONObject maxObject = (JSONObject)configObject.get("maxValues");
+                                                                         
+                                                                         SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
+                                                                         Date startDate = new Date((long)animationObject.get("startDateMilliSec"));
+                                                                                                                 
+                                                                                                                 JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+                                                                                                                 double mean = (double)dynamicObject.get("mean");
+                                                                                                                 double deviation = (double)dynamicObject.get("standardDeviation");
+                                                                                                                 yellow = (double)dynamicObject.get("yellowZone");
+                                                                                                                 red = (double)dynamicObject.get("redZone");
+                                                                                                                 
+                                                                                                                 if(yellow == -1.0)
+                                                                                                                	 yellow = mean + deviation;
+                                                                                                                 
+                                                                                                                 if(red == -1.0)
+                                                                                                                	 red = mean + 1.5*deviation;
+                                                                                                                 
+                                                                                                                 JSONObject deviceObject = (JSONObject)configObject.get("device");
+		
+    	soundCB.setSelected((boolean)alertObject.get("sound"));
+        soundCB.setText("Play sound with alarm");
+        long days = (long)animationObject.get("totalDays");
+        long weeks = days/7;
+        long alertMinutes = ((long)alertObject.get("alertLength"))/60000;
+        alarmLengthField.setText("" + alertMinutes);
+        
+        
+                alarmSoundPromptLabel.setText("How long alarm sounds: ");
+                
+                        alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+                                alarmTimeUnitsLabel.setText("minutes");
+                                
+                                        startDateLabel.setText("Trial Start Date:");
+                                        
+                                                spiroRangeLabel.setText("Spirometer range: ");
+                                                pefLowerRangeField.setText("" + minObject.get("PEFValue"));
+                                                pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+                                                lowerTextLabel.setText("Lower");
+                                                
+                                                        upperRangeLabel.setText("Upper");
+                                                        startDateField.setText(startAndEndFormat.format(startDate));
+                                                        
+                                                                saveConfigButton.setText("Save");
+                                                                
+                                                                        resetConfigButton.setText("Reset");
+                                                                        
+                                                                        
+                                                                        boolean enabled = (boolean)dynamicObject.get("airQualityMonitoringEnabled");
+                                                                        chckbxEnableDynamicAlerts.setSelected(enabled);
+                                                                        
+                                                                        
+                                                                        lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        meanParticleDisplay.setText(""+ mean);
+                                                                        meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        
+                                                                        
+                                                                        lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        
+                                                                        
+                                                                        standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        standardDeviationDisplay.setText(""+ deviation);
+                                                                        
+                                                                        
+                                                                        lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        
+                                                                        
+                                                                        lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        
+                                                                        
+                                                                        yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        yellowZoneField.setColumns(10);
+                                                                        yellowZoneField.setText(""+yellow);
+                                                                        
+                                                                        
+                                                                        redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                                                                        redZoneField.setColumns(10);
+                                                                        redZoneField.setText(""+red);
+                                                                        
+                                                                        pefRangeLabel = new JLabel("PEF");
+                                                                        
+                                                                        fevRangeLabel = new JLabel("Fev1");
+                                                                        
+                                                                        lblLower = new JLabel("Lower");
+                                                                        
+                                                                        fevLowerRangeField = new JTextField();
+                                                                        fevLowerRangeField.setColumns(10);
+                                                                        fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+                                                                        
+                                                                        fevUpperLabel = new JLabel("Upper");
+                                                                        
+                                                                        fevUpperRangeField = new JTextField();
+                                                                        fevUpperRangeField.setColumns(10);
+                                                                        fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
+                                                                        deviceIDField.setText("" +(Long)configObject.get("deviceID"));
+                                                                        trialLengthField.setText("" + weeks);
+    }
     /**
      * @param args the command line arguments
      */
+    public void medicineInit()
+    {
+    	BufferedReader br;
+    	try {
+			br = new BufferedReader(new FileReader("Config\\medlist.txt"));
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(this, "Medicine list could not be found", "File not found", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+    	
+    	String morningLine;
+    	String eveningLine;
+    	String withSymptomsLine;
+    	try {
+			morningLine = br.readLine();
+			morningLine = br.readLine();
+			morningLine = br.readLine();
+			morningLine = br.readLine();
+			eveningLine = br.readLine();
+			eveningLine = br.readLine();
+			withSymptomsLine = br.readLine();
+			withSymptomsLine = br.readLine();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "The medicine file is missing data", "Empty file", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+    	
+    	smwsCheck.setEnabled(false);
+    	pnwsCheck.setEnabled(false);
+    	ptwsCheck.setEnabled(false);
+    	bmwsCheck.setEnabled(false);
+    	adiwsCheck.setEnabled(false);
+    	adwsCheck.setEnabled(false);
+    	qmwsCheck.setEnabled(false);
+    	fiwsCheck.setEnabled(false);
+    	fdwsCheck.setEnabled(false);
+    	anwsCheck.setEnabled(false);
+    	aiwsCheck.setEnabled(false);
+    	
+    	smeCheck.setEnabled(false);
+    	pneCheck.setEnabled(false);
+    	pteCheck.setEnabled(false);
+    	bmeCheck.setEnabled(false);
+    	adieCheck.setEnabled(false);
+    	adeCheck.setEnabled(false);
+    	qeCheck.setEnabled(false);
+    	fieCheck.setEnabled(false);
+    	fdeCheck.setEnabled(false);
+    	aneCheck.setEnabled(false);
+    	aieCheck.setEnabled(false);
+    	
+    	smCheck.setEnabled(false);
+    	pnmCheck.setEnabled(false);
+    	ptmCheck.setEnabled(false);
+    	bmCheck.setEnabled(false);
+    	adimCheck.setEnabled(false);
+    	admCheck.setEnabled(false);
+    	qmCheck.setEnabled(false);
+    	fimCheck.setEnabled(false);
+    	fdmCheck.setEnabled(false);
+    	anmCheck.setEnabled(false);
+    	aimCheck.setEnabled(false);
+    	
+    	sDescField.setEnabled(false);
+    	pnDescField.setEnabled(false);
+    	ptDescField.setEnabled(false);
+    	bDescField.setEnabled(false);
+    	adiDescField.setEnabled(false);
+    	adDescField.setEnabled(false);
+    	qDescField.setEnabled(false);
+    	fiDescField.setEnabled(false);
+    	fdDescField.setEnabled(false);
+    	anDescField.setEnabled(false);
+    	aiDescField.setEnabled(false);
+    	
+    	smwsCheck.setSelected(false);
+    	pnwsCheck.setSelected(false);
+    	ptwsCheck.setSelected(false);
+    	bmwsCheck.setSelected(false);
+    	adiwsCheck.setSelected(false);
+    	adwsCheck.setSelected(false);
+    	qmwsCheck.setSelected(false);
+    	fiwsCheck.setSelected(false);
+    	fdwsCheck.setSelected(false);
+    	anwsCheck.setSelected(false);
+    	aiwsCheck.setSelected(false);
+    	
+    	smeCheck.setSelected(false);
+    	pneCheck.setSelected(false);
+    	pteCheck.setSelected(false);
+    	bmeCheck.setSelected(false);
+    	adieCheck.setSelected(false);
+    	adeCheck.setSelected(false);
+    	qeCheck.setSelected(false);
+    	fieCheck.setSelected(false);
+    	fdeCheck.setSelected(false);
+    	aneCheck.setSelected(false);
+    	aieCheck.setSelected(false);
+    	
+    	smCheck.setSelected(false);
+    	pnmCheck.setSelected(false);
+    	ptmCheck.setSelected(false);
+    	bmCheck.setSelected(false);
+    	adimCheck.setSelected(false);
+    	admCheck.setSelected(false);
+    	qmCheck.setSelected(false);
+    	fimCheck.setSelected(false);
+    	fdmCheck.setSelected(false);
+    	anmCheck.setSelected(false);
+    	aimCheck.setSelected(false);
+    	
+    	albNebCB.setSelected(false);
+    	albInhalCB.setSelected(false);
+    	floDiskCB.setSelected(false);
+    	floInhalCB.setSelected(false);
+    	qvarCB.setSelected(false);
+    	adInhalCB.setSelected(false);
+    	adDiskCB.setSelected(false);
+    	budesonideCB.setSelected(false);
+    	pulmiTwistCB.setSelected(false);
+    	pulmiNebCB.setSelected(false);
+    	singulairCB.setSelected(false);
+    	
+    	if(morningLine.contains("Albuterol (inhaler)"))
+    	{
+    		albInhalCB.setSelected(true);
+    		aimCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Albuterol (nebulizer)"))
+    	{
+    		albNebCB.setSelected(true);
+    		anmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Flovent (diskus)"))
+    	{
+    		floDiskCB.setSelected(true);
+    		fdmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Flovent (inhaler)"))
+    	{
+    		floInhalCB.setSelected(true);
+    		fimCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Qvar"))
+    	{
+    		qvarCB.setSelected(true);
+    		qmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Advair (diskus)"))
+    	{
+    		adDiskCB.setSelected(true);
+    		admCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Advair (inhailer)"))
+    	{
+    		adInhalCB.setSelected(true);
+    		adimCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Budesonide"))
+    	{
+    		budesonideCB.setSelected(true);
+    		bmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Pulmicort (twisthaler)"))
+    	{
+    		pulmiTwistCB.setSelected(true);
+    		ptmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Pulmicort (nebulizer)"))
+    	{
+    		pulmiNebCB.setSelected(true);
+    		pnmCheck.setSelected(true);	
+    	}
+    	if(morningLine.contains("Singulair"))
+    	{
+    		singulairCB.setSelected(true);
+    		smCheck.setSelected(true);	
+    	}
+    	
+    	
+    	if(eveningLine.contains("Albuterol (inhaler)"))
+    	{
+    		albInhalCB.setSelected(true);
+    		aieCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Albuterol (nebulizer)"))
+    	{
+    		albNebCB.setSelected(true);
+    		aneCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Flovent (diskus)"))
+    	{
+    		floDiskCB.setSelected(true);
+    		fdeCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Flovent (inhaler)"))
+    	{
+    		floInhalCB.setSelected(true);
+    		fieCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Qvar"))
+    	{
+    		qvarCB.setSelected(true);
+    		qeCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Advair (diskus)"))
+    	{
+    		adDiskCB.setSelected(true);
+    		adeCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Advair (inhailer)"))
+    	{
+    		adInhalCB.setSelected(true);
+    		adieCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Budesonide"))
+    	{
+    		budesonideCB.setSelected(true);
+    		bmeCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Pulmicort (twisthaler)"))
+    	{
+    		pulmiTwistCB.setSelected(true);
+    		pteCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Pulmicort (nebulizer)"))
+    	{
+    		pulmiNebCB.setSelected(true);
+    		pneCheck.setSelected(true);	
+    	}
+    	if(eveningLine.contains("Singulair"))
+    	{
+    		singulairCB.setSelected(true);
+    		smeCheck.setSelected(true);	
+    	}
+    	
+    	if(withSymptomsLine.contains("Albuterol (inhaler)"))
+    	{
+    		albInhalCB.setSelected(true);
+    		aiwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Albuterol (nebulizer)"))
+    	{
+    		albNebCB.setSelected(true);
+    		anwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Flovent (diskus)"))
+    	{
+    		floDiskCB.setSelected(true);
+    		fdwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Flovent (inhaler)"))
+    	{
+    		floInhalCB.setSelected(true);
+    		fiwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Qvar"))
+    	{
+    		qvarCB.setSelected(true);
+    		qmwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Advair (diskus)"))
+    	{
+    		adDiskCB.setSelected(true);
+    		adwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Advair (inhailer)"))
+    	{
+    		adInhalCB.setSelected(true);
+    		adiwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Budesonide"))
+    	{
+    		budesonideCB.setSelected(true);
+    		bmwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Pulmicort (twisthaler)"))
+    	{
+    		pulmiTwistCB.setSelected(true);
+    		ptwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Pulmicort (nebulizer)"))
+    	{
+    		pulmiNebCB.setSelected(true);
+    		pnwsCheck.setSelected(true);	
+    	}
+    	if(withSymptomsLine.contains("Singulair"))
+    	{
+    		singulairCB.setSelected(true);
+    		smwsCheck.setSelected(true);	
+    	}
+    	
+    	smwsCheck.setEnabled(singulairCB.isSelected());
+    	pnwsCheck.setEnabled(pulmiNebCB.isSelected());
+    	ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
+    	bmwsCheck.setEnabled(budesonideCB.isSelected());
+    	adiwsCheck.setEnabled(adInhalCB.isSelected());
+    	adwsCheck.setEnabled(adDiskCB.isSelected());
+    	qmwsCheck.setEnabled(qvarCB.isSelected());
+    	fiwsCheck.setEnabled(floInhalCB.isSelected());
+    	fdwsCheck.setEnabled(floDiskCB.isSelected());
+    	anwsCheck.setEnabled(albNebCB.isSelected());
+    	aiwsCheck.setEnabled(albInhalCB.isSelected());
+    	
+    	smeCheck.setEnabled(singulairCB.isSelected());
+    	pneCheck.setEnabled(pulmiNebCB.isSelected());
+    	pteCheck.setEnabled(pulmiTwistCB.isSelected());
+    	bmeCheck.setEnabled(budesonideCB.isSelected());
+    	adieCheck.setEnabled(adInhalCB.isSelected());
+    	adeCheck.setEnabled(adDiskCB.isSelected());
+    	qeCheck.setEnabled(qvarCB.isSelected());
+    	fieCheck.setEnabled(floInhalCB.isSelected());
+    	fdeCheck.setEnabled(floDiskCB.isSelected());
+    	aneCheck.setEnabled(albNebCB.isSelected());
+    	aieCheck.setEnabled(albInhalCB.isSelected());
+    	
+    	smCheck.setEnabled(singulairCB.isSelected());
+    	pnmCheck.setEnabled(pulmiNebCB.isSelected());
+    	ptmCheck.setEnabled(pulmiTwistCB.isSelected());
+    	bmCheck.setEnabled(budesonideCB.isSelected());
+    	adimCheck.setEnabled(adInhalCB.isSelected());
+    	admCheck.setEnabled(adDiskCB.isSelected());
+    	qmCheck.setEnabled(qvarCB.isSelected());
+    	fimCheck.setEnabled(floInhalCB.isSelected());
+    	fdmCheck.setEnabled(floDiskCB.isSelected());
+    	anmCheck.setEnabled(albNebCB.isSelected());
+    	aimCheck.setEnabled(albInhalCB.isSelected());
+    	
+    	sDescField.setEnabled(singulairCB.isSelected());
+    	pnDescField.setEnabled(pulmiNebCB.isSelected());
+    	ptDescField.setEnabled(pulmiTwistCB.isSelected());
+    	bDescField.setEnabled(budesonideCB.isSelected());
+    	adiDescField.setEnabled(adInhalCB.isSelected());
+    	adDescField.setEnabled(adDiskCB.isSelected());
+    	qDescField.setEnabled(qvarCB.isSelected());
+    	fiDescField.setEnabled(floInhalCB.isSelected());
+    	fdDescField.setEnabled(floDiskCB.isSelected());
+    	anDescField.setEnabled(albNebCB.isSelected());
+    	aiDescField.setEnabled(albInhalCB.isSelected());
+    	
+    	try {
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1628,31 +1712,29 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    try {
-                        thisFrame = new AdminConfigWindow();
-                    } catch (ParseException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (org.json.simple.parser.ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                thisFrame.setVisible(true);
+               try {
+				try {
+					thisFrame = new AdminConfigWindow();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+               thisFrame.setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify                     
     private javax.swing.JPanel MedicationPanel;
-    private javax.swing.JPanel PatientPanel;
-    private javax.swing.JLabel ProvisioningLabel;
     private javax.swing.JLabel acDateTimeArea;
     private javax.swing.JLabel acDateTimeHeader;
     private javax.swing.JButton acExportButton;
@@ -1665,15 +1747,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox adInhalCB;
     private javax.swing.JLabel alarmSoundPromptLabel;
     private javax.swing.JLabel alarmTimeUnitsLabel;
-    private javax.swing.JLabel alarmTypeLabel;
     private javax.swing.JCheckBox albInhalCB;
     private javax.swing.JCheckBox albNebCB;
-    private javax.swing.JCheckBox blinkCB;
     private javax.swing.JCheckBox budesonideCB;
-    private javax.swing.JButton resetPatientInfo;
     private javax.swing.JPanel configPanel;
-    private javax.swing.JTextField endDateField;
-    private javax.swing.JLabel endDateLabel;
     private javax.swing.JCheckBox floDiskCB;
     private javax.swing.JCheckBox floInhalCB;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -1689,29 +1766,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JButton medPannelSaveButton;
     private javax.swing.JCheckBox otherMedCB;
     private javax.swing.JTextField otherMedField;
-    private javax.swing.JTextField pidField;
-    private javax.swing.JLabel pidLabel;
-    private javax.swing.JTextField pollingTimeField;
-    private javax.swing.JLabel pollingTimeLabel;
-    private javax.swing.JLabel pollingTimeUnitLabel;
     private javax.swing.JCheckBox pulmiNebCB;
     private javax.swing.JCheckBox pulmiTwistCB;
     private javax.swing.JCheckBox qvarCB;
-    private javax.swing.JComboBox read1TimeCB;
-    private javax.swing.JTextField read1TimeField;
-    private javax.swing.JComboBox read2TimeCB;
-    private javax.swing.JComboBox read3TimeCB;
-    private javax.swing.JTextField read3TimeField;
-    private javax.swing.JLabel read3TimeLabel;
-    private javax.swing.JLabel readOneTimeLabel;
-    private javax.swing.JTextField read2TimeField;
-    private javax.swing.JLabel readTwoTimeLabel;
     private javax.swing.JButton resetConfigButton;
-    private javax.swing.JTextField rewardField;
-    private javax.swing.JLabel rewardLabel;
-    private javax.swing.JLabel rpdLabel;
     private javax.swing.JButton saveConfigButton;
-    private javax.swing.JButton savePatientInfo;
     private javax.swing.JCheckBox singulairCB;
     private javax.swing.JCheckBox soundCB;
     private javax.swing.JLabel spiroDateTimeArea;
@@ -1725,11 +1784,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JLabel spiroServerPushHeader;
     private javax.swing.JTextField startDateField;
     private javax.swing.JLabel startDateLabel;
-    private javax.swing.JButton testURLButton;
     private javax.swing.JTextField pefUpperRangeField;
     private javax.swing.JLabel upperRangeLabel;
-    private javax.swing.JTextField urlField;
-    private javax.swing.JLabel urlToPushLabel;
     private javax.swing.JLabel userDateTimeArea;
     private javax.swing.JLabel userDateTimeHeader;
     private javax.swing.JLabel userExportArea;
@@ -1743,220 +1799,133 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static JFrame thisFrame;
     private JTextField yellowZoneField;
     private JTextField redZoneField;
-    private JLabel lblOtherTimes;
-    private JLabel albuInTimesLabel;
-    private JLabel albuNebTimesLabel;
-    private JLabel floDiskTimeLabel;
-    private JLabel floInhalTimeLabel;
-    private JLabel qvarTimeLabel;
-    private JLabel adDiskusTimeLabel;
-    private JLabel adInhalTimeLabel;
-    private JLabel budeTimeLabel;
-    private JLabel pulmiTwistTimeLabel;
-    private JLabel pulmiNebTimeLabel;
-    private JLabel singTimeLabel;
-    private JTextField albuInhalFreField;
-    private JTextField albuNebFreqField;
-    private JTextField floDiskFreqField;
-    private JTextField floInhalFreqField;
-    private JTextField qvarFreqField;
-    private JTextField adDiskFreqField;
-    private JTextField adInhalFreqField;
-    private JTextField budeFreqField;
-    private JTextField pulmTwistFreqField;
-    private JTextField pulmNebFreqField;
-    private JTextField singFreqField;
-    private JTextField otherFreqField;
-    private JLabel lblAlbInhalDoses;
-    private JLabel lblAlbuNebDoses;
-    private JLabel lblFloDiskDoses;
-    private JLabel lblFloInhalDoses;
-    private JLabel lblQvarDoses;
-    private JLabel lblAdvairDiskDoses;
-    private JLabel lblAdvairInhaleDoses;
-    private JLabel lblBudeDoses;
-    private JLabel lblPulmiTwistDoses;
-    private JLabel lblPulmiNebDoses;
-    private JLabel lblSingulairDoses;
-    private JLabel lblOtherDoses;
-    private JTextField albInhalDoseField;
-    private JTextField albNebDoseField;
-    private JTextField floDiskDoseField;
-    private JTextField floInhalDoseField;
-    private JTextField qvarDoseField;
-    private JTextField adDiskDoseField;
-    private JTextField adInhalDoseField;
-    private JTextField budeDoseField;
-    private JTextField pulmiTwistDoseField;
-    private JTextField pulmiNebDoseField;
-    private JTextField singDoseField;
-    private JTextField otherDoseField;
-    TimeDialog albInhalTD;
-    TimeDialog albNebTD;
-    TimeDialog floDiskTD;
-    TimeDialog floInhalTD;
-    TimeDialog qvarTD;
-    TimeDialog adDiskTD;
-    TimeDialog adInhalTD;
-    TimeDialog budeTD;
-    TimeDialog pulmiTwistTD;
-    TimeDialog pulmiNebTD;
-    TimeDialog singTD;
-    TimeDialog otherTD;
-    private JButton btnAlbNeb;
-    private JButton btnFloDisk;
-    private JButton btnFloInhal;
-    private JButton btnQvar;
-    private JButton btnAdDisk;
-    private JButton btnAdInhal;
-    private JButton btnBude;
-    private JButton btnPulmiTwist;
-    private JButton btnPulmiNeb;
-    private JButton btnSing;
-    private JButton btnOther;
-    private JButton btnAlbInhal;
     private JTextField fevLowerRangeField;
     private JTextField fevUpperRangeField;
-    private JLabel lblSerial;
-    private JTextField serialField;
-    private JLabel lblVendor;
-    private JTextField vendorField;
-    private JLabel lblDevice;
-    private JTextField deviceField;
     JCheckBox chckbxEnableDynamicAlerts;
+    private JTextField trialLengthField;
+    private JLabel lblWeeks;
     // End of variables declaration
-
+	private JLabel lblStdDeviation;
+	private JLabel lblMean;
+	private JLabel meanParticleDisplay;
+	private JLabel standardDeviationDisplay;
+	private JLabel lblYellowZone;
+	private JLabel lblRedZone;
+	private JLabel lblSpirometerDeviceId;
+	private JTextField deviceIDField;
+	private JCheckBox aiwsCheck;
+	private JCheckBox aieCheck;
+	private JCheckBox aimCheck;
+	private JTextField anDescField;
+	private JTextField aiDescField;
+	private JCheckBox anwsCheck;
+	private JCheckBox aneCheck;
+	private JCheckBox anmCheck;
+	private JCheckBox fdwsCheck;
+	private JCheckBox fdeCheck;
+	private JCheckBox fdmCheck;
+	private JTextField fdDescField;
+	private JCheckBox fiwsCheck;
+	private JCheckBox fieCheck;
+	private JCheckBox fimCheck;
+	private JCheckBox qmwsCheck;
+	private JCheckBox qeCheck;
+	private JCheckBox qmCheck;
+	private JCheckBox adwsCheck;
+	private JCheckBox adeCheck;
+	private JCheckBox admCheck;
+	private JCheckBox adiwsCheck;
+	private JCheckBox adieCheck;
+	private JCheckBox adimCheck;
+	private JCheckBox bmwsCheck;
+	private JCheckBox bmeCheck;
+	private JCheckBox bmCheck;
+	private JCheckBox ptwsCheck;
+	private JCheckBox pteCheck;
+	private JCheckBox ptmCheck;
+	private JCheckBox pnwsCheck;
+	private JCheckBox pneCheck;
+	private JCheckBox pnmCheck;
+	private JCheckBox smwsCheck;
+	private JCheckBox smeCheck;
+	private JCheckBox smCheck;
+	private JCheckBox owsCheck;
+	private JCheckBox oeCheck;
+	private JCheckBox omCheck;
+	private JTextField fiDescField;
+	private JTextField qDescField;
+	private JTextField adDescField;
+	private JTextField adiDescField;
+	private JTextField bDescField;
+	private JTextField ptDescField;
+	private JTextField pnDescField;
+	private JTextField sDescField;
+	private JTextField textField_11;
+	private JLabel pefRangeLabel;
+	private JLabel fevRangeLabel;
+	private JLabel lblLower;
+	private JLabel fevUpperLabel;
+	private JLabel lblReading;
+	private JLabel lblReading_1;
+	private JLabel lblReading_2;
+	private JTextField read1Field;
+	private JTextField read2Field;
+	private JTextField read3Field;
+	private JComboBox read1TimeCB;
+	private JComboBox read2TimeCB;
+	private JComboBox read3TimeCB;
+	private double yellow;
+	private double red;
+    
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
-            btnAlbNeb.setEnabled(albNebCB.isSelected());
-            btnOther.setEnabled(otherMedCB.isSelected());
-            btnSing.setEnabled(singulairCB.isSelected());
-            btnPulmiNeb.setEnabled(pulmiNebCB.isSelected());
-            btnPulmiTwist.setEnabled(pulmiTwistCB.isSelected());
-            btnBude.setEnabled(budesonideCB.isSelected());
-            btnFloDisk.setEnabled(floDiskCB.isSelected());
-            btnFloInhal.setEnabled(floInhalCB.isSelected());
-            btnQvar.setEnabled(qvarCB.isSelected());
-            btnAdDisk.setEnabled(adDiskCB.isSelected());
-            btnAdInhal.setEnabled(adInhalCB.isSelected());
-            btnAlbInhal.setEnabled(albInhalCB.isSelected());
-            otherDoseField.setEnabled(otherMedCB.isSelected());
-            singDoseField.setEnabled(singulairCB.isSelected());
-            pulmiNebDoseField.setEnabled(pulmiNebCB.isSelected());
-            pulmiTwistDoseField.setEnabled(pulmiTwistCB.isSelected());
-            budeDoseField.setEnabled(budesonideCB.isSelected());
-            floDiskDoseField.setEnabled(floDiskCB.isSelected());
-            floInhalDoseField.setEnabled(floInhalCB.isSelected());
-            qvarDoseField.setEnabled(qvarCB.isSelected());
-            adDiskDoseField.setEnabled(adDiskCB.isSelected());
-            adInhalDoseField.setEnabled(adInhalCB.isSelected());
-            albInhalDoseField.setEnabled(albInhalCB.isSelected());
-            albNebDoseField.setEnabled(albNebCB.isSelected());
-        }
-    }
-
-    private class AlarmCheckBoxListener implements ItemListener{
-        public void itemStateChanged(ItemEvent e){
-            JCheckBox source = (JCheckBox)e.getSource();
-            if(!blinkCB.isSelected()&&!soundCB.isSelected())
-            {
-                JOptionPane.showMessageDialog(AdminConfigWindow.this, "At least one alarm type must be selected", 
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                source.setSelected(true);
-            }
-        }
-    }
-
-    private class PatientSaveButtonHandler implements ActionListener{
-        public void actionPerformed(ActionEvent e) {
-            JSONParser parser = new JSONParser();
-            JSONObject jo = null;
-            JSONObject configObject = null;
-            JSONObject alertObject = null;
-            try {
-                jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
-                configObject = (JSONObject)jo.get("config");
-                alertObject = (JSONObject)configObject.get("alertInfo");
-            } catch (FileNotFoundException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
-            } catch (IOException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
-            } catch (org.json.simple.parser.ParseException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
-            }
-            Date reading1=null;
-            Date reading2=null;
-            Date reading3=null;
-            Boolean validInputs = true;
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-            try {
-                reading1 = sdf.parse(read1TimeField.getText() + " " + read1TimeCB.getSelectedItem());
-            } catch (ParseException e1) {
-                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 time is invalid", 
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                validInputs = false;
-            }
-
-            try {
-                reading2 = sdf.parse(read2TimeField.getText() + " " + read2TimeCB.getSelectedItem());
-            } catch (ParseException e1) {
-                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 time is invalid", 
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                validInputs = false;
-            }
-
-            try {
-                reading3 = sdf.parse(read3TimeField.getText() + " " + read3TimeCB.getSelectedItem());
-            } catch (ParseException e1) {
-                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 time is invalid", 
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                validInputs = false;
-            }
-
-            if(validInputs)
-            {
-                if(reading1.compareTo(reading2)>0)
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 must occur after reading 1", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                else if(reading1.compareTo(reading3)>0)
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 1", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                else if(reading2.compareTo(reading3)>0)
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 must occur after reading 2", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                if(jo != null){
-                    JSONArray readings = new JSONArray();
-                    SimpleDateFormat readingFormat = new SimpleDateFormat("HHmm");
-                    readings.add(readingFormat.format(reading1));
-                    readings.add(readingFormat.format(reading2));
-                    readings.add(readingFormat.format(reading3));
-                    alertObject.put("spiroReadingTime", readings);
-                    configObject.put("alertInfo", alertObject);
-                    try{
-                        configObject.put("patientID", pidField.getText());
-                    }
-                    catch(NullPointerException npe)
-                    {
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Please enter a patient ID", 
-                                "No patient ID", JOptionPane.ERROR_MESSAGE);
-                    }
-                    jo.put("config", configObject);
-
-                    try {
-                        FileWriter jsonWriter = new FileWriter("Config/config.json");
-                        jsonWriter.write(jo.toJSONString());
-                        jsonWriter.flush();
-                        jsonWriter.close();
-                    } catch (IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                }
-            }
-
-        }
+        	smwsCheck.setEnabled(singulairCB.isSelected());
+        	pnwsCheck.setEnabled(pulmiNebCB.isSelected());
+        	ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
+        	bmwsCheck.setEnabled(budesonideCB.isSelected());
+        	adiwsCheck.setEnabled(adInhalCB.isSelected());
+        	adwsCheck.setEnabled(adDiskCB.isSelected());
+        	qmwsCheck.setEnabled(qvarCB.isSelected());
+        	fiwsCheck.setEnabled(floInhalCB.isSelected());
+        	fdwsCheck.setEnabled(floDiskCB.isSelected());
+        	anwsCheck.setEnabled(albNebCB.isSelected());
+        	aiwsCheck.setEnabled(albInhalCB.isSelected());
+        	
+        	smeCheck.setEnabled(singulairCB.isSelected());
+        	pneCheck.setEnabled(pulmiNebCB.isSelected());
+        	pteCheck.setEnabled(pulmiTwistCB.isSelected());
+        	bmeCheck.setEnabled(budesonideCB.isSelected());
+        	adieCheck.setEnabled(adInhalCB.isSelected());
+        	adeCheck.setEnabled(adDiskCB.isSelected());
+        	qeCheck.setEnabled(qvarCB.isSelected());
+        	fieCheck.setEnabled(floInhalCB.isSelected());
+        	fdeCheck.setEnabled(floDiskCB.isSelected());
+        	aneCheck.setEnabled(albNebCB.isSelected());
+        	aieCheck.setEnabled(albInhalCB.isSelected());
+        	
+        	smCheck.setEnabled(singulairCB.isSelected());
+        	pnmCheck.setEnabled(pulmiNebCB.isSelected());
+        	ptmCheck.setEnabled(pulmiTwistCB.isSelected());
+        	bmCheck.setEnabled(budesonideCB.isSelected());
+        	adimCheck.setEnabled(adInhalCB.isSelected());
+        	admCheck.setEnabled(adDiskCB.isSelected());
+        	qmCheck.setEnabled(qvarCB.isSelected());
+        	fimCheck.setEnabled(floInhalCB.isSelected());
+        	fdmCheck.setEnabled(floDiskCB.isSelected());
+        	anmCheck.setEnabled(albNebCB.isSelected());
+        	aimCheck.setEnabled(albInhalCB.isSelected());
+        	
+        	sDescField.setEnabled(singulairCB.isSelected());
+        	pnDescField.setEnabled(pulmiNebCB.isSelected());
+        	ptDescField.setEnabled(pulmiTwistCB.isSelected());
+        	bDescField.setEnabled(budesonideCB.isSelected());
+        	adiDescField.setEnabled(adInhalCB.isSelected());
+        	adDescField.setEnabled(adDiskCB.isSelected());
+        	qDescField.setEnabled(qvarCB.isSelected());
+        	fiDescField.setEnabled(floInhalCB.isSelected());
+        	fdDescField.setEnabled(floDiskCB.isSelected());
+        	anDescField.setEnabled(albNebCB.isSelected());
+        	aiDescField.setEnabled(albInhalCB.isSelected());
+         }
     }
 }
