@@ -37,6 +37,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     private static final int NO_GROUP_IDENTIFIER = -2;
     private static final Logger LOGGER = Logger.getLogger(AspiraDAODerbyImpl.class.getName());
     private static final String CLASS  = "AspiraDAODerbyImpl";
+    private static final long MS_ONE_YEAR_FROM_NOW = 1000L * 60L * 60 * 24L * 365L;
     
     /**
      * 
@@ -403,6 +404,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                } else {  // if we have no end but we have a begin we set end to the way future
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);
@@ -504,6 +507,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                } else {  // if we have no end but we have a begin we set end to the way future
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);
@@ -598,6 +603,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                } else {  // if we have no end but we have a begin we set end to the way future
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);

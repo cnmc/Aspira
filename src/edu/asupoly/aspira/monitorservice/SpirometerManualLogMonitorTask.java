@@ -6,8 +6,6 @@ import edu.asupoly.aspira.dmp.devicelogs.SpirometerTextLogParser;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerTextReadingFactory;
-import edu.asupoly.aspira.model.UIEvent;
-import edu.asupoly.aspira.model.UIEvents;
 
 import java.util.Date;
 import java.util.Properties;

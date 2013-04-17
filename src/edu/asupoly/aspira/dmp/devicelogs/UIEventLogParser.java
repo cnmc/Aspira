@@ -4,6 +4,7 @@
  * of Dylos log files 
  */
 package edu.asupoly.aspira.dmp.devicelogs;
+
 import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 import edu.asupoly.aspira.model.UIEventsFactory;

@@ -57,16 +57,17 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
         // Originally logs have date of this format
         // Sat Mar 30 2013 05:11:22 MST
         // We need mm-dd-yy hh:mm:ss
-        //
+        // Fri Apr 12 2013 00:37:00 MST
         StringTokenizer st = new StringTokenizer(date, " ", false);
         String mm = st.nextToken();
         mm = getMonth(st.nextToken());
         String dd = st.nextToken();
         String yy = st.nextToken();
         String time = st.nextToken();
+        String tzone = st.nextToken();
         
-        String _dt = mm + '-' + dd + '-' + yy + ' ' + time;
-        DateFormat df = new SimpleDateFormat("mm-dd-yyyy hh:mm:ss");
+        String _dt = mm + '-' + dd + '-' + yy + ' ' + time + ' ' + tzone;
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss z");
          Date dt = null;      
         try {
             dt = df.parse(_dt);
