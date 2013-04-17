@@ -1447,13 +1447,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         JSONObject maxObject = (JSONObject)configObject.get("maxValues");
 
         SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
-        Date startDate = new Date((long)animationObject.get("startDateMilliSec"));
+        Date startDate = new Date((Long)animationObject.get("startDateMilliSec"));
 
         JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
-        double mean = (double)dynamicObject.get("mean");
-        double deviation = (double)dynamicObject.get("standardDeviation");
-        yellow = (double)dynamicObject.get("yellowZone");
-        red = (double)dynamicObject.get("redZone");
+        double mean = (Double)dynamicObject.get("mean");
+        double deviation = (Double)dynamicObject.get("standardDeviation");
+        yellow = (Double)dynamicObject.get("yellowZone");
+        red = (Double)dynamicObject.get("redZone");
 
         if(yellow == -1.0)
             yellow = mean + deviation;
@@ -1463,11 +1463,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         JSONObject deviceObject = (JSONObject)configObject.get("device");
 
-        soundCB.setSelected((boolean)alertObject.get("sound"));
+        soundCB.setSelected((Boolean)alertObject.get("sound"));
         soundCB.setText("Play sound with alarm");
-        long days = (long)animationObject.get("totalDays");
+        long days = (Long)animationObject.get("totalDays");
         long weeks = days/7;
-        long alertMinutes = ((long)alertObject.get("alertLength"))/60000;
+        long alertMinutes = ((Long)alertObject.get("alertLength"))/60000;
         alarmLengthField.setText("" + alertMinutes);
 
 
@@ -1491,7 +1491,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         resetConfigButton.setText("Reset");
 
 
-        boolean enabled = (boolean)dynamicObject.get("airQualityMonitoringEnabled");
+        boolean enabled = (Boolean)dynamicObject.get("airQualityMonitoringEnabled");
         chckbxEnableDynamicAlerts.setSelected(enabled);
 
 
