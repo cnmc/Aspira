@@ -1705,6 +1705,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     	pulmiNebCB.setSelected(false);
     	singulairCB.setSelected(false);
     	
+    	otherMedCB.setSelected(false);
     	omCheck.setSelected(false);
     	omCheck.setEnabled(false);
     	oeCheck.setSelected(false);
@@ -1785,7 +1786,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 	    		otherMedCB.setSelected(true);
 	    		omCheck.setSelected(true);
 	    		String omName = morningTokens[i].substring(morningTokens[i].indexOf(':')+2,
-	    				morningTokens[i].indexOf('-'));
+	    				morningTokens[i].indexOf('-')-1);
 	    		otherMedField.setText(omName);
 	    		oDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
 	    	}
@@ -1797,74 +1798,74 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 	    	{
 	    		albInhalCB.setSelected(true);
 	    		aieCheck.setSelected(true);
-	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		aiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Albuterol (nebulizer)"))
 	    	{
 	    		albNebCB.setSelected(true);
 	    		aneCheck.setSelected(true);	
-	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		anDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Flovent (diskus)"))
 	    	{
 	    		floDiskCB.setSelected(true);
 	    		fdeCheck.setSelected(true);	
-	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		fdDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Flovent (inhaler)"))
 	    	{
 	    		floInhalCB.setSelected(true);
 	    		fieCheck.setSelected(true);	
-	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		fiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Qvar"))
 	    	{
 	    		qvarCB.setSelected(true);
 	    		qeCheck.setSelected(true);
-	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		qDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Advair (diskus)"))
 	    	{
 	    		adDiskCB.setSelected(true);
 	    		adeCheck.setSelected(true);	
-	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		adDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Advair (inhaler)"))
 	    	{
 	    		adInhalCB.setSelected(true);
 	    		adieCheck.setSelected(true);
-	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		adiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Budesonide"))
 	    	{
 	    		budesonideCB.setSelected(true);
 	    		bmeCheck.setSelected(true);
-	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		bDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Pulmicort (twisthaler)"))
 	    	{
 	    		pulmiTwistCB.setSelected(true);
 	    		pteCheck.setSelected(true);	
-	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		ptDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Pulmicort (nebulizer)"))
 	    	{
 	    		pulmiNebCB.setSelected(true);
 	    		pneCheck.setSelected(true);	
-	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		pnDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Singulair"))
 	    	{
 	    		singulairCB.setSelected(true);
 	    		smeCheck.setSelected(true);	
-	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		sDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
 	    	if(eveningTokens[i].contains("Other:"))
 	    	{
 	    		otherMedCB.setSelected(true);
 	    		oeCheck.setSelected(true);
 	    		String omName = eveningTokens[i].substring(eveningTokens[i].indexOf(':')+2,
-	    				eveningTokens[i].indexOf('-'));
+	    				eveningTokens[i].indexOf('-')-1);
 	    		otherMedField.setText(omName);
 	    		oDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('-')+2));
 	    	}
@@ -1876,74 +1877,74 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 	    	{
 	    		albInhalCB.setSelected(true);
 	    		aiwsCheck.setSelected(true);
-	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		aiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Albuterol (nebulizer)"))
 	    	{
 	    		albNebCB.setSelected(true);
 	    		anwsCheck.setSelected(true);
-	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		anDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Flovent (diskus)"))
 	    	{
 	    		floDiskCB.setSelected(true);
 	    		fdwsCheck.setSelected(true);
-	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		fdDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Flovent (inhaler)"))
 	    	{
 	    		floInhalCB.setSelected(true);
 	    		fiwsCheck.setSelected(true);
-	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		fiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Qvar"))
 	    	{
 	    		qvarCB.setSelected(true);
 	    		qmwsCheck.setSelected(true);
-	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		qDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Advair (diskus)"))
 	    	{
 	    		adDiskCB.setSelected(true);
 	    		adwsCheck.setSelected(true);
-	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		adDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Advair (inhaler)"))
 	    	{
 	    		adInhalCB.setSelected(true);
 	    		adiwsCheck.setSelected(true);
-	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		adiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Budesonide"))
 	    	{
 	    		budesonideCB.setSelected(true);
 	    		bmwsCheck.setSelected(true);
-	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		bDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Pulmicort (twisthaler)"))
 	    	{
 	    		pulmiTwistCB.setSelected(true);
 	    		ptwsCheck.setSelected(true);
-	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		ptDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Pulmicort (nebulizer)"))
 	    	{
 	    		pulmiNebCB.setSelected(true);
 	    		pnwsCheck.setSelected(true);
-	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		pnDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Singulair"))
 	    	{
 	    		singulairCB.setSelected(true);
 	    		smwsCheck.setSelected(true);
-	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('-')+2));
+	    		sDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}
 	    	if(withSymptomsTokens[i].contains("Other:"))
 	    	{
 	    		otherMedCB.setSelected(true);
 	    		owsCheck.setSelected(true);
 	    		String omName = withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf(':')+2,
-	    				withSymptomsTokens[i].indexOf('-'));
+	    				withSymptomsTokens[i].indexOf('-')-1);
 	    		otherMedField.setText(omName);
 	    		oDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('-')+2));
 	    	}

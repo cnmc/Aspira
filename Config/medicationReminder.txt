@@ -1,8 +1,8 @@
 Morning - 0800;
 Evening - 1500;
 Morning;
-Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
+Albuterol (inhaler) - adfdsf, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: asdfsd - asdfsdfasdf;
 Evening;
-Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
+Albuterol (inhaler) - adfdsf, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: asdfsd - asdfsdfasdf;
 With Symptoms;
-Albuterol (inhaler) - Nonary, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: Other - asdfsdfasdf;
+Albuterol (inhaler) - adfdsf, Albuterol (nebulizer) - asdfsdfasdf, Flovent (diskus) - sdfasdfsdffdadf, Flovent (inhaler) - dkfjasdfsdf, Qvar - sdfasdfsdffdadf, Advair (diskus) - asdfasdf, Advair (inhaler) - adfasdf, Budesonide - adfasdfasf, Pulmicort (twisthaler) - dsfasdfsdf, Pulmicort (nebulizer) - adsfasdfsdf, Singulair - adsfasdfasdf, Other: asdfsd - asdfsdfasdf;
