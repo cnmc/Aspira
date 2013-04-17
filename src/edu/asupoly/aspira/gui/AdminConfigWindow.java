@@ -132,38 +132,76 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 					dynamicObject = (JSONObject)configObject.get("airQualityConfig");
 					
 					alertObject.put("sound", soundCB.isSelected());
-					alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
+					try{
+						alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
+					}
+					catch(NumberFormatException e1){
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Length value must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
 					
 					configObject.put("alertInfo", alertObject);
-					configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
+					try{
+						configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
+					}catch(NumberFormatException e1){
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid device ID", "Bad input", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					
 					animationObject = (JSONObject)configObject.get("animation");
 					
-					animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
+					try{
+						animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
+					}
+					catch(NumberFormatException e1){
+					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Weeks must be an integer value", "Bad input", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 					
 					try {
 						Date startDate = storeDate.parse(startDateField.getText());
 						Date today = new Date();
-						animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
+						today.setTime(today.getTime() - 86400000);
+						System.out.println(today.toString() + startDate.toString() + startDate.compareTo(today));
+						if(startDate.compareTo(today)>= 0)
+							animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
+						else
+							JOptionPane.showMessageDialog(AdminConfigWindow.this, "Date must be at least today", "Bad date", JOptionPane.ERROR_MESSAGE);
 					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid date field entry", "Bad date", JOptionPane.ERROR_MESSAGE);
 					}
 					configObject.put("animation", animationObject);
 					
 					
 					minObject = (JSONObject)configObject.get("minValues");
 					maxObject = (JSONObject)configObject.get("maxValues");
-					minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
-					minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
-					maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
-					maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
+					try{
+						minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
+						minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
+						maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
+						maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
+					}
+					catch(NumberFormatException e1){
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					
 					dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
+					double curRed;
+					double curYellow;
+					try{
+						curRed = Double.parseDouble(redZoneField.getText());
+						curYellow = Double.parseDouble(yellowZoneField.getText());
+					}
+					catch(NumberFormatException e1){
+						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid input in airquality values", "Bad input", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					
-					double curRed = Double.parseDouble(redZoneField.getText());
-					double curYellow = Double.parseDouble(yellowZoneField.getText());
 					
 					if(red != curRed)
 						dynamicObject.put("redZone", curRed);
