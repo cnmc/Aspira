@@ -10,7 +10,8 @@
              WinJS.Utilities.id("leftHelpItem1").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("leftHelpItem2").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
-            WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false); 
+            WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false);
+            WinJS.Utilities.id("rightHelpItem5").listen("click", this.navHelpPage, false);
             AsthmaGlobals.symptomQuestion = false;
             document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
             //Initialize the awesome stuff

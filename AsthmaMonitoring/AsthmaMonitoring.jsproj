@@ -124,6 +124,9 @@
     <Content Include="images\fishAnimation\9sleepy.png" />
     <Content Include="images\fishAnimation\fishBowl.png" />
     <Content Include="images\help.png" />
+    <Content Include="images\step1.png" />
+    <Content Include="images\step2.png" />
+    <Content Include="images\step3.png" />
     <Content Include="images\third.jpg" />
     <Content Include="images\adminPage.png" />
     <Content Include="images\first.jpg" />
@@ -162,9 +165,9 @@
     <Content Include="pages\readingPage\readingPage.css" />
     <Content Include="pages\readingPage\readingPage.html" />
     <Content Include="pages\readingPage\readingPage.js" />
-    <Content Include="video\dogAnimation.mp4" />
-    <Content Include="video\steps3_6.mp4" />
-    <Content Include="video\Steps7_8.mp4" />
+    <Content Include="video\step1.mp4" />
+    <Content Include="video\step2.mp4" />
+    <Content Include="video\step3.mp4" />
     <None Include="AsthmaMonitoring_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
             WinJS.Utilities.id("leftHelpItem2").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem4").listen("click", this.navHelpPage, false);
+            WinJS.Utilities.id("rightHelpItem5").listen("click", this.navHelpPage, false);
             $("#contactName").append('Name :'+ AsthmaGlobals.fileConfig.config.contactName);
             $("#contactPhone").append('Phone :' + AsthmaGlobals.fileConfig.config.contactPhone);
         },

@@ -4,10 +4,10 @@
     WinJS.UI.Pages.define("/pages/home/home.html", {
         // This function is called whenever a user navigates to this page. It
         // populates the page elements with the app's data.
-        
+      
         ready: function (element, options) {
-            WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
-            WinJS.Utilities.id("helpLogin").listen("click", this.helpLogin, false);
+          //  WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
+            WinJS.Utilities.id("helpLogin").listen("click", helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
           
             // getMedicationText("0300");
@@ -61,25 +61,24 @@
         adminLogin: function (eventInfo) {
             WinJS.Navigation.navigate("/pages/adminPage/adminPage.html");
         },
-        helpLogin: function (eventInfo) {
-            disableAllTimers();
-            WinJS.Navigation.navigate("/pages/contact/contact.html");
-        },
+        
         nextReadingAlert: function () {
             //enable user going into the flow when its time for new reading
-            dismissAlert();
+            
             changeFishMood("attentive");
             appendLog("alert", "application home", "Take Reading");
             // Windows.Storage.ApplicationData.current.localSettings.values["bowlClickListener"] = 
             WinJS.Utilities.id("takeReading").listen("click", takeReading, false);
             WinJS.Utilities.id("takeReading").removeEventListener("click", teaseListener, false);
+            WinJS.Utilities.id("helpLogin").removeEventListener("click", helpLogin, false);
             // User doesnt take readings, so set a timer but clear it if you leave the page
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
             setTimeout(readingNotTaken, AsthmaGlobals.fileConfig.config.alertInfo.alertLength);// set next reading not taken timer
             //2. 
             initateDynamicAlert("scheduledReading", "Tap on the bowl to take a reading !!")
             animateNextReading();
-            if (AsthmaGlobals.fileConfig.config.alertInfo.sound==true){
+            if (AsthmaGlobals.fileConfig.config.alertInfo.sound == true) {
+                playAlert();
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingSoundAlert"] =
                 setInterval(playAlert, 6000);
             }
@@ -118,6 +117,10 @@
         }
     });
 })();
+function helpLogin (eventInfo) {
+    disableAllTimers();
+    WinJS.Navigation.navigate("/pages/contact/contact.html");
+}
 // animate reading box
 function waitForFileToLoad() {
     var check = false;
@@ -184,6 +187,7 @@ function takeDynamicReading(eventInfo) {
     disableAllTimers();
     Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
          new Date().toString();
+    dismissAlert();
     WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
 }
 

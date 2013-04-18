@@ -75,6 +75,9 @@ images\logo.png
 images\second.jpg
 images\smalllogo.png
 images\splashscreen.png
+images\step1.png
+images\step2.png
+images\step3.png
 images\storelogo.png
 images\third.jpg
 images\traffic_signal_disconnected.png
@@ -105,6 +108,6 @@ pages\home\home.js
 pages\readingPage\readingPage.css
 pages\readingPage\readingPage.html
 pages\readingPage\readingPage.js
-video\dogAnimation.mp4
-video\steps3_6.mp4
-video\Steps7_8.mp4
+video\step1.mp4
+video\step2.mp4
+video\step3.mp4

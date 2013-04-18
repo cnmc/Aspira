@@ -5,28 +5,28 @@
     <WindowsUser>vasu</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
-    <RegisteredManifestChecksum>E3AE3A2D40591553212D686348F09B90C785302F3CB2D3DB4BEAF40FFC97B16B</RegisteredManifestChecksum>
-    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd4_0.0.0.22_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
+    <RegisteredManifestChecksum>15F1C7D4841B23381BB8EEB1CE70173C7834D3442F095DD9FEFDF16D72F14DCB</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd4_0.0.0.23_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>99d9a641-35c0-46a2-8473-11baca999bd4_qrw6ghay3f4aj!App</RegisteredUserModeAppID>
     <RegisteredPackageID>99d9a641-35c0-46a2-8473-11baca999bd4</RegisteredPackageID>
     <RegisteredPackagePublisher>CN=vasu</RegisteredPackagePublisher>
-    <RegisteredVersion>0.0.0.22</RegisteredVersion>
+    <RegisteredVersion>0.0.0.23</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-04-16T00:20:05.342</Modified>
+      <Modified>2013-04-18T06:42:41.570</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\airQualityStatus.json">
       <PackagePath>airQualityStatus.json</PackagePath>
-      <Modified>2013-04-15T23:28:33.180</Modified>
+      <Modified>2013-04-15T23:28:08.238</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
       <PackagePath>config.json</PackagePath>
-      <Modified>2013-04-15T23:28:53.256</Modified>
+      <Modified>2013-04-15T20:52:25.412</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\asthmaMonitoringLog.txt">
       <PackagePath>asthmaMonitoringLog.txt</PackagePath>
@@ -34,7 +34,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\medicationReminder.txt">
       <PackagePath>medicationReminder.txt</PackagePath>
-      <Modified>2013-04-15T23:29:09.205</Modified>
+      <Modified>2013-04-15T20:56:10.366</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\audio\readingAlert.mp3">
       <PackagePath>audio\readingAlert.mp3</PackagePath>
@@ -54,7 +54,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.css">
       <PackagePath>pages\contact\contact.css</PackagePath>
-      <Modified>2013-04-13T22:24:41.249</Modified>
+      <Modified>2013-04-18T07:28:47.722</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.css">
       <PackagePath>pages\helpDisplay\helpDisplay.css</PackagePath>
@@ -66,7 +66,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.css">
       <PackagePath>pages\readingPage\readingPage.css</PackagePath>
-      <Modified>2013-03-24T02:47:33.442</Modified>
+      <Modified>2013-04-18T07:30:13.107</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\aspira_spiro.jpg">
       <PackagePath>images\aspira_spiro.jpg</PackagePath>
@@ -336,6 +336,18 @@
       <PackagePath>images\help.png</PackagePath>
       <Modified>2013-04-12T05:18:04.229</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\step1.png">
+      <PackagePath>images\step1.png</PackagePath>
+      <Modified>2013-04-18T06:26:18.370</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\step2.png">
+      <PackagePath>images\step2.png</PackagePath>
+      <Modified>2013-04-18T06:26:19.145</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\step3.png">
+      <PackagePath>images\step3.png</PackagePath>
+      <Modified>2013-04-18T06:26:18.641</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\images\adminPage.png">
       <PackagePath>images\adminPage.png</PackagePath>
       <Modified>2013-03-18T08:23:28.195</Modified>
@@ -414,19 +426,19 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.js">
       <PackagePath>pages\contact\contact.js</PackagePath>
-      <Modified>2013-04-12T05:18:04.660</Modified>
+      <Modified>2013-04-18T06:55:52.388</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.js">
       <PackagePath>pages\helpDisplay\helpDisplay.js</PackagePath>
-      <Modified>2013-03-19T04:59:48.792</Modified>
+      <Modified>2013-04-18T06:47:05.377</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-04-15T23:25:14.187</Modified>
+      <Modified>2013-04-17T01:42:06.825</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
-      <Modified>2013-04-16T00:25:01.728</Modified>
+      <Modified>2013-04-18T06:35:43.604</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\adminPage\adminPage.html">
       <PackagePath>pages\adminPage\adminPage.html</PackagePath>
@@ -434,7 +446,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\contact\contact.html">
       <PackagePath>pages\contact\contact.html</PackagePath>
-      <Modified>2013-04-13T22:25:32.380</Modified>
+      <Modified>2013-04-18T07:27:07.171</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\helpDisplay\helpDisplay.html">
       <PackagePath>pages\helpDisplay\helpDisplay.html</PackagePath>
@@ -442,7 +454,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.html">
       <PackagePath>pages\home\home.html</PackagePath>
-      <Modified>2013-04-15T07:46:45.135</Modified>
+      <Modified>2013-04-17T01:04:58.653</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\default.html">
       <PackagePath>default.html</PackagePath>
@@ -450,23 +462,23 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.html">
       <PackagePath>pages\readingPage\readingPage.html</PackagePath>
-      <Modified>2013-04-15T21:43:55.940</Modified>
+      <Modified>2013-04-18T07:24:38.174</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\dogAnimation.mp4">
-      <PackagePath>video\dogAnimation.mp4</PackagePath>
-      <Modified>2013-03-18T17:28:19.097</Modified>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\step1.mp4">
+      <PackagePath>video\step1.mp4</PackagePath>
+      <Modified>2013-04-04T23:49:24.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\steps3_6.mp4">
-      <PackagePath>video\steps3_6.mp4</PackagePath>
-      <Modified>2013-03-19T03:46:51.815</Modified>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\step2.mp4">
+      <PackagePath>video\step2.mp4</PackagePath>
+      <Modified>2013-04-04T23:52:20.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\Steps7_8.mp4">
-      <PackagePath>video\Steps7_8.mp4</PackagePath>
-      <Modified>2013-03-19T03:46:17.034</Modified>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\video\step3.mp4">
+      <PackagePath>video\step3.mp4</PackagePath>
+      <Modified>2013-04-04T23:55:28.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-04-16T00:20:05.068</Modified>
+      <Modified>2013-04-18T06:42:41.128</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

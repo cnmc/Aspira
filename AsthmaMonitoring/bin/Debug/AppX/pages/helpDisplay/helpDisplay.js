@@ -12,20 +12,21 @@
             var contentVidDisplayMarkup = document.createElement("video");
             contentVidDisplayMarkup.width = "650";
             contentVidDisplayMarkup.autoplay = "autoplay";
+            contentVidDisplayMarkup.controls = "controls";
 
             var contentImgDisplayMarkup = document.createElement("img");
             switch (invokingHelpIcon) {
              
                 case "leftHelpItem1":
-                    contentVidDisplayMarkup.src = "/video/steps7_8.mp4";
+                    contentVidDisplayMarkup.src = "/video/step1.mp4";
                     document.getElementById('helpDisplayContent').appendChild(contentVidDisplayMarkup);
                     break;
                 case "leftHelpItem2":
-                    contentImgDisplayMarkup.src = "/images/second.jpg";
-                    document.getElementById('helpDisplayContent').appendChild(contentImgDisplayMarkup);
+                    contentVidDisplayMarkup.src = "/video/step2.mp4";
+                    document.getElementById('helpDisplayContent').appendChild(contentVidDisplayMarkup);
                     break;
                 case "rightHelpItem3":
-                    contentVidDisplayMarkup.src = "/video/steps3_6.mp4";
+                    contentVidDisplayMarkup.src = "/video/step3.mp4";
                     document.getElementById('helpDisplayContent').appendChild(contentVidDisplayMarkup);
                     break;
                 case "rightHelpItem4":
@@ -33,6 +34,10 @@
                     contentDivDisplayMarkup.className = "spiroHelpSteps";
                     contentDivDisplayMarkup.innerHTML = this.createHelpItemSteps();
                     document.getElementById('helpDisplayContent').appendChild(contentDivDisplayMarkup);
+                    break;
+                case "rightHelpItem5":
+                    contentImgDisplayMarkup.src = "/images/second.jpg";
+                    document.getElementById('helpDisplayContent').appendChild(contentImgDisplayMarkup);
                     break;
             }
         },

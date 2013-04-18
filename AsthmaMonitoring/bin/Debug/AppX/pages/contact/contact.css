@@ -4,13 +4,18 @@
 .leftHelpPanelItem {
 padding: 5px;
 }
-.allHelp {
+
+allHelp {
     left: 100px;
+	height: auto;
+	width:auto;
     position:relative;
-    margin-top:150px;
+    margin-top:110px;
+
 }
 .leftHelpPanel {
     float:left;
+    width:370px;
 }
 .rightHelpPanel {
     float: right; 
@@ -18,14 +23,16 @@ padding: 5px;
 }
 .leftHelpPanelItem {
 float:left;
-    border:2px groove black;
-    border-radius:5px; 
+     width:110px;
+    border:1px solid black;
+    text-align:center;
 }
 .rightHelpPanelItem {
 float:left;
+ width:100px;
 }
 .helpThumbnail {
  width:100px;
- height:100px;
- padding:20px;
+ height:70px;
+ padding:5px;
 }
