@@ -14,6 +14,15 @@
             WinJS.Utilities.id("rightHelpItem5").listen("click", this.navHelpPage, false);
             AsthmaGlobals.symptomQuestion = false;
             document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
+            if (Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] != undefined &&
+                 Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] != null) {
+                document.getElementById('PEFValue').value = Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"];
+                var confirmBtnMarkup = document.createElement("button");
+                confirmBtnMarkup.id = "confirmButton";
+                confirmBtnMarkup.innerHTML = "Confirm";
+                confirmBtnMarkup.onclick = this.changeScreenFev;
+                document.getElementById('inputBoxDivision').appendChild(confirmBtnMarkup);
+            }
             //Initialize the awesome stuff
             initializeAnimation();
 

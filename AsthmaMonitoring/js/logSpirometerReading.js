@@ -13,6 +13,7 @@
             content += "\n";
 
             Windows.Storage.FileIO.appendTextAsync(datafile, content);
+            Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] = null;
         });
     
        

@@ -187,7 +187,7 @@ function takeDynamicReading(eventInfo) {
     disableAllTimers();
     Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
          new Date().toString();
-    dismissAlert();
+    Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] == null;
     WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
 }
 
@@ -415,15 +415,21 @@ function calculatePrevReadingTimeout() {
     var currHour = new Date().getHours();
     var currMins = new Date().getMinutes();
     var prevReadingHour = null;
-    for (var i = 0; i < spiroReadingTimeArray.length ; i++) {
+    for (var i = spiroReadingTimeArray.length - 1; i >=0  ; i--) {
         //get the largest hour from the array
-        if (currHour < String(spiroReadingTimeArray[i]).substr(0, 2)) {
-            prevReadingHour = String(spiroReadingTimeArray[i - 1]);
+        if (currHour > String(spiroReadingTimeArray[i]).substr(0, 2)) {
+            prevReadingHour = String(spiroReadingTimeArray[i ]);
             break;
-        } else if (currHour <= String(spiroReadingTimeArray[i]).substr(0, 2)
-            && currMins < String(spiroReadingTimeArray[i]).substr(2, 2)) {
+        } else if (currHour == String(spiroReadingTimeArray[i]).substr(0, 2)
+            && currMins == String(spiroReadingTimeArray[i]).substr(2, 2)) {
             //else if it is the same hour and min when compared to time right now
-            prevReadingHour = String(spiroReadingTimeArray[i - 1]);
+            return AsthmaGlobals.fileConfig.config.alertInfo.intervalInTwoReadings - 1000;
+           
+        }
+        else if (currHour >= String(spiroReadingTimeArray[i]).substr(0, 2)
+            && currMins > String(spiroReadingTimeArray[i]).substr(2, 2)) {
+            //else if it is the same hour and min when compared to time right now
+            prevReadingHour = String(spiroReadingTimeArray[i ]);
             break;
         }
 
