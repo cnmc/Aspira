@@ -5,7 +5,7 @@
  */
 package edu.asupoly.aspira.dmp.devicelogs;
 
-import edu.asupoly.aspira.GlobalHelper;
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
@@ -80,7 +80,7 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
                                 pef, fev, "0", "0", hasSymptoms));
                     } catch (Throwable it) {
                         Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
-                                "In SpirometerReadingTextParser inner " + GlobalHelper.stackToString(it));
+                                "In SpirometerReadingTextParser inner " + Aspira.stackToString(it));
                     }
                 }
                 dateLine = br.readLine();
@@ -91,7 +91,7 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
         }
         catch (Throwable t) {
             Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
-                    "In SpirometerReadingTextParser " + GlobalHelper.stackToString(t));
+                    "In SpirometerReadingTextParser " + Aspira.stackToString(t));
         } finally {
             try {
                 if (br != null) br.close();

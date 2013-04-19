@@ -1,5 +1,6 @@
 package edu.asupoly.aspira.monitorservice;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.dmp.devicelogs.SpirometerTextLogParser;
@@ -60,8 +61,10 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
         boolean rval = true;
         // check we have deviceId, patientId, and file
         __props = new Properties();
-        String deviceId  = p.getProperty("deviceid");
-        String patientId = p.getProperty("patientid");
+        //String deviceId  = p.getProperty("deviceid");
+        //String patientId = p.getProperty("patientid");
+        String deviceId  = Aspira.getSpirometerId();
+        String patientId = Aspira.getPatientId();
         String logfile   = p.getProperty("sptxtlogfile");
         if (deviceId != null && patientId != null && logfile != null) {
             __props.setProperty("deviceid", deviceId);

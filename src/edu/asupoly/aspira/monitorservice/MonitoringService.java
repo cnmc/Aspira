@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.HashMap;
@@ -44,6 +45,18 @@ public final class MonitoringService {
             }
         }
         return __theMonitoringService;
+    }
+    
+    public String[] listTasks() {
+        if (__tasks == null || __tasks.isEmpty()) return null;
+        String[] rval = null;
+        if (__tasks != null) {
+            Set<String> t = __tasks.keySet();
+            if (t != null) {
+                rval = t.toArray(new String[0]);
+            }
+        }
+        return rval;
     }
     
     public boolean cancelTask(String taskName) {
@@ -148,13 +161,13 @@ public final class MonitoringService {
                             "Created timer task " + (TASK_KEY_PREFIX+i) + " for task class " + taskClassName);
                 } else {
                     Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
-                            "1. Unable to initialize MonitorService task from properties, skipping\n");
+                            "1. Unable to initialize MonitorService task from properties, skipping " + taskClassName);
                 }
             } catch (Throwable t) {
                 // something prevented us from creating the task, skip it
                 Logger.getLogger(MonitoringService.class.getName()).log(Level.INFO, 
                         "2. Unable to initialize MonitorService task from properties, skipping\n" + 
-                                edu.asupoly.aspira.GlobalHelper.stackToString(t));
+                                edu.asupoly.aspira.Aspira.stackToString(t));
             }
             i++;
             taskClassName = __props.getProperty(TASK_KEY_PREFIX+i);

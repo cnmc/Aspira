@@ -1,8 +1,5 @@
 package edu.asupoly.aspira.test;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
-
 import edu.asupoly.aspira.monitorservice.MonitoringService;
 
 public final class MonitoringServiceTest {
@@ -11,10 +8,8 @@ public final class MonitoringServiceTest {
     }
 
     public static void main(String[] args) {
-        Logger logger = Logger.getLogger("edu.asupoly.aspira");
-        logger.addHandler(new ConsoleHandler());
-
         try {
+            Class.forName("edu.asupoly.aspira.GlobalHelper");
             System.out.println("Starting the monitoring service");
             MonitoringService theService = MonitoringService.getMonitoringService();
             System.out.println("Started the monitoring service");

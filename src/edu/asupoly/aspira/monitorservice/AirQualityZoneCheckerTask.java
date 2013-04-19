@@ -1,5 +1,6 @@
 package edu.asupoly.aspira.monitorservice;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -84,7 +85,8 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
         boolean rval = true;
         try {
             // check we have deviceId, patientId, and file
-            String patientId = p.getProperty("patientid");
+            //String patientId = p.getProperty("patientid");
+            String patientId = Aspira.getPatientId();
             String pollingTime = p.getProperty("airQualityNumReadings");
             String yellowThreshold = p.getProperty("yellowZoneThreshhold");
             String redThreshold = p.getProperty("redZoneThreshhold");

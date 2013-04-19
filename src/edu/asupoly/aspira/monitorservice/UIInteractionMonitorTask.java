@@ -3,6 +3,7 @@ package edu.asupoly.aspira.monitorservice;
 import java.util.Date;
 import java.util.Properties;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.dmp.devicelogs.UIEventLogParser;
@@ -56,7 +57,7 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
                     LOGGER.log(Level.INFO, "No UI eventfile to parse");
                 }
             } catch (Throwable t) {
-                LOGGER.log(Level.SEVERE, "UI Monitor Task throwable: " + edu.asupoly.aspira.GlobalHelper.stackToString(t));
+                LOGGER.log(Level.SEVERE, "UI Monitor Task throwable: " + edu.asupoly.aspira.Aspira.stackToString(t));
             }
         }
     }
@@ -66,12 +67,14 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
         boolean rval = true;
         // check we have  patientId, and file
         __props = new Properties();
-        String patientId = p.getProperty("patientid");
+        //String patientId = p.getProperty("patientid");
+        String patientId = Aspira.getPatientId();
         String logfile   = p.getProperty("uilogfile");
         if (patientId != null && logfile != null) {
             __props.setProperty("patientid", patientId);
             __props.setProperty("uilogfile", logfile);
         } else {
+            System.out.println("HERE");
             rval = false;
         }
         _isInitialized = rval;
@@ -87,7 +90,7 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
                     _lastRead = e.getDate();
                 }
             }
-        } catch (Throwable t) {
+        } catch (Throwable t) {            
             LOGGER.log(Level.WARNING, "Unable to get last reading time");
         }
         

@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.dmp.devicelogs.DylosLogParser;
@@ -67,8 +68,10 @@ public class AirQualityMonitorTask extends AspiraTimerTask {
         boolean rval = true;
         // check we have deviceId, patientId, and file
         __props = new Properties();
-        String deviceId  = p.getProperty("deviceid");
-        String patientId = p.getProperty("patientid");
+        //String deviceId  = p.getProperty("deviceid");
+        //String patientId = p.getProperty("patientid");
+        String deviceId  = Aspira.getAirQualityMonitorId();
+        String patientId = Aspira.getPatientId();
         String logfile   = p.getProperty("aqlogfile");
         if (deviceId != null && patientId != null && logfile != null) {
             __props.setProperty("deviceid", deviceId);
