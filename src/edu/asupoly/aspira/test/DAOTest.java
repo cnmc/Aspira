@@ -20,6 +20,9 @@ import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 
 public class DAOTest {
+    private static final Boolean __F = new Boolean(false);
+    private static final Boolean __T = new Boolean(true);
+    
     private SpirometerReadings __spReadings = null;
     private AirQualityReadings __aqReadings = null;
     private SpirometerReadings __sp2Readings = null;
@@ -77,25 +80,25 @@ public class DAOTest {
         __aq2Readings.addReading(new ParticleReading("device_2", "patient_2", "02/13/13", "00:48", "204900", "6400"));
         __aq2Readings.addReading(new ParticleReading("device_2", "patient_2", "02/13/13", "00:49", "206100", "6000"));
 
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-25T14:40:00-07:00", "0", false, "459", "3.17", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-29T11:32:00-07:00", "1", false, "410", "2.97", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-31T14:13:00-07:00", "2", false, "503", "3.11", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-08T09:39:00-07:00", "3", false, "350", "2", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-08T09:48:00-07:00", "4", false, "410", "2.58", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-18T11:31:00-07:00", "5", false, "386", "2.42", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:33:00-07:00", "6", false, "295", "2.28", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:34:00-07:00", "7", false, "115", "1.11", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:37:00-07:00", "8", false, "88", "1.23", "0", "503"));
-        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:38:00-07:00", "9", false, "100", "1.21", "0", "503"));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-25T14:40:00-07:00", "0", false, "459", "3.17", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-29T11:32:00-07:00", "1", false, "410", "2.97", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-01-31T14:13:00-07:00", "2", false, "503", "3.11", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-08T09:39:00-07:00", "3", false, "350", "2", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-08T09:48:00-07:00", "4", false, "410", "2.58", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-18T11:31:00-07:00", "5", false, "386", "2.42", "0", "503", __T));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:33:00-07:00", "6", false, "295", "2.28", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:34:00-07:00", "7", false, "115", "1.11", "0", "503", __F));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:37:00-07:00", "8", false, "88", "1.23", "0", "503", __T));
+        __spReadings.addReading(new SpirometerReading("device_1", "2388", "2013-02-24T18:38:00-07:00", "9", false, "100", "1.21", "0", "503", __F));
 
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:40:00-07:00", "10", false, "74", "0.68", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:41:00-07:00", "11", false, "73", "1", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:43:00-07:00", "12", false, "134", "1.55", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:45:00-07:00", "13", false, "110", "1.05", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T20:27:00-07:00", "14", false, "138", "1.9", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T20:30:00-07:00", "15", false, "58", "0.87", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-25T09:59:00-07:00", "16", false, "419", "2.69", "0", "503"));
-        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-27T13:14:00-07:00", "17", false, "123", "0.89", "0", "503"));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:40:00-07:00", "10", false, "74", "0.68", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:41:00-07:00", "11", false, "73", "1", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:43:00-07:00", "12", false, "134", "1.55", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T18:45:00-07:00", "13", false, "110", "1.05", "0", "503", __T));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T20:27:00-07:00", "14", false, "138", "1.9", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-24T20:30:00-07:00", "15", false, "58", "0.87", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-25T09:59:00-07:00", "16", false, "419", "2.69", "0", "503", __F));
+        __sp2Readings.addReading(new SpirometerReading("device_2", "2388", "2013-02-27T13:14:00-07:00", "17", false, "123", "0.89", "0", "503", __F));
 
         int groupId = (int)System.currentTimeMillis();
         __eventReadings.addEvent(new UIEvent("device_1","patient_1", "0.1", "alert", "application home", "Take Reading", UIEvent.formatDate("Sat Mar 30 2013 05:11:22 MST"), groupId));

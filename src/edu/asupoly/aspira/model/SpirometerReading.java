@@ -30,7 +30,8 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     private int    error;
     private int    bestValue;
     private int    groupId;
-
+    private Boolean hasSymptoms;
+    
     @Override
     public String toString() {
         return "SpirometerReading(deviceId, patientId, measureId, date, manual, pef, fev1, error, bv, group) (" + deviceId + ", " +
@@ -72,6 +73,10 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     public int getBestValue() {
         return bestValue;
     }
+    public Boolean getHasSymptoms() {
+        return hasSymptoms;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof SpirometerReading && measureDate.equals(((SpirometerReading)obj).measureDate);
@@ -82,7 +87,8 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         return measureDate.hashCode();
     }
 
-    public SpirometerReading(String deviceId, String id, String mdate, String mid, boolean manual, String pef, String fev, String err, String bvalue) throws DeviceLogException {
+    public SpirometerReading(String deviceId, String id, String mdate, String mid, boolean manual, 
+            String pef, String fev, String err, String bvalue, Boolean hasSymptoms) throws DeviceLogException {
         try{
             this.deviceId = deviceId;
             this.pid = id;
@@ -101,6 +107,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
+            this.hasSymptoms = hasSymptoms;  // could be null
             this.groupId = DEFAULT_NO_GROUP_ASSIGNED;
         }
         catch(Throwable th)
@@ -122,6 +129,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         fev1Value = fev;
         error = err;
         bestValue = bvalue;
+        this.hasSymptoms = null;
         this.groupId = groupid;
     }
 }

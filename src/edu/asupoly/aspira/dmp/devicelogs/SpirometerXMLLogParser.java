@@ -89,7 +89,7 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String fev = getFirstChildNodeValue(node, "FEV1Value");
                 String err = getFirstChildNodeValue(node, "Error");
                 String bvalue = getFirstChildNodeValue(node, "BestValue");
-                SpirometerReading pr = new SpirometerReading(deviceId, id,  dt, mid, false, pef, fev, err, bvalue);
+                SpirometerReading pr = new SpirometerReading(deviceId, id,  dt, mid, false, pef, fev, err, bvalue, null);
                 _spReadings.addReading(pr);
             }
         }
