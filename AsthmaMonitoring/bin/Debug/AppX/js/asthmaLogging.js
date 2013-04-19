@@ -69,10 +69,10 @@ function appendLog(eventType, target, value) {
     }
     var currDate = new Date().toDateString();
     var currTime = new Date().toTimeString();
-    var latestLog = AsthmaGlobals.fileConfig.config.pateintID + " , " +
-         AsthmaGlobals.fileConfig.config.deviceID + " , " +
-          AsthmaGlobals.fileConfig.config.buildVer + " , " + eventType + " , " +
-          target + " , " + value + " , " + currDate + " " + currTime +  '\n';
+    var latestLog = AsthmaGlobals.fileConfig.config.pateintID + " ### " +
+         AsthmaGlobals.fileConfig.config.deviceID + " ### " +
+          AsthmaGlobals.fileConfig.config.buildVer + " ### " + eventType + " ### " +
+          target + " ### " + value + " ### " + currDate + " " + currTime +  '\n';
     bufferedLogString += latestLog;
    // bufferedLogArray.push(latestLog);
     AsthmaGlobals.logString = bufferedLogString;
