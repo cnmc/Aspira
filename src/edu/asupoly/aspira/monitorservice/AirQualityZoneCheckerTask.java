@@ -55,6 +55,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                     __connected = false;
                     __zone = Zones.UNKNOWN;
                 } else {
+                    __connected = true;
                     __lastRead = _pr.getDateTime();
                     Iterator<ParticleReading> iterator = aqr.iterator();
                     Zones z = Zones.RED;
