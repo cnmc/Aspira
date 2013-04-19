@@ -118,7 +118,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     }
 
     public SpirometerReading(String deviceId, String id, Date mdate, int mid, boolean manual,
-            int pef, float fev, int err, int bvalue, int groupid)  {
+            int pef, float fev, int err, int bvalue, Boolean hasSymptoms, int groupid)  {
 
         this.deviceId = deviceId;
         this.pid = id;
@@ -129,7 +129,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         fev1Value = fev;
         error = err;
         bestValue = bvalue;
-        this.hasSymptoms = null;
+        this.hasSymptoms = hasSymptoms;
         this.groupId = groupid;
     }
 }

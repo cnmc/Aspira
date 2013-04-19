@@ -519,7 +519,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                        new Date(rs.getTimestamp("readingtime").getTime()), 
                        rs.getInt("measureid"), rs.getBoolean("manual"),
                        rs.getInt("pefvalue"), rs.getFloat("fev1value"),
-                       rs.getInt("error"), rs.getInt("bestvalue"), rs.getInt("groupid")));
+                       rs.getInt("error"), rs.getInt("bestvalue"), rs. getBoolean("symptoms"), rs.getInt("groupid")));
                count--;
             }
             return rval;
@@ -739,7 +739,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setFloat(7,  next.getFEV1Value());
                 ps.setInt(8,  next.getError());
                 ps.setInt(9,  next.getBestValue());
-                ps.setInt(10,  id);
+                ps.setBoolean(10, next.getHasSymptoms());
+                ps.setInt(11,  id);
                 ps.executeUpdate();
                 ps.clearParameters();
             }

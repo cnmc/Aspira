@@ -1,30 +1,40 @@
 Sun Mar 24 17:26:00 MST 2013
 PEF Value : 488.2
 FEV Value : 145.3
+Symptoms? : No
 Sun Mar 24 23:39:15 MST 2013
 PEF Value : 555.5
 FEV Value : 111.1
+Symptoms? : No
 Sun Mar 24 23:41:57 MST 2013
 PEF Value : 545.2
 FEV Value : 111.6
+Symptoms? : Yes
 Sun Mar 24 23:43:26 MST 2013
 PEF Value : 454.2
 FEV Value : 141.2
+Symptoms? : No
 Sun Mar 24 23:55:42 MST 2013
 PEF Value : 222.2
 FEV Value : 111.1
+Symptoms? : Yes
 Mon Mar 25 00:00:42 MST 2013
 PEF Value : 555.5
 FEV Value : 111.1
+Symptoms? : Yes
 Mon Mar 25 00:07:02 MST 2013
 PEF Value : 555.4
 FEV Value : 111.1
+Symptoms? : No
 Mon Mar 25 00:22:38 MST 2013
 PEF Value : 555.2
 FEV Value : 111.1
+Symptoms? : No
 Fri Mar 29 13:12:48 MST 2013
 PEF Value : 333.3
 FEV Value : 122.2
+Symptoms? : Yes
 Fri Mar 29 14:20:30 MST 2013
 PEF Value : 452.2
 FEV Value : 111.1
+Symptoms? : Yes
