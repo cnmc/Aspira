@@ -34,24 +34,25 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
             String filename = props.getProperty("sptxtlogfile");
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
-            String finput = br.readLine().trim();
+            String finput = null;
             String _date,  pef, fev;
+            finput = br.readLine();
             while (finput != null && !finput.isEmpty())
             {
-                _date = formatDate(finput);
-                finput = br.readLine(); 
-                st = new StringTokenizer(finput, ":", false);    
-                pef = st.nextToken();
-                pef = st.nextToken().trim();
-                finput = br.readLine();
-                st = new StringTokenizer(finput, ":", false);    
-                fev = st.nextToken();
-                fev = st.nextToken().trim();
-                finput = br.readLine();
-                // For now sending measure id as -1, error as 0 and best value as -1
-                try {  // if it doesn't work we'll skip it                    
+                finput = finput.trim();
+                try {
+                    _date = formatDate(finput);
+                    finput = br.readLine(); 
+                    st = new StringTokenizer(finput, ":", false);    
+                    pef = st.nextToken();
+                    pef = st.nextToken().trim();
+                    finput = br.readLine();
+                    st = new StringTokenizer(finput, ":", false);    
+                    fev = st.nextToken();
+                    fev = st.nextToken().trim();
+                    finput = br.readLine();                
                     _spReadings.addReading(new SpirometerReading(deviceId, patientId, _date, "-1",  true,
-                        pef, fev, "0", "0"));
+                            pef, fev, "0", "0"));
                 } catch (Throwable it) {
                     Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, 
                             "In SpirometerReadingTextParser inner " + GlobalHelper.stackToString(it));

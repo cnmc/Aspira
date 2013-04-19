@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UIEventLogParser implements UIEventsFactory  {
+    public final String UI_EVENT_DELIMITER = "###";
     
     public UIEventLogParser() {}
     
@@ -41,7 +42,7 @@ public class UIEventLogParser implements UIEventsFactory  {
             {
                 finput = finput.trim();
                 try {
-                    st = new StringTokenizer(finput, ",", false);
+                    st = new StringTokenizer(finput, UI_EVENT_DELIMITER, false);
                     // first 5 tokens are deviceid, patientid, build version, event type, target
                     deviceid  = st.nextToken().trim();
                     patientid = st.nextToken().trim();
