@@ -756,6 +756,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!aimCheck.isSelected()&&!aieCheck.isSelected()&&!aiwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Albuterol (inhaler) not saved");
                 }
                 if(albNebCB.isSelected())
                 {
@@ -771,6 +774,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!anmCheck.isSelected()&&!aneCheck.isSelected()&&!anwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Albuterol (nebulizer) not saved");
                 }
                 if(floDiskCB.isSelected())
                 {
@@ -786,6 +792,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!fdmCheck.isSelected()&&!fdeCheck.isSelected()&&!fdwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Flovent (diskus) not saved");
                 }
                 if(floInhalCB.isSelected())
                 {
@@ -801,6 +810,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!fimCheck.isSelected()&&!fieCheck.isSelected()&&!fiwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Flovent (inhaler) not saved");
                 }
                 if(qvarCB.isSelected())
                 {
@@ -816,6 +828,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!qmCheck.isSelected()&&!qeCheck.isSelected()&&!qmwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Qvar not saved");
                 }
                 if(adDiskCB.isSelected())
                 {
@@ -831,6 +846,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!admCheck.isSelected()&&!adeCheck.isSelected()&&!adwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Advair (diskus) not saved");
                 }
                 if(adInhalCB.isSelected())
                 {
@@ -846,6 +864,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!adimCheck.isSelected()&&!adieCheck.isSelected()&&!aiwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Advair (inhaler) not saved");
                 }
                 if(budesonideCB.isSelected())
                 {
@@ -861,6 +882,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!bmCheck.isSelected()&&!bmeCheck.isSelected()&&!bmwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Budesonide not saved");
                 }
                 if(pulmiTwistCB.isSelected())
                 {
@@ -876,6 +900,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!ptmCheck.isSelected()&&!pteCheck.isSelected()&&!ptwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Pulmicort (twisthaler) not saved");
                 }
                 if(pulmiNebCB.isSelected())
                 {
@@ -891,6 +918,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!pnmCheck.isSelected()&&!pneCheck.isSelected()&&!pnwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Pulmicort (nebulizer) not saved");
                 }
                 if(singulairCB.isSelected())
                 {
@@ -906,6 +936,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!smCheck.isSelected()&&!smeCheck.isSelected()&&!smwsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: Singulair not saved");
                 }
                 if(otherMedCB.isSelected())
                 {
@@ -921,6 +954,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     {
                         withSymptomList.add(newLine);
                     }
+                    if(!omCheck.isSelected()&&!oeCheck.isSelected()&&!owsCheck.isSelected())
+                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                    			"No times selected: " + otherMedField.getText() + " not saved");
                 }
 
                 writeMedFile(morningList, eveningList, withSymptomList);
