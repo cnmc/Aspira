@@ -42,18 +42,20 @@ public class AspiraWorkbook {
     public void appendFromSpirometerReadings(Iterator<SpirometerReading> sr) {
         Row currentRow = __sheet.createRow(__rowIndex++);
         currentRow.createCell(0).setCellValue("Spirometer readings:");
-        currentRow.createCell(1).setCellValue("pid");
-        currentRow.createCell(2).setCellValue("Measure ID");
-        currentRow.createCell(3).setCellValue("PEF value");
-        currentRow.createCell(4).setCellValue("FEV1 value");
-        currentRow.createCell(5).setCellValue("Error");
-        currentRow.createCell(6).setCellValue("Best value");
+        currentRow.createCell(2).setCellValue("pid");
+        currentRow.createCell(3).setCellValue("Measure ID");
+        currentRow.createCell(4).setCellValue("PEF value");
+        currentRow.createCell(5).setCellValue("FEV1 value");
+        currentRow.createCell(6).setCellValue("Error");
+        currentRow.createCell(7).setCellValue("Best value");
         
         CreationHelper createHelper = __wb.getCreationHelper();
         
-        CellStyle cellStyle = __wb.createCellStyle();
-        cellStyle.setDataFormat(
-                createHelper.createDataFormat().getFormat("yyyy-mm-dd hh:mm:ss-MM:SS"));
+        CellStyle cellStyleDate = __wb.createCellStyle();
+        CellStyle cellStyleTime = __wb.createCellStyle();
+        cellStyleDate.setDataFormat(
+                createHelper.createDataFormat().getFormat("yyyy-mm-dd"));
+        cellStyleTime.setDataFormat(createHelper.createDataFormat().getFormat("hh:mm:ss-MM:SS"));
  
         if (sr != null) {
             while (sr.hasNext()) {
@@ -61,13 +63,16 @@ public class AspiraWorkbook {
                 currentRow = __sheet.createRow(__rowIndex++);
                 Cell cell = currentRow.createCell(0);
                 cell.setCellValue(r.getMeasureDate());
-                cell.setCellStyle(cellStyle);
-                currentRow.createCell(1).setCellValue(r.getPatientId());
-                currentRow.createCell(2).setCellValue(r.getMeasureID());
-                currentRow.createCell(3).setCellValue(r.getPEFValue());
-                currentRow.createCell(4).setCellValue(r.getFEV1Value());
-                currentRow.createCell(5).setCellValue(r.getError());
-                currentRow.createCell(6).setCellValue(r.getBestValue());
+                cell.setCellStyle(cellStyleDate);
+                cell = currentRow.createCell(1);
+                cell.setCellValue(r.getMeasureDate());
+                cell.setCellStyle(cellStyleTime);
+                currentRow.createCell(2).setCellValue(r.getPatientId());
+                currentRow.createCell(3).setCellValue(r.getMeasureID());
+                currentRow.createCell(4).setCellValue(r.getPEFValue());
+                currentRow.createCell(5).setCellValue(r.getFEV1Value());
+                currentRow.createCell(6).setCellValue(r.getError());
+                currentRow.createCell(7).setCellValue(r.getBestValue());
             }
         }
     }
@@ -80,23 +85,29 @@ public class AspiraWorkbook {
     public void appendFromAirQualityReadings(Iterator<ParticleReading> aqr) {
         Row currentRow = __sheet.createRow(__rowIndex++);
         currentRow.createCell(0).setCellValue("Particle readings:");
-        currentRow.createCell(1).setCellValue("Small particles");
-        currentRow.createCell(2).setCellValue("Large particles");
+        currentRow.createCell(2).setCellValue("Small particles");
+        currentRow.createCell(3).setCellValue("Large particles");
         CreationHelper createHelper = __wb.getCreationHelper();
         
-        CellStyle cellStyle = __wb.createCellStyle();
-        cellStyle.setDataFormat(
-            createHelper.createDataFormat().getFormat("MM/dd/yy HH:mm"));
-
+        CellStyle cellStyleDate = __wb.createCellStyle();
+        cellStyleDate.setDataFormat(
+            createHelper.createDataFormat().getFormat("MM/dd/yy"));
+        CellStyle cellStyleTime = __wb.createCellStyle();
+        cellStyleTime.setDataFormat(
+            createHelper.createDataFormat().getFormat("HH:mm"));
+        
         if (aqr != null) {
             while (aqr.hasNext()) {
                 ParticleReading pr = aqr.next();
                 currentRow = __sheet.createRow(__rowIndex++);
                 Cell cell = currentRow.createCell(0);
                 cell.setCellValue(pr.getDateTime());
-                cell.setCellStyle(cellStyle);
-                currentRow.createCell(1).setCellValue(pr.getSmallParticleCount());
-                currentRow.createCell(2).setCellValue(pr.getLargeParticleCount());
+                cell.setCellStyle(cellStyleDate);
+                cell = currentRow.createCell(1);
+                cell.setCellValue(pr.getDateTime());
+                cell.setCellStyle(cellStyleTime);
+                currentRow.createCell(2).setCellValue(pr.getSmallParticleCount());
+                currentRow.createCell(3).setCellValue(pr.getLargeParticleCount());
             }
         }
     }
