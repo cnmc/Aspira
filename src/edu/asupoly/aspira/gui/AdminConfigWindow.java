@@ -1350,7 +1350,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     }// </editor-fold>                        
     public void readingInit()
     {
-    	System.out.println(configLocation);
         JSONParser parser = new JSONParser();
         JSONObject jo;
         try {
@@ -1548,30 +1547,70 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 		 JSONObject animationObject = (JSONObject)configObject.get("animation");
          JSONObject minObject = (JSONObject)configObject.get("minValues");
          JSONObject maxObject = (JSONObject)configObject.get("maxValues");
-         patientIDDisplay.setText(((Long)configObject.get("patientID")).toString());
+         Object patientIDObject = configObject.get("patientID");
+         if(patientIDObject instanceof Long)
+        	 patientIDDisplay.setText(((Long)patientIDObject).toString());
+         else
+        	 JOptionPane.showMessageDialog(this, "PatientID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                          
                                                                          SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
-                                                                         Date startDate = new Date(((Long)animationObject.get("startDateMilliSec")).longValue());
+                                                                         Date startDate = new Date();
+                                                                         Object startDateObject = animationObject.get("startDateMilliSec");
+                                                                         if(startDateObject instanceof Long)
+                                                                        	 startDate = new Date(((Long)startDateObject).longValue());
+                                                                         else
+                                                                        	 JOptionPane.showMessageDialog(this, "Start date value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                                                                  
                                                                                                                  JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
-                                                                                                                 double mean = ((Double)dynamicObject.get("mean")).doubleValue();
-                                                                                                                 double deviation = ((Double)dynamicObject.get("standardDeviation")).doubleValue();
-                                                                                                                 yellow = ((Double)dynamicObject.get("yellowZone")).doubleValue();
-                                                                                                                 red = ((Double)dynamicObject.get("redZone")).doubleValue();
+                                                                                                                 Double mean = 0.0;
+                                                                                                                 Double deviation = 0.0;
+                                                                                                                 Object meanObject = dynamicObject.get("mean");
+                                                                                                                 if(meanObject instanceof Double)
+                                                                                                                	 mean = ((Double)meanObject).doubleValue();
+                                                                                                                 else
+                                                                                                                	 JOptionPane.showMessageDialog(this, "Mean value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+                                                                                                                 Object deviationObject = dynamicObject.get("standardDeviation");
+                                                                                                                 if(deviationObject instanceof Double)
+                                                                                                                	 deviation = ((Double)deviationObject).doubleValue();
+                                                                                                                 else
+                                                                                                                	 JOptionPane.showMessageDialog(this, "Standard deviation value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+                                                                                                                 yellow = -1.0;
+                                                                                                                 red = -1.0;
+                                                                                                                 Object yellowObject = dynamicObject.get("yellowZone");
+                                                                                                                 Object redObject = dynamicObject.get("redZone");
+                                                                                                                 if(yellowObject instanceof Double)
+                                                                                                                	 yellow = ((Double)yellowObject).doubleValue();
+                                                                                                                 else
+                                                                                                                	 JOptionPane.showMessageDialog(this, "Yellow zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+                                                                                                                 if(redObject instanceof Double)
+                                                                                                                	 red = ((Double)redObject).doubleValue();
+                                                                                                                 else
+                                                                                                                	 JOptionPane.showMessageDialog(this, "Red zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                                                                  
                                                                                                                  if(yellow == -1.0)
                                                                                                                 	 yellow = mean + deviation;
                                                                                                                  
                                                                                                                  if(red == -1.0)
                                                                                                                 	 red = mean + 1.5*deviation;
-                                                                                                                 
-                                                                                                                 JSONObject deviceObject = (JSONObject)configObject.get("device");
-		
-    	soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
+		Object soundObject = alertObject.get("sound");
+		if(soundObject instanceof Boolean)
+    		soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
+		else
+       	 JOptionPane.showMessageDialog(this, "Sound enabled value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         soundCB.setText("Play sound with alarm");
-        long days = ((Long)animationObject.get("totalDays")).longValue();
+        long days = 28;
+        Object daysObject = animationObject.get("totalDays");
+        if(daysObject instanceof Long)
+        	days = ((Long)animationObject.get("totalDays")).longValue();
+        else
+       	 JOptionPane.showMessageDialog(this, "Study length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         long weeks = days/7;
-        long alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
+        long alertMinutes = 3;
+        Object alertLengthObject = alertObject.get("alertLength");
+        if(alertLengthObject instanceof Long)
+        	alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
+        else
+       	 JOptionPane.showMessageDialog(this, "Alert length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         alarmLengthField.setText("" + alertMinutes);
         
                 alarmSoundPromptLabel.setText("How long alarm sounds: ");
@@ -1582,8 +1621,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                         startDateLabel.setText("Trial Start Date:");
                                         
                                                 spiroRangeLabel.setText("Spirometer range: ");
-                                                pefLowerRangeField.setText("" + minObject.get("PEFValue"));
-                                                pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+                                                Object minPefValueObject = minObject.get("PEFValue");
+                                                if(minPefValueObject instanceof Long)
+                                                	pefLowerRangeField.setText("" + minObject.get("PEFValue"));
+                                                else
+                                               	 JOptionPane.showMessageDialog(this, "Mininmum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+                                                
+                                                Object maxPefValueObject = maxObject.get("PEFValue");
+                                                if(maxPefValueObject instanceof Long)
+                                                	pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+                                                else
+                                               	 JOptionPane.showMessageDialog(this, "Maximum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                 lowerTextLabel.setText("Lower");
                                                 
                                                         upperRangeLabel.setText("Upper");
@@ -1593,8 +1641,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                 
                                                                         resetConfigButton.setText("Reset");
                                                                         
-                                                                        
-                                                                        boolean enabled = ((Boolean)dynamicObject.get("airQualityMonitoringEnabled")).booleanValue();
+                                                                        Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
+                                                                        boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
                                                                         chckbxEnableDynamicAlerts.setSelected(enabled);
                                                                         
                                                                         
@@ -1633,14 +1681,26 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                         
                                                                         fevLowerRangeField = new JTextField();
                                                                         fevLowerRangeField.setColumns(10);
-                                                                        fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+                                                                        Object minFEVValueObject = minObject.get("FEVValue");
+                                                                        if(minFEVValueObject instanceof Long)
+                                                                        	fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+                                                                        else
+                                                                       	 JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                         
                                                                         fevUpperLabel = new JLabel("Upper");
                                                                         
                                                                         fevUpperRangeField = new JTextField();
                                                                         fevUpperRangeField.setColumns(10);
-                                                                        fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
-                                                                        deviceIDField.setText("" +(Long)configObject.get("deviceID"));
+                                                                        Object maxFEVValueObject = maxObject.get("FEVValue");
+                                                                        if(maxFEVValueObject instanceof Long)
+                                                                        	fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
+                                                                        else
+                                                                       	 JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+                                                                        Object deviceIDObject = configObject.get("deviceID");
+                                                                        if(deviceIDObject instanceof Long)
+                                                                        	deviceIDField.setText("" +(Long)configObject.get("deviceID"));
+                                                                        else
+                                                                       	 JOptionPane.showMessageDialog(this, "deviceID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                         trialLengthField.setText("" + weeks);
     }
     /**
