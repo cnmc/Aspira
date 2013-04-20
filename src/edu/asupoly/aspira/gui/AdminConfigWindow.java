@@ -4,9 +4,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import edu.asupoly.aspira.dmp.AspiraDAOBaseImpl;
-import edu.asupoly.aspira.dmp.DMPException;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -16,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -60,15 +56,16 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static String PROPERTY_FILENAME = "properties/config.properties";
     private static final String PUSH_URL_PROPERTY_KEY = "push.url";
     private String configLocation;
-	private String medTextLocation;
+    private String medTextLocation;
 
 
-	/**
+    /**
      * Creates new form NewJFrame
      */
 
-    public AdminConfigWindow(){
-    	setAlwaysOnTop(true);
+    public AdminConfigWindow(String title){
+        super(title);
+        setAlwaysOnTop(true);
         initComponents();
     }
 
@@ -85,18 +82,18 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 pushURL = new URL(url);
                 return true;
             } catch (MalformedURLException mfe) {
-            	//TODO
+                //TODO
                 return false;
             } catch (Throwable t) {
-            	//TODO
+                //TODO
                 return false;
             }
         }
         return false;
     }
     private void initComponents() {
-    	
-    	_configProperties = new Properties();
+
+        _configProperties = new Properties();
         try {
             InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             _configProperties.load(isr);
@@ -131,119 +128,124 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         saveConfigButton = new javax.swing.JButton();
         saveConfigButton.addMouseListener(new MouseAdapter() {
 
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		JSONParser parser = new JSONParser();
-        		JSONObject jo;
-        		JSONObject configObject;
-        		JSONObject alertObject;
-        		JSONObject deviceObject;
-        		JSONObject minObject;
-        		JSONObject maxObject;
-        		JSONObject animationObject;
-        		JSONObject dynamicObject;
-        		try {
-					jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
-					configObject = (JSONObject)jo.get("config");
-					alertObject = (JSONObject)configObject.get("alertInfo");
-					dynamicObject = (JSONObject)configObject.get("airQualityConfig");
-					
-					alertObject.put("sound", soundCB.isSelected());
-					try{
-						alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
-					}
-					catch(NumberFormatException e1){
-						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Length value must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
-					
-					configObject.put("alertInfo", alertObject);
-					try{
-						configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
-					}catch(NumberFormatException e1){
-						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid device ID", "Bad input", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					
-					animationObject = (JSONObject)configObject.get("animation");
-					
-					try{
-						animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
-					}
-					catch(NumberFormatException e1){
-					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Weeks must be an integer value", "Bad input", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-					
-					try {
-						Date startDate = storeDate.parse(startDateField.getText());
-						
-						animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
-						
-					} catch (ParseException e1) {
-						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid date field entry", "Bad date", JOptionPane.ERROR_MESSAGE);
-					}
-					configObject.put("animation", animationObject);
-					
-					
-					minObject = (JSONObject)configObject.get("minValues");
-					maxObject = (JSONObject)configObject.get("maxValues");
-					try{
-						minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
-						minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
-						maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
-						maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
-					}
-					catch(NumberFormatException e1){
-						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					
-					dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
-					double curRed;
-					double curYellow;
-					try{
-						curRed = Double.parseDouble(redZoneField.getText());
-						curYellow = Double.parseDouble(yellowZoneField.getText());
-					}
-					catch(NumberFormatException e1){
-						JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid input in airquality values", "Bad input", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					
-					if(red != curRed)
-						dynamicObject.put("redZone", curRed);
-					if(yellow != curYellow)
-						dynamicObject.put("yellowZone", curYellow);
-					
-					configObject.put("minValues", minObject);
-					configObject.put("maxValues", maxObject);
-					
-					jo.put("config", configObject);
-					
-					FileWriter fw = new FileWriter(configLocation);
-					fw.write(jo.toJSONString());
-					fw.flush();
-					fw.close();
-					
-					readingsHandled();
-					
-					
-					
-				} catch (FileNotFoundException e1) {
-					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file missing", "Missing config", JOptionPane.ERROR_MESSAGE);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (org.json.simple.parser.ParseException e1) {
-					JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Missing config", JOptionPane.ERROR_MESSAGE);
-				}
-        	}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JSONParser parser = new JSONParser();
+                JSONObject jo;
+                JSONObject configObject;
+                JSONObject alertObject;
+                JSONObject deviceObject;
+                JSONObject minObject;
+                JSONObject maxObject;
+                JSONObject animationObject;
+                JSONObject dynamicObject;
+                try {
+                    // XXX why have a prop when the json file is hardcoded?
+
+                    jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+                    configObject = (JSONObject)jo.get("config");
+                    alertObject = (JSONObject)configObject.get("alertInfo");
+                    dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+
+                    alertObject.put("sound", soundCB.isSelected());
+                    try{
+                        alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
+                    }
+                    catch(NumberFormatException e1){
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Length value must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
+
+                    configObject.put("alertInfo", alertObject);
+                    
+                    /* XXX
+                    try{
+                        configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
+                    }catch(NumberFormatException e1){
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid device ID", "Bad input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    */
+
+                    animationObject = (JSONObject)configObject.get("animation");
+
+                    try{
+                        animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
+                    }
+                    catch(NumberFormatException e1){
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Weeks must be an integer value", "Bad input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    try {
+                        Date startDate = storeDate.parse(startDateField.getText());
+
+                        animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
+
+                    } catch (ParseException e1) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid date field entry", "Bad date", JOptionPane.ERROR_MESSAGE);
+                    }
+                    configObject.put("animation", animationObject);
+
+
+                    minObject = (JSONObject)configObject.get("minValues");
+                    maxObject = (JSONObject)configObject.get("maxValues");
+                    try{
+                        minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
+                        minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
+                        maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
+                        maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
+                    }
+                    catch(NumberFormatException e1){
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+
+                    dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
+                    /*
+                    double curRed;
+                    double curYellow;
+                    try{
+                        curRed = Double.parseDouble(redZoneField.getText());
+                        curYellow = Double.parseDouble(yellowZoneField.getText());
+                    }
+                    catch(NumberFormatException e1){
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid input in airquality values", "Bad input", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+
+                    if(red != curRed)
+                        dynamicObject.put("redZone", curRed);
+                    if(yellow != curYellow)
+                        dynamicObject.put("yellowZone", curYellow);
+                    */
+                    configObject.put("minValues", minObject);
+                    configObject.put("maxValues", maxObject);
+
+                    jo.put("config", configObject);
+
+                    FileWriter fw = new FileWriter(configLocation);
+                    fw.write(jo.toJSONString());
+                    fw.flush();
+                    fw.close();
+
+                    readingsHandled();
+
+
+
+                } catch (FileNotFoundException e1) {
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file missing", "Missing config", JOptionPane.ERROR_MESSAGE);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (org.json.simple.parser.ParseException e1) {
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Missing config", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
         resetConfigButton = new javax.swing.JButton();
         resetConfigButton.addActionListener(new ActionListener() {
@@ -260,10 +262,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         lblWeeks = new JLabel("weeks");
 
+        // XXX add deviceID value here
         lblSpirometerDeviceId = new JLabel("Spirometer device id:");
 
-        deviceIDField = new JTextField();
-        deviceIDField.setColumns(10);
+        //deviceIDField = new JTextField();
+        //deviceIDField.setColumns(10);
 
         lblReading = new JLabel("Reading 1:");
 
@@ -289,222 +292,234 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         read3TimeCB = new JComboBox();
         read3TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
         chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
-        lblMean = new JLabel("Current mean particle read:");
-        lblStdDeviation = new JLabel("Current standard deviation:");
-        standardDeviationDisplay = new JLabel();
-        lblYellowZone = new JLabel("Yellow Zone:");
-        lblRedZone = new JLabel("Red Zone:");
-        yellowZoneField = new JTextField();
-        redZoneField = new JTextField();
-        meanParticleDisplay = new JLabel();
+        //lblMean = new JLabel("Current mean particle read:");
+        //lblStdDeviation = new JLabel("Current standard deviation:");
+        //standardDeviationDisplay = new JLabel();
+        //lblYellowZone = new JLabel("Yellow Zone:");
+        //lblRedZone = new JLabel("Red Zone:");
+        //yellowZoneField = new JTextField();
+        //redZoneField = new JTextField();
+        //meanParticleDisplay = new JLabel();
 
-        
+
         patientIDDisplay = new JLabel();
         readingInit();
         configInit();
+        /*
         chckbxEnableDynamicAlerts.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
 
-                lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+                //redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
 
 
 
             }
         });
+        */
         
         JLabel lblPatientId = new JLabel("Patient ID:");
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanelLayout.setHorizontalGroup(
-        	configPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(configPanelLayout.createSequentialGroup()
-        			.addContainerGap()
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(soundCB)
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(alarmSoundPromptLabel)
-        					.addPreferredGap(ComponentPlacement.UNRELATED)
-        					.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(alarmTimeUnitsLabel))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addGap(68)
-        					.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-        						.addComponent(lblRedZone)
-        						.addComponent(lblYellowZone))
-        					.addGap(18)
-        					.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        				.addComponent(chckbxEnableDynamicAlerts)
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(lblStdDeviation)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addGap(239)
-        					.addComponent(saveConfigButton)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(resetConfigButton))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(lblMean)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(spiroRangeLabel)
-        					.addGap(18)
-        					.addComponent(pefRangeLabel)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(lowerTextLabel)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-        					.addGap(12)
-        					.addComponent(upperRangeLabel)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-        					.addGap(10)
-        					.addComponent(fevRangeLabel)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(lblLower)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-        					.addPreferredGap(ComponentPlacement.UNRELATED)
-        					.addComponent(fevUpperLabel)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(lblSpirometerDeviceId)
-        					.addGap(18)
-        					.addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(lblPatientId)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-        					.addGroup(configPanelLayout.createSequentialGroup()
-        						.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        							.addGroup(configPanelLayout.createSequentialGroup()
-        								.addComponent(lblReading_2)
-        								.addPreferredGap(ComponentPlacement.RELATED)
-        								.addComponent(read3Field, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
-        							.addGroup(configPanelLayout.createSequentialGroup()
-        								.addComponent(lblReading_1)
-        								.addPreferredGap(ComponentPlacement.RELATED)
-        								.addComponent(read2Field, 0, 0, Short.MAX_VALUE))
-        							.addGroup(configPanelLayout.createSequentialGroup()
-        								.addComponent(lblReading)
-        								.addPreferredGap(ComponentPlacement.RELATED)
-        								.addComponent(read1Field, 0, 0, Short.MAX_VALUE)))
-        						.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        							.addGroup(configPanelLayout.createSequentialGroup()
-        								.addPreferredGap(ComponentPlacement.RELATED, 381, GroupLayout.PREFERRED_SIZE)
-        								.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        									.addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        									.addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        							.addGroup(configPanelLayout.createSequentialGroup()
-        								.addPreferredGap(ComponentPlacement.RELATED)
-        								.addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-        					.addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
-        						.addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-        							.addComponent(startDateLabel)
-        							.addComponent(lblTrialLength))
-        						.addPreferredGap(ComponentPlacement.RELATED)
-        						.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
-        							.addComponent(trialLengthField, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-        							.addComponent(startDateField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        						.addPreferredGap(ComponentPlacement.RELATED)
-        						.addComponent(lblWeeks))))
-        			.addGap(245))
-        );
+                configPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(configPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(soundCB)
+                                .addGroup(configPanelLayout.createSequentialGroup()
+                                        .addComponent(alarmSoundPromptLabel)
+                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                        .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(alarmTimeUnitsLabel))
+                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                .addGap(68)
+                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                        //.addComponent(lblRedZone)
+                                                        //.addComponent(lblYellowZone)
+                                                        )
+                                                        .addGap(18)
+                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                ))
+                                                                .addComponent(chckbxEnableDynamicAlerts)
+                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                        //.addComponent(lblStdDeviation)
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                                                        )
+                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                .addGap(239)
+                                                                                .addComponent(saveConfigButton)
+                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                .addComponent(resetConfigButton))
+                                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                        //.addComponent(lblMean)
+                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                                                                        )
+                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                .addComponent(spiroRangeLabel)
+                                                                                                .addGap(18)
+                                                                                                .addComponent(pefRangeLabel)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(lowerTextLabel)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                .addGap(12)
+                                                                                                .addComponent(upperRangeLabel)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                .addGap(10)
+                                                                                                .addComponent(fevRangeLabel)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(lblLower)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                .addComponent(fevUpperLabel)
+                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                        .addComponent(lblSpirometerDeviceId)
+                                                                                                        .addGap(18)
+                                                                                                        // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                        )
+                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                .addComponent(lblPatientId)
+                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                .addComponent(lblReading_2)
+                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                .addComponent(read3Field, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                        .addComponent(lblReading_1)
+                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                        .addComponent(read2Field, 0, 0, Short.MAX_VALUE))
+                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                .addComponent(lblReading)
+                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                .addComponent(read1Field, 0, 0, Short.MAX_VALUE)))
+                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED, 381, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                        .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                        .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                .addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                .addComponent(startDateLabel)
+                                                                                                                                                                                                                .addComponent(lblTrialLength))
+                                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                                                                                                                                                        .addComponent(trialLengthField, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                                                                                                                                                                                                        .addComponent(startDateField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                        .addComponent(lblWeeks))))
+                                                                                                                                                                                                                        .addGap(245))
+                );
         configPanelLayout.setVerticalGroup(
-        	configPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(configPanelLayout.createSequentialGroup()
-        			.addContainerGap()
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblPatientId)
-        				.addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-        			.addGap(14)
-        			.addComponent(soundCB)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(alarmTimeUnitsLabel))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(startDateLabel)
-        				.addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(trialLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lblTrialLength)
-        				.addComponent(lblWeeks))
-        			.addGap(18)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        						.addComponent(lblReading)
-        						.addComponent(read1Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        						.addComponent(read2Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(lblReading_1))
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        						.addComponent(lblReading_2)
-        						.addComponent(read3Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        				.addGroup(configPanelLayout.createSequentialGroup()
-        					.addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        			.addGap(65)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblSpirometerDeviceId)
-        				.addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(spiroRangeLabel)
-        				.addComponent(pefRangeLabel)
-        				.addComponent(lowerTextLabel)
-        				.addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(upperRangeLabel)
-        				.addComponent(fevRangeLabel)
-        				.addComponent(lblLower)
-        				.addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(fevUpperLabel)
-        				.addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(chckbxEnableDynamicAlerts)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblMean)
-        				.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblStdDeviation)
-        				.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
-        			.addGap(3)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lblYellowZone))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblRedZone)
-        				.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        			.addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(resetConfigButton)
-        				.addComponent(saveConfigButton)))
-        );
+                configPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(configPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(lblPatientId)
+                                .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+                                .addGap(14)
+                                .addComponent(soundCB)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(alarmTimeUnitsLabel))
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                .addComponent(startDateLabel)
+                                                .addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(trialLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(lblTrialLength)
+                                                        .addComponent(lblWeeks))
+                                                        .addGap(18)
+                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                .addComponent(lblReading)
+                                                                                .addComponent(read1Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                        .addComponent(read2Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(lblReading_1))
+                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                .addComponent(lblReading_2)
+                                                                                                .addComponent(read3Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                        .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                        .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                        .addGap(65)
+                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                .addComponent(lblSpirometerDeviceId)
+                                                                                                                // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                )
+                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                        .addComponent(spiroRangeLabel)
+                                                                                                                        .addComponent(pefRangeLabel)
+                                                                                                                        .addComponent(lowerTextLabel)
+                                                                                                                        .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addComponent(upperRangeLabel)
+                                                                                                                        .addComponent(fevRangeLabel)
+                                                                                                                        .addComponent(lblLower)
+                                                                                                                        .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addComponent(fevUpperLabel)
+                                                                                                                        .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                        .addComponent(chckbxEnableDynamicAlerts)
+                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                //.addComponent(lblMean)
+                                                                                                                                //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                )
+                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                        //.addComponent(lblStdDeviation)
+                                                                                                                                        //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                        )
+                                                                                                                                        .addGap(3)
+                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                //.addComponent(lblYellowZone)
+                                                                                                                                                )
+                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                        //.addComponent(lblRedZone)
+                                                                                                                                                        //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                        )
+                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                .addComponent(resetConfigButton)
+                                                                                                                                                                .addComponent(saveConfigButton)))
+                );
         configPanel.setLayout(configPanelLayout);
 
         jTabbedPane1.addTab("App Config", configPanel);
@@ -548,8 +563,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!aimCheck.isSelected()&&!aieCheck.isSelected()&&!aiwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Albuterol (inhaler) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Albuterol (inhaler) not saved");
                 }
                 if(albNebCB.isSelected())
                 {
@@ -566,8 +581,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!anmCheck.isSelected()&&!aneCheck.isSelected()&&!anwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Albuterol (nebulizer) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Albuterol (nebulizer) not saved");
                 }
                 if(floDiskCB.isSelected())
                 {
@@ -584,8 +599,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!fdmCheck.isSelected()&&!fdeCheck.isSelected()&&!fdwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Flovent (diskus) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Flovent (diskus) not saved");
                 }
                 if(floInhalCB.isSelected())
                 {
@@ -602,8 +617,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!fimCheck.isSelected()&&!fieCheck.isSelected()&&!fiwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Flovent (inhaler) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Flovent (inhaler) not saved");
                 }
                 if(qvarCB.isSelected())
                 {
@@ -620,8 +635,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!qmCheck.isSelected()&&!qeCheck.isSelected()&&!qmwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Qvar not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Qvar not saved");
                 }
                 if(adDiskCB.isSelected())
                 {
@@ -638,8 +653,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!admCheck.isSelected()&&!adeCheck.isSelected()&&!adwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Advair (diskus) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Advair (diskus) not saved");
                 }
                 if(adInhalCB.isSelected())
                 {
@@ -656,8 +671,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!adimCheck.isSelected()&&!adieCheck.isSelected()&&!aiwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Advair (inhaler) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Advair (inhaler) not saved");
                 }
                 if(budesonideCB.isSelected())
                 {
@@ -674,8 +689,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!bmCheck.isSelected()&&!bmeCheck.isSelected()&&!bmwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Budesonide not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Budesonide not saved");
                 }
                 if(pulmiTwistCB.isSelected())
                 {
@@ -692,8 +707,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!ptmCheck.isSelected()&&!pteCheck.isSelected()&&!ptwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Pulmicort (twisthaler) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Pulmicort (twisthaler) not saved");
                 }
                 if(pulmiNebCB.isSelected())
                 {
@@ -710,8 +725,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!pnmCheck.isSelected()&&!pneCheck.isSelected()&&!pnwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Pulmicort (nebulizer) not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Pulmicort (nebulizer) not saved");
                 }
                 if(singulairCB.isSelected())
                 {
@@ -728,8 +743,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!smCheck.isSelected()&&!smeCheck.isSelected()&&!smwsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: Singulair not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: Singulair not saved");
                 }
                 if(otherMedCB.isSelected())
                 {
@@ -746,8 +761,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         withSymptomList.add(newLine);
                     }
                     if(!omCheck.isSelected()&&!oeCheck.isSelected()&&!owsCheck.isSelected())
-                    	JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                    			"No times selected: " + otherMedField.getText() + " not saved");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                "No times selected: " + otherMedField.getText() + " not saved");
                 }
 
                 writeMedFile(morningList, eveningList, withSymptomList);
@@ -1182,15 +1197,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         try {
             jo = (JSONObject)parser.parse(new FileReader(configLocation));
         } catch (FileNotFoundException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return;
         } catch (IOException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return;
         } catch (org.json.simple.parser.ParseException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return;
         }
@@ -1215,15 +1230,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             read1Field.setText(displayFormat.format(reading));
             amOrPM = reading.compareTo(noon);
         } catch (ParseException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
             amOrPM = -2;
         }
-        
+
         if(amOrPM < 0)
             read1TimeCB.setSelectedIndex(0);
         else
             read1TimeCB.setSelectedIndex(1);
-        
+
         amOrPM = -1;
 
         try {
@@ -1231,7 +1246,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             read2Field.setText(displayFormat.format(reading));
             amOrPM = reading.compareTo(noon);
         } catch (ParseException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         if(amOrPM < 0)
@@ -1245,7 +1260,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             read3Field.setText(displayFormat.format(reading));
             amOrPM = reading.compareTo(noon);
         } catch (ParseException e) {
-        	JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         if(amOrPM < 0)
@@ -1350,185 +1365,199 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     public void configInit()
     {
 
-    	JSONParser parser = new JSONParser();
-		JSONObject jo;
-		try {
-			jo = (JSONObject)parser.parse(new FileReader(configLocation));
-		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
-			e1.printStackTrace();
-			return;
-		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
-			e1.printStackTrace();
-			return;
-		} catch (org.json.simple.parser.ParseException e1) {
-			JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
-			e1.printStackTrace();
-			return;
-		}
-		JSONObject configObject = (JSONObject)jo.get("config");
-		JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
-		
-		
-		 JSONObject animationObject = (JSONObject)configObject.get("animation");
-         JSONObject minObject = (JSONObject)configObject.get("minValues");
-         JSONObject maxObject = (JSONObject)configObject.get("maxValues");
-         Object patientIDObject = configObject.get("patientID");
-         if(patientIDObject instanceof Long)
-        	 patientIDDisplay.setText(((Long)patientIDObject).toString());
-         else
-        	 JOptionPane.showMessageDialog(this, "PatientID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                         
-                                                                         SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/yy");
-                                                                         Date startDate = new Date();
-                                                                         Object startDateObject = animationObject.get("startDateMilliSec");
-                                                                         if(startDateObject instanceof Long)
-                                                                        	 startDate = new Date(((Long)startDateObject).longValue());
-                                                                         else
-                                                                        	 JOptionPane.showMessageDialog(this, "Start date value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                                                                 
-                                                                                                                 JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
-                                                                                                                 Double mean = 0.0;
-                                                                                                                 Double deviation = 0.0;
-                                                                                                                 Object meanObject = dynamicObject.get("mean");
-                                                                                                                 if(meanObject instanceof Double)
-                                                                                                                	 mean = ((Double)meanObject).doubleValue();
-                                                                                                                 else
-                                                                                                                	 JOptionPane.showMessageDialog(this, "Mean value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                                                                 Object deviationObject = dynamicObject.get("standardDeviation");
-                                                                                                                 if(deviationObject instanceof Double)
-                                                                                                                	 deviation = ((Double)deviationObject).doubleValue();
-                                                                                                                 else
-                                                                                                                	 JOptionPane.showMessageDialog(this, "Standard deviation value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                                                                 yellow = -1.0;
-                                                                                                                 red = -1.0;
-                                                                                                                 Object yellowObject = dynamicObject.get("yellowZone");
-                                                                                                                 Object redObject = dynamicObject.get("redZone");
-                                                                                                                 if(yellowObject instanceof Double)
-                                                                                                                	 yellow = ((Double)yellowObject).doubleValue();
-                                                                                                                 else
-                                                                                                                	 JOptionPane.showMessageDialog(this, "Yellow zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                                                                 if(redObject instanceof Double)
-                                                                                                                	 red = ((Double)redObject).doubleValue();
-                                                                                                                 else
-                                                                                                                	 JOptionPane.showMessageDialog(this, "Red zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                                                                 
-                                                                                                                 if(yellow == -1.0)
-                                                                                                                	 yellow = mean + deviation;
-                                                                                                                 
-                                                                                                                 if(red == -1.0)
-                                                                                                                	 red = mean + 1.5*deviation;
-		Object soundObject = alertObject.get("sound");
-		if(soundObject instanceof Boolean)
-    		soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
-		else
-       	 JOptionPane.showMessageDialog(this, "Sound enabled value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        JSONParser parser = new JSONParser();
+        JSONObject jo;
+        try {
+            jo = (JSONObject)parser.parse(new FileReader(configLocation));
+        } catch (FileNotFoundException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+            return;
+        } catch (IOException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+            return;
+        } catch (org.json.simple.parser.ParseException e1) {
+            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+            return;
+        }
+        JSONObject configObject = (JSONObject)jo.get("config");
+        JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+
+
+        JSONObject animationObject = (JSONObject)configObject.get("animation");
+        JSONObject minObject = (JSONObject)configObject.get("minValues");
+        JSONObject maxObject = (JSONObject)configObject.get("maxValues");
+        Object patientIDObject = configObject.get("patientID");
+        patientIDDisplay.setText(patientIDObject.toString());  // not assuming Long anymore
+        /*
+        if(patientIDObject instanceof Long)
+            patientIDDisplay.setText(((Long)patientIDObject).toString());
+        else
+            JOptionPane.showMessageDialog(this, "PatientID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+         */
+        SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/yy");
+        Date startDate = new Date();
+        Object startDateObject = animationObject.get("startDateMilliSec");
+        //Date d = null;
+        // XXX KG Check that start date is in the future 
+        if(startDateObject instanceof Long) // && (d = new Date((Long)startDateObject)).after(new Date(System.currentTimeMillis() - 72L * 60L * 60L * 1000L)))
+            startDate = new Date((Long)startDateObject);
+        else
+            JOptionPane.showMessageDialog(this, "Start date value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+
+        // XXX KG Do we need air quality config in here, other than the checkbox to enable dynamic alerts? NO WE DO NOT
+        // but we do need the dynamicObject for the checkbox
+        JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+        /*
+        Double mean = 0.0;
+        Double deviation = 0.0;
+        Object meanObject = dynamicObject.get("mean");
+        if(meanObject instanceof Double)
+            mean = ((Double)meanObject).doubleValue();
+        else
+            JOptionPane.showMessageDialog(this, "Mean value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        Object deviationObject = dynamicObject.get("standardDeviation");
+        if(deviationObject instanceof Double)
+            deviation = ((Double)deviationObject).doubleValue();
+        else
+            JOptionPane.showMessageDialog(this, "Standard deviation value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        yellow = -1.0;
+        red = -1.0;
+        Object yellowObject = dynamicObject.get("yellowZone");
+        Object redObject = dynamicObject.get("redZone");
+        if(yellowObject instanceof Double)
+            yellow = ((Double)yellowObject).doubleValue();
+        else
+            JOptionPane.showMessageDialog(this, "Yellow zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        if(redObject instanceof Double)
+            red = ((Double)redObject).doubleValue();
+        else
+            JOptionPane.showMessageDialog(this, "Red zone value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+
+        if(yellow == -1.0)
+            yellow = mean + deviation;
+
+        if(red == -1.0)
+            red = mean + 1.5*deviation;
+        */
+            
+        Object soundObject = alertObject.get("sound");
+        if(soundObject instanceof Boolean)
+            soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
+        else
+            JOptionPane.showMessageDialog(this, "Sound enabled value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         soundCB.setText("Play sound with alarm");
         long days = 28;
         Object daysObject = animationObject.get("totalDays");
         if(daysObject instanceof Long)
-        	days = ((Long)animationObject.get("totalDays")).longValue();
+            days = ((Long)animationObject.get("totalDays")).longValue();
         else
-       	 JOptionPane.showMessageDialog(this, "Study length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Study length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         long weeks = days/7;
         long alertMinutes = 3;
         Object alertLengthObject = alertObject.get("alertLength");
         if(alertLengthObject instanceof Long)
-        	alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
+            alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
         else
-       	 JOptionPane.showMessageDialog(this, "Alert length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Alert length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         alarmLengthField.setText("" + alertMinutes);
+
+        alarmSoundPromptLabel.setText("How long alarm sounds: ");
+
+        alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        alarmTimeUnitsLabel.setText("minutes");
+
+        startDateLabel.setText("Trial Start Date:");
+
+        spiroRangeLabel.setText("Spirometer range: ");
+        Object minPefValueObject = minObject.get("PEFValue");
+        if(minPefValueObject instanceof Long)
+            pefLowerRangeField.setText("" + minObject.get("PEFValue"));
+        else
+            JOptionPane.showMessageDialog(this, "Mininmum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+
+        Object maxPefValueObject = maxObject.get("PEFValue");
+        if(maxPefValueObject instanceof Long)
+            pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+        else
+            JOptionPane.showMessageDialog(this, "Maximum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        lowerTextLabel.setText("Lower");
+
+        upperRangeLabel.setText("Upper");
+        startDateField.setText(startAndEndFormat.format(startDate));
+
+        saveConfigButton.setText("Save");
+
+        resetConfigButton.setText("Reset");
+
+        Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
+        boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
+        chckbxEnableDynamicAlerts.setSelected(enabled);
+
+        /*
+        lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+        meanParticleDisplay.setText(""+ mean);
+        meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+
+
+        lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+
+
+        standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+        standardDeviationDisplay.setText(""+ deviation);
+
+
+        lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+
+
+        lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+
+
+        yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+        yellowZoneField.setColumns(10);
+        yellowZoneField.setText(""+yellow);
+
+
+        redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
+        redZoneField.setColumns(10);
+        redZoneField.setText(""+red);
+         */
         
-                alarmSoundPromptLabel.setText("How long alarm sounds: ");
-                
-                        alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-                                alarmTimeUnitsLabel.setText("minutes");
-                                
-                                        startDateLabel.setText("Trial Start Date:");
-                                        
-                                                spiroRangeLabel.setText("Spirometer range: ");
-                                                Object minPefValueObject = minObject.get("PEFValue");
-                                                if(minPefValueObject instanceof Long)
-                                                	pefLowerRangeField.setText("" + minObject.get("PEFValue"));
-                                                else
-                                               	 JOptionPane.showMessageDialog(this, "Mininmum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                
-                                                Object maxPefValueObject = maxObject.get("PEFValue");
-                                                if(maxPefValueObject instanceof Long)
-                                                	pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
-                                                else
-                                               	 JOptionPane.showMessageDialog(this, "Maximum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                lowerTextLabel.setText("Lower");
-                                                
-                                                        upperRangeLabel.setText("Upper");
-                                                        startDateField.setText(startAndEndFormat.format(startDate));
-                                                        
-                                                                saveConfigButton.setText("Save");
-                                                                
-                                                                        resetConfigButton.setText("Reset");
-                                                                        
-                                                                        Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
-                                                                        boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
-                                                                        chckbxEnableDynamicAlerts.setSelected(enabled);
-                                                                        
-                                                                        
-                                                                        lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        meanParticleDisplay.setText(""+ mean);
-                                                                        meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        
-                                                                        
-                                                                        lblStdDeviation.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        
-                                                                        
-                                                                        standardDeviationDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        standardDeviationDisplay.setText(""+ deviation);
-                                                                        
-                                                                        
-                                                                        lblYellowZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        
-                                                                        
-                                                                        lblRedZone.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        
-                                                                        
-                                                                        yellowZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        yellowZoneField.setColumns(10);
-                                                                        yellowZoneField.setText(""+yellow);
-                                                                        
-                                                                        
-                                                                        redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
-                                                                        redZoneField.setColumns(10);
-                                                                        redZoneField.setText(""+red);
-                                                                        
-                                                                        pefRangeLabel = new JLabel("PEF");
-                                                                        
-                                                                        fevRangeLabel = new JLabel("Fev1");
-                                                                        
-                                                                        lblLower = new JLabel("Lower");
-                                                                        
-                                                                        fevLowerRangeField = new JTextField();
-                                                                        fevLowerRangeField.setColumns(10);
-                                                                        Object minFEVValueObject = minObject.get("FEVValue");
-                                                                        if(minFEVValueObject instanceof Long)
-                                                                        	fevLowerRangeField.setText("" + minObject.get("FEVValue"));
-                                                                        else
-                                                                       	 JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                        
-                                                                        fevUpperLabel = new JLabel("Upper");
-                                                                        
-                                                                        fevUpperRangeField = new JTextField();
-                                                                        fevUpperRangeField.setColumns(10);
-                                                                        Object maxFEVValueObject = maxObject.get("FEVValue");
-                                                                        if(maxFEVValueObject instanceof Long)
-                                                                        	fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
-                                                                        else
-                                                                       	 JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                        Object deviceIDObject = configObject.get("deviceID");
-                                                                        if(deviceIDObject instanceof Long)
-                                                                        	deviceIDField.setText("" +(Long)configObject.get("deviceID"));
-                                                                        else
-                                                                       	 JOptionPane.showMessageDialog(this, "deviceID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-                                                                        trialLengthField.setText("" + weeks);
+        pefRangeLabel = new JLabel("PEF");
+
+        fevRangeLabel = new JLabel("Fev1");
+
+        lblLower = new JLabel("Lower");
+
+        fevLowerRangeField = new JTextField();
+        fevLowerRangeField.setColumns(10);
+        Object minFEVValueObject = minObject.get("FEVValue");
+        if(minFEVValueObject instanceof Long)
+            fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+        else
+            JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+
+        fevUpperLabel = new JLabel("Upper");
+
+        fevUpperRangeField = new JTextField();
+        fevUpperRangeField.setColumns(10);
+        Object maxFEVValueObject = maxObject.get("FEVValue");
+        if(maxFEVValueObject instanceof Long)
+            fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
+        else
+            JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        Object deviceIDObject = configObject.get("deviceID");
+        // 
+        /*
+        if(deviceIDObject instanceof Long)
+            deviceIDField.setText("" +(Long)configObject.get("deviceID"));
+        else
+            JOptionPane.showMessageDialog(this, "deviceID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+        */
+        lblSpirometerDeviceId.setText("Spirometer ID: " + deviceIDObject.toString());  // XXX KG changed from above
+        trialLengthField.setText("" + weeks);
     }
     /**
      * @param args the command line arguments
@@ -1536,477 +1565,477 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     public void medicineInit()
     {
 
-    	BufferedReader br;
-    	try {
-			br = new BufferedReader(new FileReader(medTextLocation));
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(this, "Medicine list could not be found", "File not found", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-    	
-    	String morningLine;
-    	String eveningLine;
-    	String withSymptomsLine;
-    	ArrayList<String> morningList = new ArrayList<String>();
-    	ArrayList<String> eveningList = new ArrayList<String>();
-    	ArrayList<String> withSymptomsList = new ArrayList<String>();
-    	Boolean reachedNextLine = false;
-    	Boolean EoF = false;
-    	try {
-			morningLine = br.readLine();
-			morningLine = br.readLine();
-			morningLine = br.readLine();
-			while(!reachedNextLine&&!EoF)
-			{
-				morningLine = br.readLine();
-				if(morningLine == null)
-					EoF = true;
-				else if(morningLine.compareToIgnoreCase("evening##")==0)
-					reachedNextLine = true;
-				else
-					morningList.add(morningLine);
-			}
-			reachedNextLine = false;
-			while(!reachedNextLine&&!EoF)
-			{
-				eveningLine = br.readLine();
-				if(eveningLine == null)
-					EoF = true;
-				else if(eveningLine.compareToIgnoreCase("with symptoms##")==0)
-					reachedNextLine = true;
-				else
-					eveningList.add(eveningLine);
-			}
-			while(!EoF)
-			{
-				withSymptomsLine = br.readLine();
-				if(withSymptomsLine == null)
-					EoF = true;
-				else
-					withSymptomsList.add(withSymptomsLine);
-			}
-			eveningLine = br.readLine();
-			eveningLine = br.readLine();
-			withSymptomsLine = br.readLine();
-			withSymptomsLine = br.readLine();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "The medicine file is missing data", "Empty file", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-    	
-    	morningList.set(morningList.size()-1, morningList.get(morningList.size()-1).substring(0,
-    			morningList.get(morningList.size()-1).indexOf('#')));
-    	eveningList.set(eveningList.size()-1, eveningList.get(eveningList.size()-1).substring(0,
-    			eveningList.get(eveningList.size()-1).indexOf('#')));
-    	withSymptomsList.set(withSymptomsList.size()-1, withSymptomsList.get(withSymptomsList.size()-1).substring(0,
-    			withSymptomsList.get(withSymptomsList.size()-1).indexOf('#')));
-    	
-    
-    	String[] morningTokens = new String[13];
-    	morningTokens = morningList.toArray(morningTokens);
-    	
-    	smwsCheck.setEnabled(false);
-    	pnwsCheck.setEnabled(false);
-    	ptwsCheck.setEnabled(false);
-    	bmwsCheck.setEnabled(false);
-    	adiwsCheck.setEnabled(false);
-    	adwsCheck.setEnabled(false);
-    	qmwsCheck.setEnabled(false);
-    	fiwsCheck.setEnabled(false);
-    	fdwsCheck.setEnabled(false);
-    	anwsCheck.setEnabled(false);
-    	aiwsCheck.setEnabled(false);
-    	
-    	smeCheck.setEnabled(false);
-    	pneCheck.setEnabled(false);
-    	pteCheck.setEnabled(false);
-    	bmeCheck.setEnabled(false);
-    	adieCheck.setEnabled(false);
-    	adeCheck.setEnabled(false);
-    	qeCheck.setEnabled(false);
-    	fieCheck.setEnabled(false);
-    	fdeCheck.setEnabled(false);
-    	aneCheck.setEnabled(false);
-    	aieCheck.setEnabled(false);
-    	
-    	smCheck.setEnabled(false);
-    	pnmCheck.setEnabled(false);
-    	ptmCheck.setEnabled(false);
-    	bmCheck.setEnabled(false);
-    	adimCheck.setEnabled(false);
-    	admCheck.setEnabled(false);
-    	qmCheck.setEnabled(false);
-    	fimCheck.setEnabled(false);
-    	fdmCheck.setEnabled(false);
-    	anmCheck.setEnabled(false);
-    	aimCheck.setEnabled(false);
-    	
-    	sDescField.setEnabled(false);
-    	pnDescField.setEnabled(false);
-    	ptDescField.setEnabled(false);
-    	bDescField.setEnabled(false);
-    	adiDescField.setEnabled(false);
-    	adDescField.setEnabled(false);
-    	qDescField.setEnabled(false);
-    	fiDescField.setEnabled(false);
-    	fdDescField.setEnabled(false);
-    	anDescField.setEnabled(false);
-    	aiDescField.setEnabled(false);
-    	
-    	smwsCheck.setSelected(false);
-    	pnwsCheck.setSelected(false);
-    	ptwsCheck.setSelected(false);
-    	bmwsCheck.setSelected(false);
-    	adiwsCheck.setSelected(false);
-    	adwsCheck.setSelected(false);
-    	qmwsCheck.setSelected(false);
-    	fiwsCheck.setSelected(false);
-    	fdwsCheck.setSelected(false);
-    	anwsCheck.setSelected(false);
-    	aiwsCheck.setSelected(false);
-    	
-    	smeCheck.setSelected(false);
-    	pneCheck.setSelected(false);
-    	pteCheck.setSelected(false);
-    	bmeCheck.setSelected(false);
-    	adieCheck.setSelected(false);
-    	adeCheck.setSelected(false);
-    	qeCheck.setSelected(false);
-    	fieCheck.setSelected(false);
-    	fdeCheck.setSelected(false);
-    	aneCheck.setSelected(false);
-    	aieCheck.setSelected(false);
-    	
-    	smCheck.setSelected(false);
-    	pnmCheck.setSelected(false);
-    	ptmCheck.setSelected(false);
-    	bmCheck.setSelected(false);
-    	adimCheck.setSelected(false);
-    	admCheck.setSelected(false);
-    	qmCheck.setSelected(false);
-    	fimCheck.setSelected(false);
-    	fdmCheck.setSelected(false);
-    	anmCheck.setSelected(false);
-    	aimCheck.setSelected(false);
-    	
-    	albNebCB.setSelected(false);
-    	albInhalCB.setSelected(false);
-    	floDiskCB.setSelected(false);
-    	floInhalCB.setSelected(false);
-    	qvarCB.setSelected(false);
-    	adInhalCB.setSelected(false);
-    	adDiskCB.setSelected(false);
-    	budesonideCB.setSelected(false);
-    	pulmiTwistCB.setSelected(false);
-    	pulmiNebCB.setSelected(false);
-    	singulairCB.setSelected(false);
-    	
-    	otherMedCB.setSelected(false);
-    	omCheck.setSelected(false);
-    	omCheck.setEnabled(false);
-    	oeCheck.setSelected(false);
-    	oeCheck.setEnabled(false);
-    	owsCheck.setSelected(false);
-    	owsCheck.setEnabled(false);
-    	oDescField.setEnabled(false);
-    	otherMedField.setEnabled(false);
-    	for(int i = 0; i < morningList.size(); i++){
-	    	if(morningTokens[i].contains("Albuterol (inhaler)"))
-	    	{
-	    		albInhalCB.setSelected(true);
-	    		aimCheck.setSelected(true);	
-	    		aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Albuterol (nebulizer)"))
-	    	{
-	    		albNebCB.setSelected(true);
-	    		anmCheck.setSelected(true);
-	    		anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Flovent (diskus)"))
-	    	{
-	    		floDiskCB.setSelected(true);
-	    		fdmCheck.setSelected(true);	
-	    		fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Flovent (inhaler)"))
-	    	{
-	    		floInhalCB.setSelected(true);
-	    		fimCheck.setSelected(true);
-	    		fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Qvar"))
-	    	{
-	    		qvarCB.setSelected(true);
-	    		qmCheck.setSelected(true);
-	    		qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Advair (diskus)"))
-	    	{
-	    		adDiskCB.setSelected(true);
-	    		admCheck.setSelected(true);
-	    		adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Advair (inhaler)"))
-	    	{
-	    		adInhalCB.setSelected(true);
-	    		adimCheck.setSelected(true);
-	    		adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Budesonide"))
-	    	{
-	    		budesonideCB.setSelected(true);
-	    		bmCheck.setSelected(true);
-	    		bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Pulmicort (twisthaler)"))
-	    	{
-	    		pulmiTwistCB.setSelected(true);
-	    		ptmCheck.setSelected(true);
-	    		ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Pulmicort (nebulizer)"))
-	    	{
-	    		pulmiNebCB.setSelected(true);
-	    		pnmCheck.setSelected(true);
-	    		pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Singulair"))
-	    	{
-	    		singulairCB.setSelected(true);
-	    		smCheck.setSelected(true);
-	    		sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(morningTokens[i].contains("Other:"))
-	    	{
-	    		otherMedCB.setSelected(true);
-	    		omCheck.setSelected(true);
-	    		String omName = morningTokens[i].substring(morningTokens[i].indexOf(':')+2,
-	    				morningTokens[i].indexOf('>')-1);
-	    		otherMedField.setText(omName);
-	    		oDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
-	    	}
-    	}
-    	
-    	String[] eveningTokens = new String[13];
-    	eveningTokens = eveningList.toArray(eveningTokens);
-    	for(int i = 0; i < eveningList.size(); i++){
-	    	if(eveningTokens[i].contains("Albuterol (inhaler)"))
-	    	{
-	    		albInhalCB.setSelected(true);
-	    		aieCheck.setSelected(true);
-	    		aiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Albuterol (nebulizer)"))
-	    	{
-	    		albNebCB.setSelected(true);
-	    		aneCheck.setSelected(true);	
-	    		anDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Flovent (diskus)"))
-	    	{
-	    		floDiskCB.setSelected(true);
-	    		fdeCheck.setSelected(true);	
-	    		fdDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Flovent (inhaler)"))
-	    	{
-	    		floInhalCB.setSelected(true);
-	    		fieCheck.setSelected(true);	
-	    		fiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Qvar"))
-	    	{
-	    		qvarCB.setSelected(true);
-	    		qeCheck.setSelected(true);
-	    		qDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Advair (diskus)"))
-	    	{
-	    		adDiskCB.setSelected(true);
-	    		adeCheck.setSelected(true);	
-	    		adDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Advair (inhaler)"))
-	    	{
-	    		adInhalCB.setSelected(true);
-	    		adieCheck.setSelected(true);
-	    		adiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Budesonide"))
-	    	{
-	    		budesonideCB.setSelected(true);
-	    		bmeCheck.setSelected(true);
-	    		bDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Pulmicort (twisthaler)"))
-	    	{
-	    		pulmiTwistCB.setSelected(true);
-	    		pteCheck.setSelected(true);	
-	    		ptDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Pulmicort (nebulizer)"))
-	    	{
-	    		pulmiNebCB.setSelected(true);
-	    		pneCheck.setSelected(true);	
-	    		pnDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Singulair"))
-	    	{
-	    		singulairCB.setSelected(true);
-	    		smeCheck.setSelected(true);	
-	    		sDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-	    	if(eveningTokens[i].contains("Other:"))
-	    	{
-	    		otherMedCB.setSelected(true);
-	    		oeCheck.setSelected(true);
-	    		String omName = eveningTokens[i].substring(eveningTokens[i].indexOf(':')+2,
-	    				eveningTokens[i].indexOf('>')-1);
-	    		otherMedField.setText(omName);
-	    		oDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
-	    	}
-    	}
-    	
-    	String[] withSymptomsTokens = new String[13];
-    	withSymptomsTokens = withSymptomsList.toArray(withSymptomsTokens);
-    	for(int i = 0; i < withSymptomsList.size(); i++){
-	    	if(withSymptomsTokens[i].contains("Albuterol (inhaler)"))
-	    	{
-	    		albInhalCB.setSelected(true);
-	    		aiwsCheck.setSelected(true);
-	    		aiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Albuterol (nebulizer)"))
-	    	{
-	    		albNebCB.setSelected(true);
-	    		anwsCheck.setSelected(true);
-	    		anDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Flovent (diskus)"))
-	    	{
-	    		floDiskCB.setSelected(true);
-	    		fdwsCheck.setSelected(true);
-	    		fdDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Flovent (inhaler)"))
-	    	{
-	    		floInhalCB.setSelected(true);
-	    		fiwsCheck.setSelected(true);
-	    		fiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Qvar"))
-	    	{
-	    		qvarCB.setSelected(true);
-	    		qmwsCheck.setSelected(true);
-	    		qDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Advair (diskus)"))
-	    	{
-	    		adDiskCB.setSelected(true);
-	    		adwsCheck.setSelected(true);
-	    		adDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Advair (inhaler)"))
-	    	{
-	    		adInhalCB.setSelected(true);
-	    		adiwsCheck.setSelected(true);
-	    		adiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Budesonide"))
-	    	{
-	    		budesonideCB.setSelected(true);
-	    		bmwsCheck.setSelected(true);
-	    		bDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Pulmicort (twisthaler)"))
-	    	{
-	    		pulmiTwistCB.setSelected(true);
-	    		ptwsCheck.setSelected(true);
-	    		ptDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Pulmicort (nebulizer)"))
-	    	{
-	    		pulmiNebCB.setSelected(true);
-	    		pnwsCheck.setSelected(true);
-	    		pnDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Singulair"))
-	    	{
-	    		singulairCB.setSelected(true);
-	    		smwsCheck.setSelected(true);
-	    		sDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-	    	if(withSymptomsTokens[i].contains("Other:"))
-	    	{
-	    		otherMedCB.setSelected(true);
-	    		owsCheck.setSelected(true);
-	    		String omName = withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf(':')+2,
-	    				withSymptomsTokens[i].indexOf('>')-1);
-	    		otherMedField.setText(omName);
-	    		oDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
-	    	}
-    	}
-    	
-    	smwsCheck.setEnabled(singulairCB.isSelected());
-    	pnwsCheck.setEnabled(pulmiNebCB.isSelected());
-    	ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
-    	bmwsCheck.setEnabled(budesonideCB.isSelected());
-    	adiwsCheck.setEnabled(adInhalCB.isSelected());
-    	adwsCheck.setEnabled(adDiskCB.isSelected());
-    	qmwsCheck.setEnabled(qvarCB.isSelected());
-    	fiwsCheck.setEnabled(floInhalCB.isSelected());
-    	fdwsCheck.setEnabled(floDiskCB.isSelected());
-    	anwsCheck.setEnabled(albNebCB.isSelected());
-    	aiwsCheck.setEnabled(albInhalCB.isSelected());
-    	
-    	smeCheck.setEnabled(singulairCB.isSelected());
-    	pneCheck.setEnabled(pulmiNebCB.isSelected());
-    	pteCheck.setEnabled(pulmiTwistCB.isSelected());
-    	bmeCheck.setEnabled(budesonideCB.isSelected());
-    	adieCheck.setEnabled(adInhalCB.isSelected());
-    	adeCheck.setEnabled(adDiskCB.isSelected());
-    	qeCheck.setEnabled(qvarCB.isSelected());
-    	fieCheck.setEnabled(floInhalCB.isSelected());
-    	fdeCheck.setEnabled(floDiskCB.isSelected());
-    	aneCheck.setEnabled(albNebCB.isSelected());
-    	aieCheck.setEnabled(albInhalCB.isSelected());
-    	
-    	smCheck.setEnabled(singulairCB.isSelected());
-    	pnmCheck.setEnabled(pulmiNebCB.isSelected());
-    	ptmCheck.setEnabled(pulmiTwistCB.isSelected());
-    	bmCheck.setEnabled(budesonideCB.isSelected());
-    	adimCheck.setEnabled(adInhalCB.isSelected());
-    	admCheck.setEnabled(adDiskCB.isSelected());
-    	qmCheck.setEnabled(qvarCB.isSelected());
-    	fimCheck.setEnabled(floInhalCB.isSelected());
-    	fdmCheck.setEnabled(floDiskCB.isSelected());
-    	anmCheck.setEnabled(albNebCB.isSelected());
-    	aimCheck.setEnabled(albInhalCB.isSelected());
-    	
-    	sDescField.setEnabled(singulairCB.isSelected());
-    	pnDescField.setEnabled(pulmiNebCB.isSelected());
-    	ptDescField.setEnabled(pulmiTwistCB.isSelected());
-    	bDescField.setEnabled(budesonideCB.isSelected());
-    	adiDescField.setEnabled(adInhalCB.isSelected());
-    	adDescField.setEnabled(adDiskCB.isSelected());
-    	qDescField.setEnabled(qvarCB.isSelected());
-    	fiDescField.setEnabled(floInhalCB.isSelected());
-    	fdDescField.setEnabled(floDiskCB.isSelected());
-    	anDescField.setEnabled(albNebCB.isSelected());
-    	aiDescField.setEnabled(albInhalCB.isSelected());
-    	
-    	omCheck.setEnabled(otherMedCB.isSelected());
-    	oeCheck.setEnabled(otherMedCB.isSelected());
-    	owsCheck.setEnabled(otherMedCB.isSelected());
-    	oDescField.setEnabled(otherMedCB.isSelected());
-    	otherMedField.setEnabled(otherMedCB.isSelected());
-    	
-    	try {
-			br.close();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "File couldn't close, please contact technician");
-		}
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(medTextLocation));
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Medicine list could not be found", "File not found", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String morningLine;
+        String eveningLine;
+        String withSymptomsLine;
+        ArrayList<String> morningList = new ArrayList<String>();
+        ArrayList<String> eveningList = new ArrayList<String>();
+        ArrayList<String> withSymptomsList = new ArrayList<String>();
+        Boolean reachedNextLine = false;
+        Boolean EoF = false;
+        try {
+            morningLine = br.readLine();
+            morningLine = br.readLine();
+            morningLine = br.readLine();
+            while(!reachedNextLine&&!EoF)
+            {
+                morningLine = br.readLine();
+                if(morningLine == null)
+                    EoF = true;
+                else if(morningLine.compareToIgnoreCase("evening##")==0)
+                    reachedNextLine = true;
+                else
+                    morningList.add(morningLine);
+            }
+            reachedNextLine = false;
+            while(!reachedNextLine&&!EoF)
+            {
+                eveningLine = br.readLine();
+                if(eveningLine == null)
+                    EoF = true;
+                else if(eveningLine.compareToIgnoreCase("with symptoms##")==0)
+                    reachedNextLine = true;
+                else
+                    eveningList.add(eveningLine);
+            }
+            while(!EoF)
+            {
+                withSymptomsLine = br.readLine();
+                if(withSymptomsLine == null)
+                    EoF = true;
+                else
+                    withSymptomsList.add(withSymptomsLine);
+            }
+            eveningLine = br.readLine();
+            eveningLine = br.readLine();
+            withSymptomsLine = br.readLine();
+            withSymptomsLine = br.readLine();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "The medicine file is missing data", "Empty file", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        morningList.set(morningList.size()-1, morningList.get(morningList.size()-1).substring(0,
+                morningList.get(morningList.size()-1).indexOf('#')));
+        eveningList.set(eveningList.size()-1, eveningList.get(eveningList.size()-1).substring(0,
+                eveningList.get(eveningList.size()-1).indexOf('#')));
+        withSymptomsList.set(withSymptomsList.size()-1, withSymptomsList.get(withSymptomsList.size()-1).substring(0,
+                withSymptomsList.get(withSymptomsList.size()-1).indexOf('#')));
+
+
+        String[] morningTokens = new String[13];
+        morningTokens = morningList.toArray(morningTokens);
+
+        smwsCheck.setEnabled(false);
+        pnwsCheck.setEnabled(false);
+        ptwsCheck.setEnabled(false);
+        bmwsCheck.setEnabled(false);
+        adiwsCheck.setEnabled(false);
+        adwsCheck.setEnabled(false);
+        qmwsCheck.setEnabled(false);
+        fiwsCheck.setEnabled(false);
+        fdwsCheck.setEnabled(false);
+        anwsCheck.setEnabled(false);
+        aiwsCheck.setEnabled(false);
+
+        smeCheck.setEnabled(false);
+        pneCheck.setEnabled(false);
+        pteCheck.setEnabled(false);
+        bmeCheck.setEnabled(false);
+        adieCheck.setEnabled(false);
+        adeCheck.setEnabled(false);
+        qeCheck.setEnabled(false);
+        fieCheck.setEnabled(false);
+        fdeCheck.setEnabled(false);
+        aneCheck.setEnabled(false);
+        aieCheck.setEnabled(false);
+
+        smCheck.setEnabled(false);
+        pnmCheck.setEnabled(false);
+        ptmCheck.setEnabled(false);
+        bmCheck.setEnabled(false);
+        adimCheck.setEnabled(false);
+        admCheck.setEnabled(false);
+        qmCheck.setEnabled(false);
+        fimCheck.setEnabled(false);
+        fdmCheck.setEnabled(false);
+        anmCheck.setEnabled(false);
+        aimCheck.setEnabled(false);
+
+        sDescField.setEnabled(false);
+        pnDescField.setEnabled(false);
+        ptDescField.setEnabled(false);
+        bDescField.setEnabled(false);
+        adiDescField.setEnabled(false);
+        adDescField.setEnabled(false);
+        qDescField.setEnabled(false);
+        fiDescField.setEnabled(false);
+        fdDescField.setEnabled(false);
+        anDescField.setEnabled(false);
+        aiDescField.setEnabled(false);
+
+        smwsCheck.setSelected(false);
+        pnwsCheck.setSelected(false);
+        ptwsCheck.setSelected(false);
+        bmwsCheck.setSelected(false);
+        adiwsCheck.setSelected(false);
+        adwsCheck.setSelected(false);
+        qmwsCheck.setSelected(false);
+        fiwsCheck.setSelected(false);
+        fdwsCheck.setSelected(false);
+        anwsCheck.setSelected(false);
+        aiwsCheck.setSelected(false);
+
+        smeCheck.setSelected(false);
+        pneCheck.setSelected(false);
+        pteCheck.setSelected(false);
+        bmeCheck.setSelected(false);
+        adieCheck.setSelected(false);
+        adeCheck.setSelected(false);
+        qeCheck.setSelected(false);
+        fieCheck.setSelected(false);
+        fdeCheck.setSelected(false);
+        aneCheck.setSelected(false);
+        aieCheck.setSelected(false);
+
+        smCheck.setSelected(false);
+        pnmCheck.setSelected(false);
+        ptmCheck.setSelected(false);
+        bmCheck.setSelected(false);
+        adimCheck.setSelected(false);
+        admCheck.setSelected(false);
+        qmCheck.setSelected(false);
+        fimCheck.setSelected(false);
+        fdmCheck.setSelected(false);
+        anmCheck.setSelected(false);
+        aimCheck.setSelected(false);
+
+        albNebCB.setSelected(false);
+        albInhalCB.setSelected(false);
+        floDiskCB.setSelected(false);
+        floInhalCB.setSelected(false);
+        qvarCB.setSelected(false);
+        adInhalCB.setSelected(false);
+        adDiskCB.setSelected(false);
+        budesonideCB.setSelected(false);
+        pulmiTwistCB.setSelected(false);
+        pulmiNebCB.setSelected(false);
+        singulairCB.setSelected(false);
+
+        otherMedCB.setSelected(false);
+        omCheck.setSelected(false);
+        omCheck.setEnabled(false);
+        oeCheck.setSelected(false);
+        oeCheck.setEnabled(false);
+        owsCheck.setSelected(false);
+        owsCheck.setEnabled(false);
+        oDescField.setEnabled(false);
+        otherMedField.setEnabled(false);
+        for(int i = 0; i < morningList.size(); i++){
+            if(morningTokens[i].contains("Albuterol (inhaler)"))
+            {
+                albInhalCB.setSelected(true);
+                aimCheck.setSelected(true);	
+                aiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Albuterol (nebulizer)"))
+            {
+                albNebCB.setSelected(true);
+                anmCheck.setSelected(true);
+                anDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Flovent (diskus)"))
+            {
+                floDiskCB.setSelected(true);
+                fdmCheck.setSelected(true);	
+                fdDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Flovent (inhaler)"))
+            {
+                floInhalCB.setSelected(true);
+                fimCheck.setSelected(true);
+                fiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Qvar"))
+            {
+                qvarCB.setSelected(true);
+                qmCheck.setSelected(true);
+                qDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Advair (diskus)"))
+            {
+                adDiskCB.setSelected(true);
+                admCheck.setSelected(true);
+                adDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Advair (inhaler)"))
+            {
+                adInhalCB.setSelected(true);
+                adimCheck.setSelected(true);
+                adiDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Budesonide"))
+            {
+                budesonideCB.setSelected(true);
+                bmCheck.setSelected(true);
+                bDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Pulmicort (twisthaler)"))
+            {
+                pulmiTwistCB.setSelected(true);
+                ptmCheck.setSelected(true);
+                ptDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Pulmicort (nebulizer)"))
+            {
+                pulmiNebCB.setSelected(true);
+                pnmCheck.setSelected(true);
+                pnDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Singulair"))
+            {
+                singulairCB.setSelected(true);
+                smCheck.setSelected(true);
+                sDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+            if(morningTokens[i].contains("Other:"))
+            {
+                otherMedCB.setSelected(true);
+                omCheck.setSelected(true);
+                String omName = morningTokens[i].substring(morningTokens[i].indexOf(':')+2,
+                        morningTokens[i].indexOf('>')-1);
+                otherMedField.setText(omName);
+                oDescField.setText(morningTokens[i].substring(morningTokens[i].indexOf('>')+2));
+            }
+        }
+
+        String[] eveningTokens = new String[13];
+        eveningTokens = eveningList.toArray(eveningTokens);
+        for(int i = 0; i < eveningList.size(); i++){
+            if(eveningTokens[i].contains("Albuterol (inhaler)"))
+            {
+                albInhalCB.setSelected(true);
+                aieCheck.setSelected(true);
+                aiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Albuterol (nebulizer)"))
+            {
+                albNebCB.setSelected(true);
+                aneCheck.setSelected(true);	
+                anDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Flovent (diskus)"))
+            {
+                floDiskCB.setSelected(true);
+                fdeCheck.setSelected(true);	
+                fdDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Flovent (inhaler)"))
+            {
+                floInhalCB.setSelected(true);
+                fieCheck.setSelected(true);	
+                fiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Qvar"))
+            {
+                qvarCB.setSelected(true);
+                qeCheck.setSelected(true);
+                qDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Advair (diskus)"))
+            {
+                adDiskCB.setSelected(true);
+                adeCheck.setSelected(true);	
+                adDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Advair (inhaler)"))
+            {
+                adInhalCB.setSelected(true);
+                adieCheck.setSelected(true);
+                adiDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Budesonide"))
+            {
+                budesonideCB.setSelected(true);
+                bmeCheck.setSelected(true);
+                bDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Pulmicort (twisthaler)"))
+            {
+                pulmiTwistCB.setSelected(true);
+                pteCheck.setSelected(true);	
+                ptDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Pulmicort (nebulizer)"))
+            {
+                pulmiNebCB.setSelected(true);
+                pneCheck.setSelected(true);	
+                pnDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Singulair"))
+            {
+                singulairCB.setSelected(true);
+                smeCheck.setSelected(true);	
+                sDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+            if(eveningTokens[i].contains("Other:"))
+            {
+                otherMedCB.setSelected(true);
+                oeCheck.setSelected(true);
+                String omName = eveningTokens[i].substring(eveningTokens[i].indexOf(':')+2,
+                        eveningTokens[i].indexOf('>')-1);
+                otherMedField.setText(omName);
+                oDescField.setText(eveningTokens[i].substring(eveningTokens[i].indexOf('>')+2));
+            }
+        }
+
+        String[] withSymptomsTokens = new String[13];
+        withSymptomsTokens = withSymptomsList.toArray(withSymptomsTokens);
+        for(int i = 0; i < withSymptomsList.size(); i++){
+            if(withSymptomsTokens[i].contains("Albuterol (inhaler)"))
+            {
+                albInhalCB.setSelected(true);
+                aiwsCheck.setSelected(true);
+                aiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Albuterol (nebulizer)"))
+            {
+                albNebCB.setSelected(true);
+                anwsCheck.setSelected(true);
+                anDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Flovent (diskus)"))
+            {
+                floDiskCB.setSelected(true);
+                fdwsCheck.setSelected(true);
+                fdDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Flovent (inhaler)"))
+            {
+                floInhalCB.setSelected(true);
+                fiwsCheck.setSelected(true);
+                fiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Qvar"))
+            {
+                qvarCB.setSelected(true);
+                qmwsCheck.setSelected(true);
+                qDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Advair (diskus)"))
+            {
+                adDiskCB.setSelected(true);
+                adwsCheck.setSelected(true);
+                adDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Advair (inhaler)"))
+            {
+                adInhalCB.setSelected(true);
+                adiwsCheck.setSelected(true);
+                adiDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Budesonide"))
+            {
+                budesonideCB.setSelected(true);
+                bmwsCheck.setSelected(true);
+                bDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Pulmicort (twisthaler)"))
+            {
+                pulmiTwistCB.setSelected(true);
+                ptwsCheck.setSelected(true);
+                ptDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Pulmicort (nebulizer)"))
+            {
+                pulmiNebCB.setSelected(true);
+                pnwsCheck.setSelected(true);
+                pnDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Singulair"))
+            {
+                singulairCB.setSelected(true);
+                smwsCheck.setSelected(true);
+                sDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+            if(withSymptomsTokens[i].contains("Other:"))
+            {
+                otherMedCB.setSelected(true);
+                owsCheck.setSelected(true);
+                String omName = withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf(':')+2,
+                        withSymptomsTokens[i].indexOf('>')-1);
+                otherMedField.setText(omName);
+                oDescField.setText(withSymptomsTokens[i].substring(withSymptomsTokens[i].indexOf('>')+2));
+            }
+        }
+
+        smwsCheck.setEnabled(singulairCB.isSelected());
+        pnwsCheck.setEnabled(pulmiNebCB.isSelected());
+        ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
+        bmwsCheck.setEnabled(budesonideCB.isSelected());
+        adiwsCheck.setEnabled(adInhalCB.isSelected());
+        adwsCheck.setEnabled(adDiskCB.isSelected());
+        qmwsCheck.setEnabled(qvarCB.isSelected());
+        fiwsCheck.setEnabled(floInhalCB.isSelected());
+        fdwsCheck.setEnabled(floDiskCB.isSelected());
+        anwsCheck.setEnabled(albNebCB.isSelected());
+        aiwsCheck.setEnabled(albInhalCB.isSelected());
+
+        smeCheck.setEnabled(singulairCB.isSelected());
+        pneCheck.setEnabled(pulmiNebCB.isSelected());
+        pteCheck.setEnabled(pulmiTwistCB.isSelected());
+        bmeCheck.setEnabled(budesonideCB.isSelected());
+        adieCheck.setEnabled(adInhalCB.isSelected());
+        adeCheck.setEnabled(adDiskCB.isSelected());
+        qeCheck.setEnabled(qvarCB.isSelected());
+        fieCheck.setEnabled(floInhalCB.isSelected());
+        fdeCheck.setEnabled(floDiskCB.isSelected());
+        aneCheck.setEnabled(albNebCB.isSelected());
+        aieCheck.setEnabled(albInhalCB.isSelected());
+
+        smCheck.setEnabled(singulairCB.isSelected());
+        pnmCheck.setEnabled(pulmiNebCB.isSelected());
+        ptmCheck.setEnabled(pulmiTwistCB.isSelected());
+        bmCheck.setEnabled(budesonideCB.isSelected());
+        adimCheck.setEnabled(adInhalCB.isSelected());
+        admCheck.setEnabled(adDiskCB.isSelected());
+        qmCheck.setEnabled(qvarCB.isSelected());
+        fimCheck.setEnabled(floInhalCB.isSelected());
+        fdmCheck.setEnabled(floDiskCB.isSelected());
+        anmCheck.setEnabled(albNebCB.isSelected());
+        aimCheck.setEnabled(albInhalCB.isSelected());
+
+        sDescField.setEnabled(singulairCB.isSelected());
+        pnDescField.setEnabled(pulmiNebCB.isSelected());
+        ptDescField.setEnabled(pulmiTwistCB.isSelected());
+        bDescField.setEnabled(budesonideCB.isSelected());
+        adiDescField.setEnabled(adInhalCB.isSelected());
+        adDescField.setEnabled(adDiskCB.isSelected());
+        qDescField.setEnabled(qvarCB.isSelected());
+        fiDescField.setEnabled(floInhalCB.isSelected());
+        fdDescField.setEnabled(floDiskCB.isSelected());
+        anDescField.setEnabled(albNebCB.isSelected());
+        aiDescField.setEnabled(albInhalCB.isSelected());
+
+        omCheck.setEnabled(otherMedCB.isSelected());
+        oeCheck.setEnabled(otherMedCB.isSelected());
+        owsCheck.setEnabled(otherMedCB.isSelected());
+        oDescField.setEnabled(otherMedCB.isSelected());
+        otherMedField.setEnabled(otherMedCB.isSelected());
+
+        try {
+            br.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File couldn't close, please contact technician");
+        }
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -2036,8 +2065,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
-					thisFrame = new AdminConfigWindow();
-               thisFrame.setVisible(true);
+                thisFrame = new AdminConfigWindow("Aspira Configuration");
+                thisFrame.setVisible(true);
             }
         });
     }
@@ -2074,22 +2103,22 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JTextField pefUpperRangeField;
     private javax.swing.JLabel upperRangeLabel;
     private static JFrame thisFrame;
-    private JTextField yellowZoneField;
-    private JTextField redZoneField;
+    //private JTextField yellowZoneField;
+    //private JTextField redZoneField;
     private JTextField fevLowerRangeField;
     private JTextField fevUpperRangeField;
     JCheckBox chckbxEnableDynamicAlerts;
     private JTextField trialLengthField;
     private JLabel lblWeeks;
     // End of variables declaration
-    private JLabel lblStdDeviation;
-    private JLabel lblMean;
-    private JLabel meanParticleDisplay;
-    private JLabel standardDeviationDisplay;
-    private JLabel lblYellowZone;
-    private JLabel lblRedZone;
+    //private JLabel lblStdDeviation;
+    //private JLabel lblMean;
+    //private JLabel meanParticleDisplay;
+    //private JLabel standardDeviationDisplay;
+    //private JLabel lblYellowZone;
+    //private JLabel lblRedZone;
     private JLabel lblSpirometerDeviceId;
-    private JTextField deviceIDField;
+    //private JTextField deviceIDField;
     private JCheckBox aiwsCheck;
     private JCheckBox aieCheck;
     private JCheckBox aimCheck;
@@ -2154,7 +2183,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private double yellow;
     private double red;
     private JLabel patientIDDisplay;
-    
+
 
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
