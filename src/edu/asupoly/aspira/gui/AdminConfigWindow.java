@@ -1380,7 +1380,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
          else
         	 JOptionPane.showMessageDialog(this, "PatientID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
                                                                          
-                                                                         SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/YY");
+                                                                         SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/yy");
                                                                          Date startDate = new Date();
                                                                          Object startDateObject = animationObject.get("startDateMilliSec");
                                                                          if(startDateObject instanceof Long)
