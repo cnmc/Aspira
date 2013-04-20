@@ -194,9 +194,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     maxObject = (JSONObject)configObject.get("maxValues");
                     try{
                         minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
-                        minObject.put("FEVValue", Integer.parseInt(fevLowerRangeField.getText()));
+                        minObject.put("FEVValue", Double.parseDouble(fevLowerRangeField.getText()));
                         maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
-                        maxObject.put("FEVValue", Integer.parseInt(fevUpperRangeField.getText()));
+                        maxObject.put("FEVValue", Double.parseDouble(fevUpperRangeField.getText()));
                     }
                     catch(NumberFormatException e1){
                         JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
@@ -1534,18 +1534,18 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         fevLowerRangeField = new JTextField();
         fevLowerRangeField.setColumns(10);
         Object minFEVValueObject = minObject.get("FEVValue");
-        if(minFEVValueObject instanceof Long)
-            fevLowerRangeField.setText("" + minObject.get("FEVValue"));
+        if(minFEVValueObject instanceof Double)
+            fevLowerRangeField.setText(((Double)minObject.get("FEVValue")).toString());
         else
-            JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Miniimum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
 
         fevUpperLabel = new JLabel("Upper");
 
         fevUpperRangeField = new JTextField();
         fevUpperRangeField.setColumns(10);
         Object maxFEVValueObject = maxObject.get("FEVValue");
-        if(maxFEVValueObject instanceof Long)
-            fevUpperRangeField.setText("" + maxObject.get("FEVValue"));
+        if(maxFEVValueObject instanceof Double)
+            fevUpperRangeField.setText(((Double)maxObject.get("FEVValue")).toString());
         else
             JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
         Object deviceIDObject = configObject.get("deviceID");
