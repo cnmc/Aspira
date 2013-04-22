@@ -9,7 +9,7 @@ public final class MonitoringServiceTest {
 
     public static void main(String[] args) {
         try {
-            Class.forName("edu.asupoly.aspira.GlobalHelper");
+            //Class.forName("edu.asupoly.aspira.GlobalHelper");
             System.out.println("Starting the monitoring service");
             MonitoringService theService = MonitoringService.getMonitoringService();
             System.out.println("Started the monitoring service");
