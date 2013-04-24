@@ -109,6 +109,37 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
+        logPanel = new javax.swing.JPanel();
+        lastSpiroLogHeader = new javax.swing.JLabel();
+        lastSpiroLogArea = new javax.swing.JLabel();
+        spiroDateTimeHeader = new javax.swing.JLabel();
+        spiroDateTimeArea = new javax.swing.JLabel();
+        spiroServerPushHeader = new javax.swing.JLabel();
+        spiroPushArea = new javax.swing.JLabel();
+        spiroPushButton = new javax.swing.JButton();
+        spiroExportedHeader = new javax.swing.JLabel();
+        spiroExportButton = new javax.swing.JButton();
+        spiroExportedArea = new javax.swing.JLabel();
+        acExportedArea = new javax.swing.JLabel();
+        acExportButton = new javax.swing.JButton();
+        lastACLogArea = new javax.swing.JLabel();
+        lastACLogHeader = new javax.swing.JLabel();
+        acPushButton = new javax.swing.JButton();
+        acExportedHeader = new javax.swing.JLabel();
+        acPushHeader = new javax.swing.JLabel();
+        acPushArea = new javax.swing.JLabel();
+        acDateTimeHeader = new javax.swing.JLabel();
+        acDateTimeArea = new javax.swing.JLabel();
+        userExportButton = new javax.swing.JButton();
+        userDateTimeArea = new javax.swing.JLabel();
+        userExportArea = new javax.swing.JLabel();
+        userInterLogArea = new javax.swing.JLabel();
+        userInteractionLogHeader = new javax.swing.JLabel();
+        userPushButton = new javax.swing.JButton();
+        userExportHeader = new javax.swing.JLabel();
+        userPushHeader = new javax.swing.JLabel();
+        userPushArea = new javax.swing.JLabel();
+        userDateTimeHeader = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Administrator Config Window"); // NOI18N
@@ -523,6 +554,184 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         configPanel.setLayout(configPanelLayout);
 
         jTabbedPane1.addTab("App Config", configPanel);
+
+        lastSpiroLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lastSpiroLogHeader.setText("Last spirometer log:");
+
+        spiroDateTimeHeader.setText("Date/time");
+
+        spiroServerPushHeader.setText("Push to server");
+
+        spiroPushButton.setText("push");
+
+        spiroExportedHeader.setText("Exported");
+
+        spiroExportButton.setText("export");
+
+        acExportButton.setText("export");
+
+        lastACLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lastACLogHeader.setText("Last AC log:");
+
+        acPushButton.setText("push");
+
+        acExportedHeader.setText("Exported");
+
+        acPushHeader.setText("Push to server");
+
+        acDateTimeHeader.setText("Date/time");
+
+        userExportButton.setText("export");
+
+        userInteractionLogHeader.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        userInteractionLogHeader.setText("User interaction log");
+
+        userPushButton.setText("push");
+
+        userExportHeader.setText("Exported");
+
+        userPushHeader.setText("Push to server");
+
+        userDateTimeHeader.setText("Date/time");
+
+        javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
+        logPanel.setLayout(logPanelLayout);
+        logPanelLayout.setHorizontalGroup(
+                logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(logPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lastACLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(userInterLogArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                .addComponent(spiroServerPushHeader)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                        .addComponent(spiroDateTimeHeader)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                .addComponent(spiroExportedHeader)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                        .addComponent(acExportedHeader)
+                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addComponent(acExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                .addComponent(acPushHeader)
+                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                        .addComponent(acDateTimeHeader)
+                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                        .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                .addComponent(userDateTimeHeader)
+                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                        .addComponent(userExportHeader)
+                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                                        .addComponent(userExportArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                                .addComponent(userPushHeader)
+                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                                .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                                                        .addComponent(spiroPushButton)
+                                                                                                                                        .addComponent(spiroExportButton)
+                                                                                                                                        .addComponent(acExportButton)
+                                                                                                                                        .addComponent(acPushButton)
+                                                                                                                                        .addComponent(userExportButton)
+                                                                                                                                        .addComponent(userPushButton))))
+                                                                                                                                        .addContainerGap(427, Short.MAX_VALUE))
+                );
+        logPanelLayout.setVerticalGroup(
+                logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(logPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lastSpiroLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lastSpiroLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(spiroDateTimeHeader)
+                                .addComponent(spiroDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(spiroPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(spiroServerPushHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                .addComponent(spiroExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(spiroExportedArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                        .addGap(4, 4, 4)
+                                                                        .addComponent(spiroPushButton)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(spiroExportButton)))
+                                                                        .addGap(18, 18, 18)
+                                                                        .addComponent(lastACLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lastACLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(acDateTimeHeader)
+                                                                                .addComponent(acDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                                                        .addComponent(acPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                        .addComponent(acPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                                                                .addComponent(acExportedHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                .addComponent(acExportedArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                        .addGap(4, 4, 4)
+                                                                                                                        .addComponent(acPushButton)
+                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                        .addComponent(acExportButton)))
+                                                                                                                        .addGap(18, 18, 18)
+                                                                                                                        .addComponent(userInteractionLogHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                        .addComponent(userInterLogArea, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                                                .addComponent(userDateTimeHeader)
+                                                                                                                                .addComponent(userDateTimeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                                                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                                                                                                        .addComponent(userPushArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                        .addComponent(userPushHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                                                                        .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                                                                                                                .addComponent(userExportHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                                .addComponent(userExportArea, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                                                                                        .addGap(4, 4, 4)
+                                                                                                                                                                        .addComponent(userPushButton)
+                                                                                                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                                                                        .addComponent(userExportButton)))
+                                                                                                                                                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
+
+        jTabbedPane1.addTab("Logs", logPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
@@ -2072,6 +2281,14 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify                     
     private javax.swing.JPanel MedicationPanel;
+    private javax.swing.JLabel acDateTimeArea;
+    private javax.swing.JLabel acDateTimeHeader;
+    private javax.swing.JButton acExportButton;
+    private javax.swing.JLabel acExportedArea;
+    private javax.swing.JLabel acExportedHeader;
+    private javax.swing.JLabel acPushArea;
+    private javax.swing.JButton acPushButton;
+    private javax.swing.JLabel acPushHeader;
     private javax.swing.JCheckBox adDiskCB;
     private javax.swing.JCheckBox adInhalCB;
     private javax.swing.JLabel alarmSoundPromptLabel;
@@ -2084,6 +2301,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox floInhalCB;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField alarmLengthField;
+    private javax.swing.JLabel lastACLogArea;
+    private javax.swing.JLabel lastACLogHeader;
+    private javax.swing.JLabel lastSpiroLogArea;
+    private javax.swing.JLabel lastSpiroLogHeader;
+    private javax.swing.JPanel logPanel;
     private javax.swing.JTextField pefLowerRangeField;
     private javax.swing.JLabel lowerTextLabel;
     private javax.swing.JButton medResetClearButton;
@@ -2097,11 +2319,29 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JButton saveConfigButton;
     private javax.swing.JCheckBox singulairCB;
     private javax.swing.JCheckBox soundCB;
+    private javax.swing.JLabel spiroDateTimeArea;
+    private javax.swing.JLabel spiroDateTimeHeader;
+    private javax.swing.JButton spiroExportButton;
+    private javax.swing.JLabel spiroExportedArea;
+    private javax.swing.JLabel spiroExportedHeader;
+    private javax.swing.JLabel spiroPushArea;
+    private javax.swing.JButton spiroPushButton;
     private javax.swing.JLabel spiroRangeLabel;
+    private javax.swing.JLabel spiroServerPushHeader;
     private javax.swing.JTextField startDateField;
     private javax.swing.JLabel startDateLabel;
     private javax.swing.JTextField pefUpperRangeField;
     private javax.swing.JLabel upperRangeLabel;
+    private javax.swing.JLabel userDateTimeArea;
+    private javax.swing.JLabel userDateTimeHeader;
+    private javax.swing.JLabel userExportArea;
+    private javax.swing.JButton userExportButton;
+    private javax.swing.JLabel userExportHeader;
+    private javax.swing.JLabel userInterLogArea;
+    private javax.swing.JLabel userInteractionLogHeader;
+    private javax.swing.JLabel userPushArea;
+    private javax.swing.JButton userPushButton;
+    private javax.swing.JLabel userPushHeader;
     private static JFrame thisFrame;
     //private JTextField yellowZoneField;
     //private JTextField redZoneField;
