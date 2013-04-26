@@ -187,8 +187,7 @@ function takeDynamicReading(eventInfo) {
     disableAllTimers();
     Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
          new Date().toString();
-    dismissAlert();
-    Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] == null;
+    AsthmaGlobals.tempPefVal == null;
     WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
 }
 

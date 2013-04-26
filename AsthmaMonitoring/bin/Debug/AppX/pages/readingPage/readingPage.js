@@ -14,9 +14,9 @@
             WinJS.Utilities.id("rightHelpItem5").listen("click", this.navHelpPage, false);
             AsthmaGlobals.symptomQuestion = false;
             document.getElementById('PEFValue').onkeyup = this.currReadingMonitor.bind(this);
-            if (Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] != undefined &&
-                 Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] != null) {
-                document.getElementById('PEFValue').value = Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"];
+            if (AsthmaGlobals.tempPefVal != undefined &&
+                AsthmaGlobals.tempPefVal != null) {
+                document.getElementById('PEFValue').value = AsthmaGlobals.tempPefVal;
                 var confirmBtnMarkup = document.createElement("button");
                 confirmBtnMarkup.id = "confirmButton";
                 confirmBtnMarkup.innerHTML = "Confirm";
@@ -78,7 +78,7 @@
             appendLog("navigation", "application", "PEF Complete");
             Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] =
                 document.getElementById("PEFValue").value;
-
+            AsthmaGlobals.tempPefVal = document.getElementById("PEFValue").value;
                 document.getElementById("headingText").innerHTML = "FEV Reading";
                 document.getElementById("PEFValue").id = "FEVValue"
                 document.getElementById("FEVValue").value = "";
@@ -97,7 +97,13 @@
         var currValueEntered = document.getElementById(feildName).value.trim();
         appendLog("data entry", feildName+" " + "text box", currValueEntered);
         //appendLog("in " + feildName + " text box, user entered " + currValueEntered);
+
         var re = /^\d{3}\.\d{1}$/g;
+        if (feildName == "PEFValue") {
+            re = /^\d{1,3}$/g;
+        } else {
+            re = /^\d{1,3}\.\d{1,2}$/g;
+        }
         var result = re.exec(currValueEntered);
         if (result == null) {
             return false;

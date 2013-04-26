@@ -2,7 +2,7 @@
 function setMedicationTimeout() {
     var retString = "";
     var allMedicationStr = String(AsthmaGlobals.medicationArray);
-    var MedicationInfoArray = allMedicationStr.split(";");
+    var MedicationInfoArray = allMedicationStr.split("##");
     var morningTime = String(MedicationInfoArray[0]).split("-")[1].trim();
     var eveningTime = String(MedicationInfoArray[1]).split("-")[1].trim();
    
@@ -18,11 +18,14 @@ function setMedicationTimeout() {
         alertTextArrayIndex = 5;
         nextMedicationHour = eveningTime;
     }
-    if (MedicationInfoArray.length >= 7) {
+    if (String(MedicationInfoArray[7]).trim() != null && String(MedicationInfoArray[7]).trim() != ""
+        && String(MedicationInfoArray[7]).trim() != "\n" && String(MedicationInfoArray[7]).trim() != "\r\n"
+        && String(MedicationInfoArray[7]).trim() != "\r") {
         AsthmaGlobals.symptomsMedicationText = MedicationInfoArray[7];
     }
-    if (MedicationInfoArray[alertTextArrayIndex] != undefined || MedicationInfoArray[alertTextArrayIndex] != null
-        || MedicationInfoArray[alertTextArrayIndex] != "") {
+    if (MedicationInfoArray[alertTextArrayIndex] != undefined && MedicationInfoArray[alertTextArrayIndex] != null
+        && MedicationInfoArray[alertTextArrayIndex] != "" && MedicationInfoArray[alertTextArrayIndex] != "\n"
+        && MedicationInfoArray[alertTextArrayIndex] != "\r" && MedicationInfoArray[alertTextArrayIndex] != "\r\n") {
         AsthmaGlobals.medicationAlertText = MedicationInfoArray[alertTextArrayIndex];
     } else {
         AsthmaGlobals.medicationAlertText = null;
