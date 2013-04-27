@@ -19,7 +19,7 @@ import edu.asupoly.aspira.model.ParticleReading;
  */
 public class AirQualityMonitorTask extends AspiraTimerTask {    
     
-    private static final Logger LOGGER = Logger.getLogger(AirQualityMonitorTask.class.getName());
+    private static final Logger LOGGER = Aspira.getAspiraLogger();
     
     private Properties __props;
     

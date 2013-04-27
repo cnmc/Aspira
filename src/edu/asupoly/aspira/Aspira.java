@@ -16,8 +16,10 @@ import edu.asupoly.aspira.monitorservice.MonitoringService;
 
 public final class Aspira {
     private static final String PROPERTY_FILENAME = "properties/aspira.properties";
-    private static Logger ASPIRA_LOGGER = Logger.getLogger(Aspira.class.getName());
-    private static Level ASPIRA_LOGLEVEL = Level.WARNING;
+    private static Logger ASPIRA_LOGGER  = null;
+    private static Level ASPIRA_LOGLEVEL = null;
+    private static final long __startTime = System.currentTimeMillis();
+            
     private static Properties __globalProperties;
    
     public static String getSpirometerId() {
@@ -67,12 +69,11 @@ public final class Aspira {
         MonitoringService theService = null;
         try {
             theApp = new Aspira();
-            long startTime = System.currentTimeMillis();
-            long upTime = startTime;
-            System.out.println("Started the aspira monitoring service at " + new Date(startTime));
-            Aspira.log(Level.INFO, "Started the Aspira Monitoring Service at " + new Date(startTime));
+            
+            long upTime = __startTime;
+            System.out.println("Started Aspira at " + new Date(__startTime));
+            Aspira.log(Level.INFO, "Started Aspira at " + new Date(__startTime));
             theService = MonitoringService.getMonitoringService();
-            System.out.println("Started!");
             char c = 'a';
             boolean done = false;
             do {
@@ -80,7 +81,7 @@ public final class Aspira {
                 switch (c) {    
                 case 'U' : 
                     upTime = System.currentTimeMillis();
-                    System.out.println("Uptime: " + (upTime - startTime)/60 + " seconds");
+                    System.out.println("Uptime: " + (upTime - __startTime)/60 + " seconds");
                     break;
                 case 'C' :
                     System.out.println("\n\nSpecify a task to Cancel:");
@@ -151,7 +152,7 @@ public final class Aspira {
             isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             __globalProperties = new Properties();
             __globalProperties.load(isr);
-            String logFileName = __globalProperties.getProperty("aspira.log");
+            
             String globalLogLevel = __globalProperties.getProperty("log.level");
             String loggerScope = __globalProperties.getProperty("log.scope");
             if (loggerScope != null) {
@@ -163,11 +164,24 @@ public final class Aspira {
                 try {
                     ASPIRA_LOGLEVEL = Level.parse(globalLogLevel.trim());
                 } catch (IllegalArgumentException iae) {
-                    // ok to swallow as we will use the default above. Log it
+                    // ok to swallow as we will use the default. Log it.
+                    ASPIRA_LOGLEVEL = Level.INFO;
                     ASPIRA_LOGGER.log(Level.WARNING, "Unable to initialize loglevel " + globalLogLevel + 
                             ", using " + ASPIRA_LOGLEVEL.toString());
                 }
             }
+            
+            // now deal with log handlers.
+            String logToConsole = __globalProperties.getProperty("log.logToConsole");
+            if (logToConsole == null || logToConsole.trim().equals("") || logToConsole.equalsIgnoreCase("false")) {
+                ASPIRA_LOGGER.setUseParentHandlers(false);
+            }
+            
+            String logFileName = __globalProperties.getProperty("aspira.log");
+            if (logFileName == null || logFileName.trim().equals("")) {
+                logFileName = "aspiradefault";
+            }
+            logFileName = logFileName + "." + new Date(__startTime) + ".log";
             FileHandler fhandler = new FileHandler(logFileName);
             SimpleFormatter sformatter = new SimpleFormatter();
             fhandler.setFormatter(sformatter);

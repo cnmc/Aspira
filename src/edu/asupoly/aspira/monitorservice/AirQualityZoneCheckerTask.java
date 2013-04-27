@@ -43,7 +43,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
-            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "Monitoring Service: running AQ Zone Checker Task");
+            Aspira.getAspiraLogger().log(Level.INFO, "Monitoring Service: running AQ Zone Checker Task");
             try {
                 //System.out.println("Executing  Air Quality Zone Checker Timer Task!");           
                 // Now we need to call DAOManager to get DAO
@@ -64,10 +64,10 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                         _pr = iterator.next();
                         if (_pr.getSmallParticleCount() < __yellowZoneThreshold) {
                             z = Zones.GREEN;
-                            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "AQ Zone GREEN");
+                            Aspira.getAspiraLogger().log(Level.INFO, "AQ Zone GREEN");
                         } else if (_pr.getSmallParticleCount() < __redZoneThreshold) {
                             z = Zones.YELLOW;
-                            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.INFO, "AQ Zone YELLOW");
+                            Aspira.getAspiraLogger().log(Level.INFO, "AQ Zone YELLOW");
                         }
                     }
                     __zone = z;
@@ -75,7 +75,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                 editAirQualityStatus();
             }
             catch (Throwable t) {
-                Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, t);
+                Aspira.getAspiraLogger().log(Level.SEVERE, null, t);
             }
         }
     }
@@ -105,7 +105,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
             }
             _isInitialized = rval;
         } catch (Throwable t) {
-            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, "Cannot parse Zone properties", t);
+            Aspira.getAspiraLogger().log(Level.SEVERE, "Cannot parse Zone properties", t);
             _isInitialized = false;
         }
         return rval;
@@ -138,13 +138,13 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
             fop.close();
         }
         catch(Throwable th) {
-            Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, th);
+            Aspira.getAspiraLogger().log(Level.SEVERE, null, th);
         } finally {
             try {
                 if (fr != null) fr.close();
                 if (fop != null) fop.close();
             } catch (Throwable t2) {
-                Logger.getLogger(AirQualityZoneCheckerTask.class.getName()).log(Level.SEVERE, null, t2);
+                Aspira.getAspiraLogger().log(Level.SEVERE, null, t2);
             }
         }
     }

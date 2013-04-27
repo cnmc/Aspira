@@ -7,6 +7,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.asupoly.aspira.Aspira;
+
 /*
  * This task should wake up and check for event log
  * from tablet application and push the logs to remote database
@@ -42,7 +44,7 @@ public class TabletLogMonitorTask extends AspiraTimerTask {
                 //
                 // XXX We are not using this task yet as we do not have a tablet app log
             } catch (Throwable t) {
-                Logger.getLogger(TabletLogMonitorTask.class.getName()).log(Level.SEVERE, null, t);
+                Aspira.getAspiraLogger().log(Level.SEVERE, null, t);
             }
         }
     }

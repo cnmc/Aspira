@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
 
-    private static final Logger LOGGER = Logger.getLogger(SpirometerManualLogMonitorTask.class.getName());
+    private static final Logger LOGGER = Aspira.getAspiraLogger();
     private Properties __props;
     
     public SpirometerManualLogMonitorTask() {

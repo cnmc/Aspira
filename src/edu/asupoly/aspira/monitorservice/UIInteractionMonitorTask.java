@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * last time we read them - so we have to store the last event or timestamp
  */
 public class UIInteractionMonitorTask extends AspiraTimerTask {
-    private static final Logger LOGGER = Logger.getLogger(UIInteractionMonitorTask.class.getName());
+    private static final Logger LOGGER = Aspira.getAspiraLogger();
 
     private Properties __props;
 
