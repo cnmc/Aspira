@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.AspiraWorkbook;
 import edu.asupoly.aspira.dmp.DMPException;
@@ -105,7 +106,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         _configProperties = new Properties();
         try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(Aspira.getAspiraHome() + PROPERTY_FILENAME));
             _configProperties.load(isr);
             // let's create a DAO based on a known property
         } catch (Throwable t1) {
@@ -114,8 +115,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         }
         // all impls need to figure out if they need to push
         setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
-        configLocation = _configProperties.getProperty("config.fileLocation");
-        medTextLocation = _configProperties.getProperty("medication.fileLocation");
+        configLocation = Aspira.getAspiraHome() + _configProperties.getProperty("config.fileLocation");
+        medTextLocation = Aspira.getAspiraHome() + _configProperties.getProperty("medication.fileLocation");
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
@@ -151,9 +152,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 JSONObject animationObject;
                 JSONObject dynamicObject;
                 try {
-                    // XXX why have a prop when the json file is hardcoded?
-
-                    jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+                    jo = (JSONObject)parser.parse(new FileReader(configLocation));
                     configObject = (JSONObject)jo.get("config");
                     alertObject = (JSONObject)configObject.get("alertInfo");
                     dynamicObject = (JSONObject)configObject.get("airQualityConfig");
@@ -170,7 +169,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
 
                     configObject.put("alertInfo", alertObject);
-                    
+
                     /* XXX
                     try{
                         configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
@@ -178,7 +177,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid device ID", "Bad input", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    */
+                     */
 
                     animationObject = (JSONObject)configObject.get("animation");
 
@@ -233,7 +232,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         dynamicObject.put("redZone", curRed);
                     if(yellow != curYellow)
                         dynamicObject.put("yellowZone", curYellow);
-                    */
+                     */
                     configObject.put("minValues", minObject);
                     configObject.put("maxValues", maxObject);
 
@@ -333,8 +332,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
             }
         });
-        */
-        
+         */
+
         JLabel lblPatientId = new JLabel("Patient ID:");
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
@@ -534,164 +533,164 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         configPanel.setLayout(configPanelLayout);
 
         jTabbedPane1.addTab("App Config", configPanel);
-        
+
         JLabel lblType = new JLabel("Type:");
-        
+
         chckbxSpirometer = new JCheckBox("Spirometer");
-        
+
         chckbxAirQuality = new JCheckBox("Air Quality");
-        
+
         chckbxUIEvent = new JCheckBox("UI Event");
-        
+
         JLabel lblTo = new JLabel("To:");
-        
+
         dateFromField = new JTextField();
         dateFromField.setText("dd/MM/yy");
         dateFromField.setColumns(10);
-        
+
         dateToField = new JTextField();
         dateToField.setText("dd/MM/yy");
         dateToField.setColumns(10);
-        
+
         JLabel lblFrom = new JLabel("From:");
-        
+
         timeFromField = new JTextField();
         timeFromField.setText("HH:mm:ss");
         timeFromField.setColumns(10);
-        
+
         timeToField = new JTextField();
         timeToField.setText("HH:mm:ss");
         timeToField.setColumns(10);
-        
+
         btnExport = new JButton("Export");
         btnExport.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent arg0) {
-        		
-        		String fname = "";
-        		AspiraWorkbook writetobook = new AspiraWorkbook("Exported logs");
-        		IAspiraDAO database;
-        		try {
-					database = AspiraDAO.getDAO();
-				} catch (DMPException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return;
-				}
-        		
-        		SimpleDateFormat lookupFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-        		Date start;
-        		try {
-					start = lookupFormat.parse(dateFromField.getText() + " " + timeFromField.getText());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return;
-				}
-        		Date end;
-        		try {
-					end = lookupFormat.parse(dateToField.getText() + " " + timeToField.getText());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return;
-				}
-        		
-        		if(chckbxSpirometer.isSelected())
-        		{
-        			fname.concat("Spiro");
-        			try {
-						SpirometerReadings sr = database.findSpirometerReadingsForPatient(patientID, start, end);
-						writetobook.appendFromSpirometerReadings(sr.iterator());
-					} catch (DMPException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-        		}
-        		if(chckbxAirQuality.isSelected()){
-        			fname.concat("AirQ");
-        			try {
-						AirQualityReadings aqr = database.findAirQualityReadingsForPatient(patientID, start, end);
-						writetobook.appendFromAirQualityReadings(aqr.iterator());
-					} catch (DMPException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-        		}
-        		if(chckbxUIEvent.isSelected()){
-        			fname.concat("UIEvents");
-        			try {
-						UIEvents uie = database.findUIEventsForPatient(patientID, start, end);
-						writetobook.writeEvents(uie);
-					} catch (DMPException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-        		}
-        		if(fname != "")
-        		{
-        			SimpleDateFormat fnameFormat = new SimpleDateFormat("MM-dd-yy");
-        			fname.concat("_" + fnameFormat.format(start) + "_" + fnameFormat.format(end)+".xls");
-        			writetobook.exportToExcel(fname);
-        		}
-        		
-        	}
+            public void actionPerformed(ActionEvent arg0) {
+
+                String fname = "";
+                AspiraWorkbook writetobook = new AspiraWorkbook("Exported logs");
+                IAspiraDAO database;
+                try {
+                    database = AspiraDAO.getDAO();
+                } catch (DMPException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    return;
+                }
+
+                SimpleDateFormat lookupFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                Date start;
+                try {
+                    start = lookupFormat.parse(dateFromField.getText() + " " + timeFromField.getText());
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    return;
+                }
+                Date end;
+                try {
+                    end = lookupFormat.parse(dateToField.getText() + " " + timeToField.getText());
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    return;
+                }
+
+                if(chckbxSpirometer.isSelected())
+                {
+                    fname.concat("Spiro");
+                    try {
+                        SpirometerReadings sr = database.findSpirometerReadingsForPatient(patientID, start, end);
+                        writetobook.appendFromSpirometerReadings(sr.iterator());
+                    } catch (DMPException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                if(chckbxAirQuality.isSelected()){
+                    fname.concat("AirQ");
+                    try {
+                        AirQualityReadings aqr = database.findAirQualityReadingsForPatient(patientID, start, end);
+                        writetobook.appendFromAirQualityReadings(aqr.iterator());
+                    } catch (DMPException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                if(chckbxUIEvent.isSelected()){
+                    fname.concat("UIEvents");
+                    try {
+                        UIEvents uie = database.findUIEventsForPatient(patientID, start, end);
+                        writetobook.writeEvents(uie);
+                    } catch (DMPException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                if(fname != "")
+                {
+                    SimpleDateFormat fnameFormat = new SimpleDateFormat("MM-dd-yy");
+                    fname.concat("_" + fnameFormat.format(start) + "_" + fnameFormat.format(end)+".xls");
+                    writetobook.exportToExcel(fname);
+                }
+
+            }
         });
 
         javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
         logPanelLayout.setHorizontalGroup(
-        	logPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(logPanelLayout.createSequentialGroup()
-        			.addContainerGap()
-        			.addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(logPanelLayout.createSequentialGroup()
-        					.addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-        						.addGroup(logPanelLayout.createSequentialGroup()
-        							.addComponent(lblType)
-        							.addPreferredGap(ComponentPlacement.UNRELATED)
-        							.addComponent(chckbxSpirometer)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(chckbxAirQuality))
-        						.addGroup(logPanelLayout.createSequentialGroup()
-        							.addComponent(lblFrom)
-        							.addGap(6)
-        							.addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
-        					.addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-        						.addGroup(logPanelLayout.createSequentialGroup()
-        							.addGap(20)
-        							.addComponent(lblTo)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-        						.addGroup(logPanelLayout.createSequentialGroup()
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(chckbxUIEvent))))
-        				.addComponent(btnExport))
-        			.addContainerGap(401, Short.MAX_VALUE))
-        );
+                logPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(logPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                .addGroup(logPanelLayout.createSequentialGroup()
+                                        .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                        .addComponent(lblType)
+                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                        .addComponent(chckbxSpirometer)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(chckbxAirQuality))
+                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                .addComponent(lblFrom)
+                                                                .addGap(6)
+                                                                .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
+                                                                .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                        .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                .addGap(20)
+                                                                                .addComponent(lblTo)
+                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+                                                                                .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                        .addComponent(chckbxUIEvent))))
+                                                                                        .addComponent(btnExport))
+                                                                                        .addContainerGap(401, Short.MAX_VALUE))
+                );
         logPanelLayout.setVerticalGroup(
-        	logPanelLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(logPanelLayout.createSequentialGroup()
-        			.addGap(40)
-        			.addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(lblType)
-        				.addComponent(chckbxSpirometer)
-        				.addComponent(chckbxAirQuality)
-        				.addComponent(chckbxUIEvent))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(dateToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(timeToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lblTo)
-        				.addComponent(lblFrom))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(btnExport)
-        			.addContainerGap(359, Short.MAX_VALUE))
-        );
+                logPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(logPanelLayout.createSequentialGroup()
+                        .addGap(40)
+                        .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(lblType)
+                                .addComponent(chckbxSpirometer)
+                                .addComponent(chckbxAirQuality)
+                                .addComponent(chckbxUIEvent))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblTo)
+                                        .addComponent(lblFrom))
+                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                        .addComponent(btnExport)
+                                        .addContainerGap(359, Short.MAX_VALUE))
+                );
         logPanel.setLayout(logPanelLayout);
 
         jTabbedPane1.addTab("Logs", logPanel);
@@ -1614,8 +1613,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         if(red == -1.0)
             red = mean + 1.5*deviation;
-        */
-            
+         */
+
         Object soundObject = alertObject.get("sound");
         if(soundObject instanceof Boolean)
             soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
@@ -1697,7 +1696,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         redZoneField.setColumns(10);
         redZoneField.setText(""+red);
          */
-        
+
         pefRangeLabel = new JLabel("PEF");
 
         fevRangeLabel = new JLabel("Fev1");
@@ -1728,7 +1727,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             deviceIDField.setText("" +(Long)configObject.get("deviceID"));
         else
             JOptionPane.showMessageDialog(this, "deviceID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        */
+         */
         lblSpirometerDeviceId.setText("Spirometer ID: " + deviceIDObject.toString());  // XXX KG changed from above
         trialLengthField.setText("" + weeks);
     }
@@ -2362,9 +2361,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JTextField timeFromField;
     private JTextField timeToField;
     private JButton btnExport;
-	private JCheckBox chckbxSpirometer;
-	private JCheckBox chckbxAirQuality;
-	private JCheckBox chckbxUIEvent;
+    private JCheckBox chckbxSpirometer;
+    private JCheckBox chckbxAirQuality;
+    private JCheckBox chckbxUIEvent;
 
 
     private class MedicineCheckBoxListener implements ItemListener{

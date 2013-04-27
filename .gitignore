@@ -3,9 +3,11 @@ classes/*
 build/*
 build_dmp/*
 build_config/*
+logs/*
 
 # Derby, uncomment to update db
 db/*
+derby.log
 
 # Package Files #
 *.war

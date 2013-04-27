@@ -91,7 +91,7 @@ public final class MonitoringService {
         __props = new Properties();
         InputStreamReader  isr = null;
         try {
-            isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
+            isr = new InputStreamReader(new FileInputStream(Aspira.getAspiraHome() + PROPERTY_FILENAME));
             __props.load(isr);
             defaultInterval = Integer.parseInt(__props.getProperty(DEFAULT_INTERVAL_KEY));
             maxTimerTasks = Integer.parseInt(__props.getProperty(MAX_TIMERTASKS_KEY));
