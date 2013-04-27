@@ -28,6 +28,11 @@ public class UIEventsWorkbook {
         currentRow.createCell(0).setCellValue("UI events:");
     }
     
+    public void writeEvents(UIEvents events)
+    {
+    	writeEventsToSheet(events.iterator());
+    }
+    
     public void writeEventsFromPatient(String Patient, UIEvents events)
     {
     	writeEventsToSheet(events.getUIEventsForPatient(Patient).iterator());
