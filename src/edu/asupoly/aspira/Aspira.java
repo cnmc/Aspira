@@ -113,6 +113,9 @@ public final class Aspira {
             System.out.println("Started Aspira at " + new Date(__startTime));
             Aspira.log(Level.INFO, "Started Aspira at " + new Date(__startTime));
             theService = MonitoringService.getMonitoringService();
+            if (theService == null) {
+                System.out.println("EXITING: Cannot initialize the Monitoring Service");
+            }
             char c = 'a';
             boolean done = false;
             do {
@@ -199,10 +202,13 @@ public final class Aspira {
                 ASPIRA_HOME = __globalProperties.getProperty("aspira.home");
                 if (ASPIRA_HOME == null || ASPIRA_HOME.isEmpty()) {
                     // well darnit, try a default
-                    ASPIRA_HOME = "/usr/aspira";
+                    ASPIRA_HOME = "/usr/aspira/";
                 }
             }
-
+            if (!ASPIRA_HOME.endsWith(File.separator)) {
+                ASPIRA_HOME = ASPIRA_HOME + File.separator;
+            }
+            
             // We have a value for ASPIRA_HOME but is it valid and can I write to it?
             File f = new File(ASPIRA_HOME);
             if (!f.canWrite()) {
