@@ -25,6 +25,7 @@
             }
             //Initialize the awesome stuff
             initializeAnimation();
+            AsthmaGlobals.toastNotifier.hide(AsthmaGlobals.toast);
 
         },
 

@@ -65,7 +65,7 @@
         nextReadingAlert: function () {
             //enable user going into the flow when its time for new reading
             
-            changeFishMood("attentive");
+            changeFishMood("attentive"); 
             appendLog("alert", "application home", "Take Reading");
             // Windows.Storage.ApplicationData.current.localSettings.values["bowlClickListener"] = 
             WinJS.Utilities.id("takeReading").listen("click", takeReading, false);
@@ -75,7 +75,7 @@
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingNotTakenTimeoutId"] =
             setTimeout(readingNotTaken, AsthmaGlobals.fileConfig.config.alertInfo.alertLength);// set next reading not taken timer
             //2. 
-            initateDynamicAlert("scheduledReading", "Tap on the bowl to take a reading !!")
+            initateDynamicAlert("scheduledReading", "Take a reading, tap on the bowl!!")
             animateNextReading();
             if (AsthmaGlobals.fileConfig.config.alertInfo.sound == true) {
                 playAlert();
@@ -113,6 +113,10 @@
                 ) {
                 initateDynamicAlert("dynamicReading", AsthmaGlobals.fileConfig.config.alertInfo.dynamicReadingAlertText);
                 AsthmaGlobals.dynamicAlertDisplay = true;
+            } else if (AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "false" && AsthmaGlobals.notifiedDisconnection == false) {
+                generateToast("The air quality meter seems to be disconnected, please refer the help manual and connect it again.")
+                setTimeout(function () { AsthmaGlobals.notifiedDisconnection = false; }, 900000);
+                AsthmaGlobals.notifiedDisconnection = true;
             }
         }
     });
@@ -275,8 +279,12 @@ function initateDynamicAlert(type, description) {
     content += "<div class='dynamicContent'>";
     if (description != undefined) {
         content += description;
+        if (type != "symptoms") {
+            generateToast(description);
+        }
     } else {
         content += AsthmaGlobals.medicationAlertText;
+        generateToast(AsthmaGlobals.medicationAlertText);
     }
     content += "</div>";
     if (type != "scheduledReading") {

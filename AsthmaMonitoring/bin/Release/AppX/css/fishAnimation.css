@@ -1,0 +1,20 @@
+﻿body {
+}
+.fishImage {
+    position: relative;
+    left: 207px; 
+    top: 81px;
+	z-index:10;
+}
+.bowlImage{
+	position:relative;
+    left: 90px; 
+    top: -321px;
+	}
+.readingPageAnimationDiv {
+    float:left;
+   
+}
+#fishImageID {
+ height: 331px; width: 367px;
+}

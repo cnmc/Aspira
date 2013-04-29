@@ -49,7 +49,7 @@
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>AsthmaMonitoring_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
@@ -143,6 +143,7 @@
     <Content Include="js\asthmaLogging.js" />
     <Content Include="js\default.js" />
     <Content Include="js\fishAnimation.js" />
+    <Content Include="js\generateToastNotifications.js" />
     <Content Include="js\jquery1.8.js" />
     <Content Include="js\logSpirometerReading.js" />
     <Content Include="js\medicationConfig.js" />

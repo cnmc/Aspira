@@ -299,6 +299,9 @@
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\fishAnimation.js">
       <PackagePath>js\fishAnimation.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\generateToastNotifications.js">
+      <PackagePath>js\generateToastNotifications.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\js\jquery1.8.js">
       <PackagePath>js\jquery1.8.js</PackagePath>
     </AppxPackagedFile>

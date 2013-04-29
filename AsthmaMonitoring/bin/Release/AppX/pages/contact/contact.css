@@ -1,0 +1,38 @@
+﻿.contact p {
+    margin-left: 120px;
+}
+.leftHelpPanelItem {
+padding: 5px;
+}
+
+allHelp {
+    left: 100px;
+	height: auto;
+	width:auto;
+    position:relative;
+    margin-top:110px;
+
+}
+.leftHelpPanel {
+    float:left;
+    width:370px;
+}
+.rightHelpPanel {
+    float: right; 
+    margin-right:100px;
+}
+.leftHelpPanelItem {
+float:left;
+     width:110px;
+    border:1px solid black;
+    text-align:center;
+}
+.rightHelpPanelItem {
+float:left;
+ width:100px;
+}
+.helpThumbnail {
+ width:100px;
+ height:70px;
+ padding:5px;
+}

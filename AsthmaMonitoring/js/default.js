@@ -29,7 +29,10 @@
         "medicationAlertText": null,
         "hasSymptoms": false,
         "idCount": 0,
-        "tempPefVal":null
+        "tempPefVal":null,
+        "toast": null,
+        "toastNotifier": null,
+        "notifiedDisconnection" : false
     });
    
     app.addEventListener("activated", function (eventObject) {

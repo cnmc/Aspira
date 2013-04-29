@@ -268,6 +268,7 @@ function calculateNextReadingTimeout() {
     return nextReadingObj.getTime() - new Date().getTime();
 } 
 function initateDynamicAlert(type, description) {
+    generateToast();
     changeFishMood("attentive");
     var id = AsthmaGlobals.idCount;
     AsthmaGlobals.idCount = AsthmaGlobals.idCount + 1;

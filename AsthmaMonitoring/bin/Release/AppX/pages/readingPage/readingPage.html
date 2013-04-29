@@ -9,33 +9,55 @@
     <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
     <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
 
+    <script src="/js/configurationProperties.js"></script>
+    <link href="/css/fishAnimation.css" rel="stylesheet" />
     <link href="/pages/readingPage/readingPage.css" rel="stylesheet" />
     <script src="/pages/readingPage/readingPage.js"></script>
+    <script src="/js/logSpirometerReading.js"></script>
 </head>
 <body>
-    <div class="readingPage fragment">
+    <div class="readingPage fragment" id="readingPageDivision">
         <header aria-label="Header content" role="banner">
-            <button class="win-backbutton" aria-label="Back" disabled type="button"></button>
             <h1 class="titlearea win-type-ellipsis">
-                <span class="pagetitle" id="headingText">PEF Reading</span>
+                <span class="pagetitle">Asthma Monitoring!</span>
             </h1>
+
         </header>
-       
-        <section aria-label="Main content" role="main">
-             <div class="allHelp">
+        <div class="allHelp">
             <div class="leftHelpPanel">
-                left Panel
-            </div>
+                    <div class="leftHelpPanelItem" id="leftHelpItem1">Powering on Device
+                        <img class="helpThumbnail" src="/images/step1.png" /> 
+                    </div>
+                    <div class="leftHelpPanelItem" id="leftHelpItem2">Using a Spirometer
+                        <img class="helpThumbnail" src="/images/step2.png" /></div>
+                    <div class="leftHelpPanelItem" id="rightHelpItem3"> Record a Reading
+                        <img class="helpThumbnail" src="/images/step3.png" /></div>
+                
+                    <div class="leftHelpPanelItem" id="rightHelpItem4">Steps to take reading
+                        <img class="helpThumbnail" src="/images/holdSpiroBothHands.jpg" /></div>
+                <div class="leftHelpPanelItem" id="rightHelpItem5">Spirometer Manual
+                        <img class="helpThumbnail" src="/images/second.jpg" /></div>
+                </div>
             <div class="rightHelpPanel">
-                Right Panel
+                <div id="takeReading" class="readingPageAnimationDiv"></div>
             </div>
         </div>
-            <div class="mainDivision">
-                <div class="middleContent" id="middleContent">
-                    <input id="PEFValue" type="text"/>
+
+
+        <div class="mainDivision">
+
+            <div class="middleContent" id="middleContent">
+                <h1 class="titlearea win-type-ellipsis">
+                    <span class="pagetitle" id="headingText">PEF Reading</span>
+                </h1>
+                <div id="inputBoxDivision">
+                    <input id="PEFValue" type="text" />
+                </div>
+                <div id="symptomBoxDiv">
                 </div>
             </div>
-        </section>
+        </div>
+
     </div>
 </body>
 </html>

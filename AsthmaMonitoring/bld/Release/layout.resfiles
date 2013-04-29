@@ -88,6 +88,7 @@ js\asthmaLogging.js
 js\configurationProperties.js
 js\default.js
 js\fishAnimation.js
+js\generateToastNotifications.js
 js\jquery1.8.js
 js\logSpirometerReading.js
 js\medicationConfig.js
