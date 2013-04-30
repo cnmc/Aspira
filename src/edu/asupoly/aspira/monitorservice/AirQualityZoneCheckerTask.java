@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 

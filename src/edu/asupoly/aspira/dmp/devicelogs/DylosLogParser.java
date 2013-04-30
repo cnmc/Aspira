@@ -52,6 +52,11 @@ public class DylosLogParser implements AirQualityReadingsFactory  {
             small = st.nextToken().trim();
             large = st.nextToken().trim();
 
+            // The Dylos Logger program, for whatever reason, tacks "00"
+            // on the end of every reading. Confirm and remove.
+            if (small.endsWith("00")) small = small.substring(small.length()-2);
+            if (large.endsWith("00")) large = large.substring(large.length()-2);
+            
             aqr.addReading(new ParticleReading(deviceId, patientId, date, time, small, large));
 
             finput = br.readLine(); 
