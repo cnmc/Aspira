@@ -259,13 +259,12 @@ public final class Aspira {
             System.out.println("\tLog Level =\t" + ASPIRA_LOGLEVEL.toString());
         } catch (Throwable t1) {            
             System.out.println("Unable to initialize Aspira Monitoring Service, exiting");
-            ASPIRA_LOGGER.log(Level.SEVERE, "Unable to initialize Aspira Monitoring Service, exiting");
+            t1.printStackTrace();
             System.exit(0);
         } finally {
             try {
                 isr.close();
             } catch (Throwable t) {
-                ASPIRA_LOGGER.log(Level.WARNING, "Unable to close properties file input stream");
             }
         }
     }

@@ -58,7 +58,7 @@ public final class AspiraDAO implements IAspiraDAO {
     private AspiraDAO() throws DMPException {
         __daoProperties = new Properties();
         try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(Aspira.getAspiraHome() + PROPERTY_FILENAME));
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             __daoProperties.load(isr);
             // let's create a DAO based on a known property
             String daoClassName = __daoProperties.getProperty(DAO_CLASS_PROPERTY_KEY);

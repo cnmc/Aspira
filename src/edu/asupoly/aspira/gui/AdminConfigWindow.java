@@ -106,7 +106,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         _configProperties = new Properties();
         try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(Aspira.getAspiraHome() + PROPERTY_FILENAME));
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             _configProperties.load(isr);
             // let's create a DAO based on a known property
         } catch (Throwable t1) {
