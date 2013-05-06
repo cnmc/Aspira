@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.Clinician;
@@ -35,7 +36,7 @@ import edu.asupoly.aspira.model.UIEvents;
 public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
     private static final int NO_GROUP_IDENTIFIER = -2;
-    private static final Logger LOGGER = Logger.getLogger(AspiraDAODerbyImpl.class.getName());
+    private static final Logger LOGGER = Aspira.getAspiraLogger();
     private static final String CLASS  = "AspiraDAODerbyImpl";
     private static final long MS_ONE_YEAR_FROM_NOW = 1000L * 60L * 60 * 24L * 365L;
     
@@ -80,7 +81,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                if (ps != null) ps.close();
                if (c != null) c.close();
            } catch (SQLException se2) {
-               LOGGER.logp(Level.INFO, CLASS, "getPatients", "SQL Close Error in finally");
+               LOGGER.logp(Level.FINE, CLASS, "getPatients", "SQL Close Error in finally");
            }
        }
     }
@@ -116,7 +117,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "getSpirometers", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "getSpirometers", "SQL close in finally block");
             }
         }
     }
@@ -156,7 +157,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "getAirQualityMonitors", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "getAirQualityMonitors", "SQL close in finally block");
             }
         }
     }
@@ -205,7 +206,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "getClinicians", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "getClinicians", "SQL close in finally block");
             }
         }
     }
@@ -241,7 +242,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "findSpirometersForPatient", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "findSpirometersForPatient", "SQL close in finally block");
             }
         }
     }
@@ -278,7 +279,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "findAirQualityMonitorForPatient", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "findAirQualityMonitorForPatient", "SQL close in finally block");
             }
         }
     }
@@ -313,7 +314,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "findClinicianForPatient", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "findClinicianForPatient", "SQL close in finally block");
             }
         }
     }
@@ -430,7 +431,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "__findAirQualityReadingsForPatientByQuery", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "__findAirQualityReadingsForPatientByQuery", "SQL close in finally block");
             }
         }
     }
@@ -535,7 +536,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "__findSpirometerReadingsForPatientByQuery", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "__findSpirometerReadingsForPatientByQuery", "SQL close in finally block");
             }
         }
     }
@@ -631,7 +632,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (ps != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "__findUIEventsForPatientByQuery", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "__findUIEventsForPatientByQuery", "SQL close in finally block");
             }
         }
     }
@@ -694,7 +695,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "importAirQualityReadings", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "importAirQualityReadings", "SQL close in finally block");
             }
         }
         return true;
@@ -761,7 +762,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "importSpirometerReadings", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "importSpirometerReadings", "SQL close in finally block");
             }
         }
         return true;
@@ -822,7 +823,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "XXX", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "XXX", "SQL close in finally block");
             }
         }
         return true;
@@ -869,7 +870,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                     c.close();
                 }
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "importUIEvents", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "importUIEvents", "SQL close in finally block");
             }
         }
         return true;
@@ -923,7 +924,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "addOrModifyPatient", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "addOrModifyPatient", "SQL close in finally block");
             }
         }
     }
@@ -974,7 +975,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "addOrModifySpirometer", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "addOrModifySpirometer", "SQL close in finally block");
             }
         }
     }
@@ -1026,7 +1027,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "addOrModifyAQM", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "addOrModifyAQM", "SQL close in finally block");
             }
         }
     }
@@ -1081,7 +1082,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 if (psdml2 != null) ps.close();
                 if (c != null) c.close();
             } catch (SQLException se2) {
-                LOGGER.logp(Level.INFO, CLASS, "XXX", "SQL close in finally block");
+                LOGGER.logp(Level.FINE, CLASS, "addClinician", "SQL close in finally block");
             }
         }
     }
