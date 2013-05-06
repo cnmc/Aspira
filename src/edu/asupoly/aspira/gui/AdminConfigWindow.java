@@ -21,7 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -37,12 +36,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -65,8 +62,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static final Logger LOGGER = Aspira.getAspiraLogger();
     //private Properties _configProperties;
     private URL pushURL;
-    private static String CONFIG_PROPERTY_FILENAME = "properties/config.json";
-    private static String MEDICATION_REMINDERS_FILENAME = "properties/medicationReminder.txt";
+    private static String CONFIG_PROPERTY_FILENAME = "config.json";
+    private static String MEDICATION_REMINDERS_FILENAME = "medicationReminder.txt";
     //private static final String PUSH_URL_PROPERTY_KEY = "push.url";
     private static String patientID;
     private String configLocation;
@@ -106,109 +103,113 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         return false;
     }
     private void initComponents() {
-        // all impls need to figure out if they need to push
-        //setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
-        configLocation = Aspira.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
-        medTextLocation = Aspira.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
+        try {
+            // all impls need to figure out if they need to push
+            //setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
+            configLocation = Aspira.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
+            medTextLocation = Aspira.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
-        logPanel = new javax.swing.JPanel();
+            System.out.println("Config file " + configLocation);
+            System.out.println("Med Text file " + medTextLocation);
+            
+            jTabbedPane1 = new javax.swing.JTabbedPane();
+            jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
+            logPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setName("Administrator Config Window"); // NOI18N
+            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            setName("Administrator Config Window"); // NOI18N
 
-        configPanel = new javax.swing.JPanel();
-        soundCB = new javax.swing.JCheckBox();
-        alarmSoundPromptLabel = new javax.swing.JLabel();
-        alarmLengthField = new javax.swing.JTextField();
-        alarmTimeUnitsLabel = new javax.swing.JLabel();
-        startDateLabel = new javax.swing.JLabel();
-        spiroRangeLabel = new javax.swing.JLabel();
-        lowerTextLabel = new javax.swing.JLabel();
-        pefLowerRangeField = new javax.swing.JTextField();
-        upperRangeLabel = new javax.swing.JLabel();
-        pefUpperRangeField = new javax.swing.JTextField();
-        startDateField = new javax.swing.JTextField();
-        saveConfigButton = new javax.swing.JButton();
-        saveConfigButton.addMouseListener(new MouseAdapter() {
+            configPanel = new javax.swing.JPanel();
+            soundCB = new javax.swing.JCheckBox();
+            alarmSoundPromptLabel = new javax.swing.JLabel();
+            alarmLengthField = new javax.swing.JTextField();
+            alarmTimeUnitsLabel = new javax.swing.JLabel();
+            startDateLabel = new javax.swing.JLabel();
+            spiroRangeLabel = new javax.swing.JLabel();
+            lowerTextLabel = new javax.swing.JLabel();
+            pefLowerRangeField = new javax.swing.JTextField();
+            upperRangeLabel = new javax.swing.JLabel();
+            pefUpperRangeField = new javax.swing.JTextField();
+            startDateField = new javax.swing.JTextField();
+            saveConfigButton = new javax.swing.JButton();
+            saveConfigButton.addMouseListener(new MouseAdapter() {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JSONParser parser = new JSONParser();
-                JSONObject jo;
-                JSONObject configObject;
-                JSONObject alertObject;
-                JSONObject deviceObject;
-                JSONObject minObject;
-                JSONObject maxObject;
-                JSONObject animationObject;
-                JSONObject dynamicObject;
-                try {
-                    jo = (JSONObject)parser.parse(new FileReader(configLocation));
-                    configObject = (JSONObject)jo.get("config");
-                    alertObject = (JSONObject)configObject.get("alertInfo");
-                    dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JSONParser parser = new JSONParser();
+                    JSONObject jo;
+                    JSONObject configObject;
+                    JSONObject alertObject;
+                    JSONObject deviceObject;
+                    JSONObject minObject;
+                    JSONObject maxObject;
+                    JSONObject animationObject;
+                    JSONObject dynamicObject;
+                    try {
+                        jo = (JSONObject)parser.parse(new FileReader(configLocation));
+                        configObject = (JSONObject)jo.get("config");
+                        alertObject = (JSONObject)configObject.get("alertInfo");
+                        dynamicObject = (JSONObject)configObject.get("airQualityConfig");
 
-                    alertObject.put("sound", soundCB.isSelected());
-                    try{
-                        alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
-                    }
-                    catch(NumberFormatException e1){
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Length value must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                        alertObject.put("sound", soundCB.isSelected());
+                        try{
+                            alertObject.put("alertLength", Integer.parseInt(alarmLengthField.getText())*60000);
+                        }
+                        catch(NumberFormatException e1){
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Length value must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
-                    SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
+                        SimpleDateFormat storeDate = new SimpleDateFormat("MM/dd/yy");
 
-                    configObject.put("alertInfo", alertObject);
+                        configObject.put("alertInfo", alertObject);
 
-                    /* XXX
+                        /* XXX
                     try{
                         configObject.put("deviceID", Integer.parseInt(deviceIDField.getText()));
                     }catch(NumberFormatException e1){
                         JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid device ID", "Bad input", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                     */
+                         */
 
-                    animationObject = (JSONObject)configObject.get("animation");
+                        animationObject = (JSONObject)configObject.get("animation");
 
-                    try{
-                        animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
-                    }
-                    catch(NumberFormatException e1){
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Weeks must be an integer value", "Bad input", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                        try{
+                            animationObject.put("totalDays", Integer.parseInt(trialLengthField.getText())*7);
+                        }
+                        catch(NumberFormatException e1){
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Weeks must be an integer value", "Bad input", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
-                    try {
-                        Date startDate = storeDate.parse(startDateField.getText());
+                        try {
+                            Date startDate = storeDate.parse(startDateField.getText());
 
-                        animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
+                            animationObject.put("startDateMilliSec",storeDate.parse(startDateField.getText()).getTime() );
 
-                    } catch (ParseException e1) {
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid date field entry", "Bad date", JOptionPane.ERROR_MESSAGE);
-                    }
-                    configObject.put("animation", animationObject);
-
-
-                    minObject = (JSONObject)configObject.get("minValues");
-                    maxObject = (JSONObject)configObject.get("maxValues");
-                    try{
-                        minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
-                        minObject.put("FEVValue", Double.parseDouble(fevLowerRangeField.getText()));
-                        maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
-                        maxObject.put("FEVValue", Double.parseDouble(fevUpperRangeField.getText()));
-                    }
-                    catch(NumberFormatException e1){
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                        } catch (ParseException e1) {
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid date field entry", "Bad date", JOptionPane.ERROR_MESSAGE);
+                        }
+                        configObject.put("animation", animationObject);
 
 
-                    dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
-                    /*
+                        minObject = (JSONObject)configObject.get("minValues");
+                        maxObject = (JSONObject)configObject.get("maxValues");
+                        try{
+                            minObject.put("PEFValue", Integer.parseInt(pefLowerRangeField.getText()));
+                            minObject.put("FEVValue", Double.parseDouble(fevLowerRangeField.getText()));
+                            maxObject.put("PEFValue", Integer.parseInt(pefUpperRangeField.getText()));
+                            maxObject.put("FEVValue", Double.parseDouble(fevUpperRangeField.getText()));
+                        }
+                        catch(NumberFormatException e1){
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+
+                        dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
+                        /*
                     double curRed;
                     double curYellow;
                     try{
@@ -225,90 +226,92 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         dynamicObject.put("redZone", curRed);
                     if(yellow != curYellow)
                         dynamicObject.put("yellowZone", curYellow);
-                     */
-                    configObject.put("minValues", minObject);
-                    configObject.put("maxValues", maxObject);
+                         */
+                        configObject.put("minValues", minObject);
+                        configObject.put("maxValues", maxObject);
 
-                    jo.put("config", configObject);
+                        jo.put("config", configObject);
 
-                    FileWriter fw = new FileWriter(configLocation);
-                    fw.write(jo.toJSONString());
-                    fw.flush();
-                    fw.close();
+                        FileWriter fw = new FileWriter(configLocation);
+                        fw.write(jo.toJSONString());
+                        fw.flush();
+                        fw.close();
 
-                    readingsHandled();
+                        readingsHandled();
 
 
 
-                } catch (FileNotFoundException e1) {
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file missing", "Missing config", JOptionPane.ERROR_MESSAGE);
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (org.json.simple.parser.ParseException e1) {
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Missing config", JOptionPane.ERROR_MESSAGE);
+                    } catch (FileNotFoundException e1) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file missing", "Missing config", JOptionPane.ERROR_MESSAGE);
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    } catch (org.json.simple.parser.ParseException e1) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Missing config", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-            }
-        });
-        resetConfigButton = new javax.swing.JButton();
-        resetConfigButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                readingInit();
-                configInit();
-            }
-        });
+            });
+            resetConfigButton = new javax.swing.JButton();
+            resetConfigButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (! (readingInit() && configInit())) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Error processing configuration files", "Exiting", JOptionPane.ERROR_MESSAGE);
+                        System.exit(0);
+                    }
+                }
+            });
 
-        JLabel lblTrialLength = new JLabel("Trial length:");
+            JLabel lblTrialLength = new JLabel("Trial length:");
 
-        trialLengthField = new JTextField();
-        trialLengthField.setColumns(10);
+            trialLengthField = new JTextField();
+            trialLengthField.setColumns(10);
 
-        lblWeeks = new JLabel("weeks");
+            lblWeeks = new JLabel("weeks");
 
-        // XXX add deviceID value here
-        lblSpirometerDeviceId = new JLabel("Spirometer device id:");
+            // XXX add deviceID value here
+            lblSpirometerDeviceId = new JLabel("Spirometer device id:");
 
-        //deviceIDField = new JTextField();
-        //deviceIDField.setColumns(10);
+            //deviceIDField = new JTextField();
+            //deviceIDField.setColumns(10);
 
-        lblReading = new JLabel("Reading 1:");
+            lblReading = new JLabel("Reading 1:");
 
-        lblReading_1 = new JLabel("Reading 2:");
+            lblReading_1 = new JLabel("Reading 2:");
 
-        lblReading_2 = new JLabel("Reading 3:");
+            lblReading_2 = new JLabel("Reading 3:");
 
-        read1Field = new JTextField();
-        read1Field.setColumns(10);
+            read1Field = new JTextField();
+            read1Field.setColumns(10);
 
-        read2Field = new JTextField();
-        read2Field.setColumns(10);
+            read2Field = new JTextField();
+            read2Field.setColumns(10);
 
-        read3Field = new JTextField();
-        read3Field.setColumns(10);
+            read3Field = new JTextField();
+            read3Field.setColumns(10);
 
-        read1TimeCB = new JComboBox();
-        read1TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+            read1TimeCB = new JComboBox();
+            read1TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
 
-        read2TimeCB = new JComboBox();
-        read2TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+            read2TimeCB = new JComboBox();
+            read2TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
 
-        read3TimeCB = new JComboBox();
-        read3TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
-        chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
-        //lblMean = new JLabel("Current mean particle read:");
-        //lblStdDeviation = new JLabel("Current standard deviation:");
-        //standardDeviationDisplay = new JLabel();
-        //lblYellowZone = new JLabel("Yellow Zone:");
-        //lblRedZone = new JLabel("Red Zone:");
-        //yellowZoneField = new JTextField();
-        //redZoneField = new JTextField();
-        //meanParticleDisplay = new JLabel();
+            read3TimeCB = new JComboBox();
+            read3TimeCB.setModel(new DefaultComboBoxModel(new String[] {"AM", "PM"}));
+            chckbxEnableDynamicAlerts = new JCheckBox("Enable dynamic alerts");
+            //lblMean = new JLabel("Current mean particle read:");
+            //lblStdDeviation = new JLabel("Current standard deviation:");
+            //standardDeviationDisplay = new JLabel();
+            //lblYellowZone = new JLabel("Yellow Zone:");
+            //lblRedZone = new JLabel("Red Zone:");
+            //yellowZoneField = new JTextField();
+            //redZoneField = new JTextField();
+            //meanParticleDisplay = new JLabel();
 
 
-        patientIDDisplay = new JLabel();
-        readingInit();
-        configInit();
-        /*
+            patientIDDisplay = new JLabel();
+            readingInit();
+            configInit();
+            /*
         chckbxEnableDynamicAlerts.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
 
@@ -325,1137 +328,1152 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
             }
         });
-         */
+             */
 
-        JLabel lblPatientId = new JLabel("Patient ID:");
+            JLabel lblPatientId = new JLabel("Patient ID:");
 
-        javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
-        configPanelLayout.setHorizontalGroup(
-                configPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(configPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(soundCB)
-                                .addGroup(configPanelLayout.createSequentialGroup()
-                                        .addComponent(alarmSoundPromptLabel)
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(alarmTimeUnitsLabel))
-                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                .addGap(68)
-                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                        //.addComponent(lblRedZone)
-                                                        //.addComponent(lblYellowZone)
-                                                        )
-                                                        .addGap(18)
-                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                ))
-                                                                .addComponent(chckbxEnableDynamicAlerts)
-                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                        //.addComponent(lblStdDeviation)
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-                                                                        )
-                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                .addGap(239)
-                                                                                .addComponent(saveConfigButton)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(resetConfigButton))
-                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                        //.addComponent(lblMean)
-                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                        //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-                                                                                        )
-                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                .addComponent(spiroRangeLabel)
-                                                                                                .addGap(18)
-                                                                                                .addComponent(pefRangeLabel)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(lowerTextLabel)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addGap(12)
-                                                                                                .addComponent(upperRangeLabel)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addGap(10)
-                                                                                                .addComponent(fevRangeLabel)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(lblLower)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                .addComponent(fevUpperLabel)
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
-                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                        .addComponent(lblSpirometerDeviceId)
-                                                                                                        .addGap(18)
-                                                                                                        // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        )
-                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                .addComponent(lblPatientId)
-                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                .addComponent(lblReading_2)
-                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                .addComponent(read3Field, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
-                                                                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                        .addComponent(lblReading_1)
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                        .addComponent(read2Field, 0, 0, Short.MAX_VALUE))
-                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                .addComponent(lblReading)
-                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                .addComponent(read1Field, 0, 0, Short.MAX_VALUE)))
-                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED, 381, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                        .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                                                        .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                                                                        .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                                                .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                                                                                                                                                                                                .addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
-                                                                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                                .addComponent(startDateLabel)
-                                                                                                                                                                                                                .addComponent(lblTrialLength))
-                                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
-                                                                                                                                                                                                                        .addComponent(trialLengthField, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                                                                                                                                                                                                                        .addComponent(startDateField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                                                                                        .addComponent(lblWeeks))))
-                                                                                                                                                                                                                        .addGap(245))
-                );
-        configPanelLayout.setVerticalGroup(
-                configPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(configPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(lblPatientId)
-                                .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-                                .addGap(14)
-                                .addComponent(soundCB)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(alarmTimeUnitsLabel))
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                .addComponent(startDateLabel)
-                                                .addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                        .addComponent(trialLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(lblTrialLength)
-                                                        .addComponent(lblWeeks))
-                                                        .addGap(18)
-                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                .addComponent(lblReading)
-                                                                                .addComponent(read1Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(read2Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(lblReading_1))
-                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                .addComponent(lblReading_2)
-                                                                                                .addComponent(read3Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                                                .addGroup(configPanelLayout.createSequentialGroup()
-                                                                                                        .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                        .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                                                        .addGap(65)
-                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                .addComponent(lblSpirometerDeviceId)
-                                                                                                                // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                )
-                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                        .addComponent(spiroRangeLabel)
-                                                                                                                        .addComponent(pefRangeLabel)
-                                                                                                                        .addComponent(lowerTextLabel)
-                                                                                                                        .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(upperRangeLabel)
-                                                                                                                        .addComponent(fevRangeLabel)
-                                                                                                                        .addComponent(lblLower)
-                                                                                                                        .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(fevUpperLabel)
-                                                                                                                        .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                        .addComponent(chckbxEnableDynamicAlerts)
-                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                //.addComponent(lblMean)
-                                                                                                                                //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                )
-                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                        //.addComponent(lblStdDeviation)
-                                                                                                                                        //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        )
-                                                                                                                                        .addGap(3)
-                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                //.addComponent(lblYellowZone)
-                                                                                                                                                )
-                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                        //.addComponent(lblRedZone)
-                                                                                                                                                        //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        )
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                                                                                        .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                                .addComponent(resetConfigButton)
-                                                                                                                                                                .addComponent(saveConfigButton)))
-                );
-        configPanel.setLayout(configPanelLayout);
+            javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
+            configPanelLayout.setHorizontalGroup(
+                    configPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(configPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                    .addComponent(soundCB)
+                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                            .addComponent(alarmSoundPromptLabel)
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                            .addComponent(alarmTimeUnitsLabel))
+                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                    .addGap(68)
+                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                            //.addComponent(lblRedZone)
+                                                            //.addComponent(lblYellowZone)
+                                                            )
+                                                            .addGap(18)
+                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                    //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                    //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                    ))
+                                                                    .addComponent(chckbxEnableDynamicAlerts)
+                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                            //.addComponent(lblStdDeviation)
+                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                            //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                                                            )
+                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                    .addGap(239)
+                                                                                    .addComponent(saveConfigButton)
+                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                    .addComponent(resetConfigButton))
+                                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                            //.addComponent(lblMean)
+                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                            //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                                                                            )
+                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                    .addComponent(spiroRangeLabel)
+                                                                                                    .addGap(18)
+                                                                                                    .addComponent(pefRangeLabel)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(lowerTextLabel)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                    .addGap(12)
+                                                                                                    .addComponent(upperRangeLabel)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                                                                                    .addGap(10)
+                                                                                                    .addComponent(fevRangeLabel)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(lblLower)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                                                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                    .addComponent(fevUpperLabel)
+                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                    .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+                                                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                            .addComponent(lblSpirometerDeviceId)
+                                                                                                            .addGap(18)
+                                                                                                            // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                            )
+                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                    .addComponent(lblPatientId)
+                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                    .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                    .addComponent(lblReading_2)
+                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                    .addComponent(read3Field, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                                                                                                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                            .addComponent(lblReading_1)
+                                                                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                            .addComponent(read2Field, 0, 0, Short.MAX_VALUE))
+                                                                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                    .addComponent(lblReading)
+                                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                    .addComponent(read1Field, 0, 0, Short.MAX_VALUE)))
+                                                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED, 381, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                            .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                                            .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                    .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                    .addGroup(Alignment.LEADING, configPanelLayout.createSequentialGroup()
+                                                                                                                                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                    .addComponent(startDateLabel)
+                                                                                                                                                                                                                    .addComponent(lblTrialLength))
+                                                                                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                                                                                                                                                            .addComponent(trialLengthField, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                                                                                                                                                                                                            .addComponent(startDateField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                            .addComponent(lblWeeks))))
+                                                                                                                                                                                                                            .addGap(245))
+                    );
+            configPanelLayout.setVerticalGroup(
+                    configPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(configPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                    .addComponent(lblPatientId)
+                                    .addComponent(patientIDDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+                                    .addGap(14)
+                                    .addComponent(soundCB)
+                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                            .addComponent(alarmSoundPromptLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(alarmTimeUnitsLabel))
+                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                    .addComponent(startDateLabel)
+                                                    .addComponent(startDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                            .addComponent(trialLengthField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(lblTrialLength)
+                                                            .addComponent(lblWeeks))
+                                                            .addGap(18)
+                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                    .addComponent(lblReading)
+                                                                                    .addComponent(read1Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                    .addComponent(read1TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                            .addComponent(read2Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                            .addComponent(lblReading_1))
+                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                    .addComponent(lblReading_2)
+                                                                                                    .addComponent(read3Field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                    .addGroup(configPanelLayout.createSequentialGroup()
+                                                                                                            .addComponent(read2TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                            .addComponent(read3TimeCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                                                                            .addGap(65)
+                                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                    .addComponent(lblSpirometerDeviceId)
+                                                                                                                    // XXX .addComponent(deviceIDField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                    )
+                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                            .addComponent(spiroRangeLabel)
+                                                                                                                            .addComponent(pefRangeLabel)
+                                                                                                                            .addComponent(lowerTextLabel)
+                                                                                                                            .addComponent(pefLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                            .addComponent(upperRangeLabel)
+                                                                                                                            .addComponent(fevRangeLabel)
+                                                                                                                            .addComponent(lblLower)
+                                                                                                                            .addComponent(fevLowerRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                            .addComponent(fevUpperLabel)
+                                                                                                                            .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                            .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                            .addComponent(chckbxEnableDynamicAlerts)
+                                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                    //.addComponent(lblMean)
+                                                                                                                                    //.addComponent(meanParticleDisplay, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                    )
+                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                            //.addComponent(lblStdDeviation)
+                                                                                                                                            //.addComponent(standardDeviationDisplay, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                            )
+                                                                                                                                            .addGap(3)
+                                                                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                    //.addComponent(yellowZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                    //.addComponent(lblYellowZone)
+                                                                                                                                                    )
+                                                                                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                    .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                            //.addComponent(lblRedZone)
+                                                                                                                                                            //.addComponent(redZoneField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                            )
+                                                                                                                                                            .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                                                                                            .addGroup(configPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                    .addComponent(resetConfigButton)
+                                                                                                                                                                    .addComponent(saveConfigButton)))
+                    );
+            configPanel.setLayout(configPanelLayout);
 
-        jTabbedPane1.addTab("App Config", configPanel);
+            jTabbedPane1.addTab("App Config", configPanel);
 
-        JLabel lblType = new JLabel("Type:");
+            JLabel lblType = new JLabel("Type:");
 
-        chckbxSpirometer = new JCheckBox("Spirometer");
+            chckbxSpirometer = new JCheckBox("Spirometer");
 
-        chckbxAirQuality = new JCheckBox("Air Quality");
+            chckbxAirQuality = new JCheckBox("Air Quality");
 
-        chckbxUIEvent = new JCheckBox("UI Event");
+            chckbxUIEvent = new JCheckBox("UI Event");
 
-        JLabel lblTo = new JLabel("To:");
+            JLabel lblTo = new JLabel("To:");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-        Date now = new Date();
-        Date twoWeeksAgo = new Date(System.currentTimeMillis() - 168L*60L*60L*1000L*2L); 
-        
-        dateFromField = new JTextField();
-        dateFromField.setText(sdf.format(twoWeeksAgo));
-        dateFromField.setColumns(10);
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+            Date now = new Date();
+            Date twoWeeksAgo = new Date(System.currentTimeMillis() - 168L*60L*60L*1000L*2L); 
 
-        dateToField = new JTextField();
-        dateToField.setText(sdf.format(now));
-        dateToField.setColumns(10);
+            dateFromField = new JTextField();
+            dateFromField.setText(sdf.format(twoWeeksAgo));
+            dateFromField.setColumns(10);
 
-        JLabel lblFrom = new JLabel("From:");
+            dateToField = new JTextField();
+            dateToField.setText(sdf.format(now));
+            dateToField.setColumns(10);
 
-        timeFromField = new JTextField();
-        timeFromField.setText("00:00:00");
-        timeFromField.setColumns(10);
+            JLabel lblFrom = new JLabel("From:");
 
-        timeToField = new JTextField();
-        timeToField.setText("00:00:00");
-        timeToField.setColumns(10);
+            timeFromField = new JTextField();
+            timeFromField.setText("00:00:00");
+            timeFromField.setColumns(10);
 
-        btnExport = new JButton("Export");
-        btnExport.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                StringBuffer fname = new StringBuffer("export_");
+            timeToField = new JTextField();
+            timeToField.setText("00:00:00");
+            timeToField.setColumns(10);
 
-                // These flags determine which we export
-                boolean spExport = false;
-                boolean aqExport = false;
-                boolean uiExport = false;
+            btnExport = new JButton("Export");
+            btnExport.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    StringBuffer fname = new StringBuffer("export_");
 
-                AspiraWorkbook writetobook = new AspiraWorkbook("Exported logs");
-                IAspiraDAO database = null;
-                try {
-                    database = AspiraDAO.getDAO();
-                } catch (DMPException e) {
-                    LOGGER.log(Level.SEVERE, "Unable to get persistence store handle for Export");
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Unable to connect to database, cannot export");
-                    return;
-                }
+                    // These flags determine which we export
+                    boolean spExport = false;
+                    boolean aqExport = false;
+                    boolean uiExport = false;
 
-                SimpleDateFormat lookupFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-                Date start = new Date();
-                Date end = new Date();
-                try {
-                    start = lookupFormat.parse(dateFromField.getText() + " " + timeFromField.getText());
-                    end = lookupFormat.parse(dateToField.getText() + " " + timeToField.getText());
-                    if (start.compareTo(end) > 0) {
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Start date after end date, cannot export");
+                    AspiraWorkbook writetobook = new AspiraWorkbook("Exported logs");
+                    IAspiraDAO database = null;
+                    try {
+                        database = AspiraDAO.getDAO();
+                    } catch (DMPException e) {
+                        LOGGER.log(Level.SEVERE, "Unable to get persistence store handle for Export");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Unable to connect to database, cannot export");
                         return;
                     }
-                } catch (ParseException e) {
-                    LOGGER.log(Level.SEVERE, "Invalid date time format for log export");
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid dates entered, cannot export");
-                    return;
-                }
 
-                if(chckbxSpirometer.isSelected())
-                {
-                    fname.append("SR");
+                    SimpleDateFormat lookupFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+                    Date start = new Date();
+                    Date end = new Date();
                     try {
-                        SpirometerReadings sr = database.findSpirometerReadingsForPatient(patientID, start, end);
-                        if (sr != null && sr.size() > 0) {
-                            writetobook.appendFromSpirometerReadings(sr.iterator());
-                            spExport = true;
+                        start = lookupFormat.parse(dateFromField.getText() + " " + timeFromField.getText());
+                        end = lookupFormat.parse(dateToField.getText() + " " + timeToField.getText());
+                        if (start.compareTo(end) > 0) {
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Start date after end date, cannot export");
+                            return;
                         }
-                    } catch (DMPException e) {
-                        LOGGER.log(Level.SEVERE, "Unable to retrieve spirometer readings for log export");
-                        spExport = false;
+                    } catch (ParseException e) {
+                        LOGGER.log(Level.SEVERE, "Invalid date time format for log export");
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid dates entered, cannot export");
+                        return;
                     }
+
+                    if(chckbxSpirometer.isSelected())
+                    {
+                        fname.append("SR");
+                        try {
+                            SpirometerReadings sr = database.findSpirometerReadingsForPatient(patientID, start, end);
+                            if (sr != null && sr.size() > 0) {
+                                writetobook.appendFromSpirometerReadings(sr.iterator());
+                                spExport = true;
+                            }
+                        } catch (DMPException e) {
+                            LOGGER.log(Level.SEVERE, "Unable to retrieve spirometer readings for log export");
+                            spExport = false;
+                        }
+                    }
+                    if(chckbxAirQuality.isSelected()){
+                        fname.append("AQ");
+                        try {
+                            AirQualityReadings aqr = database.findAirQualityReadingsForPatient(patientID, start, end);
+                            if (aqr != null && aqr.size() > 0) {
+                                writetobook.appendFromAirQualityReadings(aqr.iterator());
+                                aqExport = true;
+                            }
+                        } catch (DMPException e) {
+                            LOGGER.log(Level.SEVERE, "Unable to retrieve air quality readings for log export");
+                            aqExport = false;
+                        }
+                    }
+                    if(chckbxUIEvent.isSelected()){
+                        fname.append("UI");
+                        try {
+                            UIEvents uie = database.findUIEventsForPatient(patientID, start, end);
+                            if (uie != null && uie.size() > 0) {
+                                writetobook.writeEvents(uie);
+                                uiExport = true;
+                            }
+                        } catch (DMPException e) {
+                            LOGGER.log(Level.SEVERE, "Unable to retrieve User Interaction readings for log export");
+                            uiExport = false;
+                        }
+                    }
+                    StringBuffer msg = new StringBuffer("Export result:");               
+                    if (! (spExport || aqExport || uiExport)) {
+                        msg.append("\nNo Readings selected for export");
+                    } else {
+                        if (spExport) msg.append("\nSpirometer Readings exported successfully");
+                        if (aqExport) msg.append("\nAir Quality Readings exported successfully");
+                        if (uiExport) msg.append("\nUser Interaction Readings exported successfully");
+                        try {
+                            SimpleDateFormat fnameFormat = new SimpleDateFormat("MMddyy_HHmmss");
+                            fname.append("_" + fnameFormat.format(start) + "_TO_" + fnameFormat.format(end)+".xls");
+                            writetobook.exportToExcel(fname.toString());                        
+                        } catch (Throwable t) {
+                            msg = new StringBuffer("Error trying to export " + t.getMessage());                        
+                        }
+                    }
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, msg.toString());
                 }
-                if(chckbxAirQuality.isSelected()){
-                    fname.append("AQ");
+            });
+
+            javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
+            logPanelLayout.setHorizontalGroup(
+                    logPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                    .addGroup(logPanelLayout.createSequentialGroup()
+                                            .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                    .addGroup(logPanelLayout.createSequentialGroup()
+                                                            .addComponent(lblType)
+                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                            .addComponent(chckbxSpirometer)
+                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                            .addComponent(chckbxAirQuality))
+                                                            .addGroup(logPanelLayout.createSequentialGroup()
+                                                                    .addComponent(lblFrom)
+                                                                    .addGap(6)
+                                                                    .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                    .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)))
+                                                                    .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                            .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                    .addGap(20)
+                                                                                    .addComponent(lblTo)
+                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                    .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+                                                                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                    .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
+                                                                                    .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                            .addComponent(chckbxUIEvent))))
+                                                                                            .addComponent(btnExport))
+                                                                                            .addContainerGap(401, Short.MAX_VALUE))
+                    );
+            logPanelLayout.setVerticalGroup(
+                    logPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                            .addGap(40)
+                            .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                    .addComponent(lblType)
+                                    .addComponent(chckbxSpirometer)
+                                    .addComponent(chckbxAirQuality)
+                                    .addComponent(chckbxUIEvent))
+                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                    .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                            .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblTo)
+                                            .addComponent(lblFrom))
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addComponent(btnExport)
+                                            .addContainerGap(359, Short.MAX_VALUE))
+                    );
+            logPanel.setLayout(logPanelLayout);
+
+            jTabbedPane1.addTab("Logs", logPanel);
+
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+            layout.setHorizontalGroup(
+                    layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 782, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(19, Short.MAX_VALUE))
+                    );
+            layout.setVerticalGroup(
+                    layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jTabbedPane1, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+                            .addContainerGap())
+                    );
+            getContentPane().setLayout(layout);
+            MedicationPanel = new javax.swing.JPanel();
+            medPannelSaveButton = new javax.swing.JButton();
+            medPannelSaveButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    ArrayList<String> morningList = new ArrayList<String>();
+                    ArrayList<String> eveningList = new ArrayList<String>();
+                    ArrayList<String> withSymptomList = new ArrayList<String>();
+                    String newLine;
+                    if(albInhalCB.isSelected())
+                    {
+                        newLine = "Albuterol (inhaler) > " + aiDescField.getText();
+                        if(aimCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(aieCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(aiwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!aimCheck.isSelected()&&!aieCheck.isSelected()&&!aiwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Albuterol (inhaler) not saved");
+                    }
+                    if(albNebCB.isSelected())
+                    {
+                        newLine = "Albuterol (nebulizer) > " + anDescField.getText();
+                        if(anmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(aneCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(anwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!anmCheck.isSelected()&&!aneCheck.isSelected()&&!anwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Albuterol (nebulizer) not saved");
+                    }
+                    if(floDiskCB.isSelected())
+                    {
+                        newLine = "Flovent (diskus) > " + fdDescField.getText();
+                        if(fdmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(fdeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(fdwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!fdmCheck.isSelected()&&!fdeCheck.isSelected()&&!fdwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Flovent (diskus) not saved");
+                    }
+                    if(floInhalCB.isSelected())
+                    {
+                        newLine = "Flovent (inhaler) > " + fiDescField.getText();
+                        if(fimCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(fieCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(fiwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!fimCheck.isSelected()&&!fieCheck.isSelected()&&!fiwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Flovent (inhaler) not saved");
+                    }
+                    if(qvarCB.isSelected())
+                    {
+                        newLine = "Qvar > " + qDescField.getText();
+                        if(qmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(qeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(qmwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!qmCheck.isSelected()&&!qeCheck.isSelected()&&!qmwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Qvar not saved");
+                    }
+                    if(adDiskCB.isSelected())
+                    {
+                        newLine = "Advair (diskus) > " + adDescField.getText();
+                        if(admCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(adeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(adwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!admCheck.isSelected()&&!adeCheck.isSelected()&&!adwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Advair (diskus) not saved");
+                    }
+                    if(adInhalCB.isSelected())
+                    {
+                        newLine = "Advair (inhaler) > " + adiDescField.getText();
+                        if(adimCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(adieCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(adiwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!adimCheck.isSelected()&&!adieCheck.isSelected()&&!aiwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Advair (inhaler) not saved");
+                    }
+                    if(budesonideCB.isSelected())
+                    {
+                        newLine = "Budesonide > " + bDescField.getText();
+                        if(bmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(bmeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(bmwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!bmCheck.isSelected()&&!bmeCheck.isSelected()&&!bmwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Budesonide not saved");
+                    }
+                    if(pulmiTwistCB.isSelected())
+                    {
+                        newLine = "Pulmicort (twisthaler) > " + ptDescField.getText();
+                        if(ptmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(pteCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(ptwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!ptmCheck.isSelected()&&!pteCheck.isSelected()&&!ptwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Pulmicort (twisthaler) not saved");
+                    }
+                    if(pulmiNebCB.isSelected())
+                    {
+                        newLine = "Pulmicort (nebulizer) > " + pnDescField.getText();
+                        if(pnmCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(pneCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(pnwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!pnmCheck.isSelected()&&!pneCheck.isSelected()&&!pnwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Pulmicort (nebulizer) not saved");
+                    }
+                    if(singulairCB.isSelected())
+                    {
+                        newLine = "Singulair > " + sDescField.getText();
+                        if(smCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(smeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(smwsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!smCheck.isSelected()&&!smeCheck.isSelected()&&!smwsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: Singulair not saved");
+                    }
+                    if(otherMedCB.isSelected())
+                    {
+                        newLine = "Other: " +otherMedField.getText() +" > " + oDescField.getText();
+                        if(omCheck.isSelected()){
+                            morningList.add(newLine);
+                        }
+                        if(oeCheck.isSelected())
+                        {
+                            eveningList.add(newLine);
+                        }
+                        if(owsCheck.isSelected())
+                        {
+                            withSymptomList.add(newLine);
+                        }
+                        if(!omCheck.isSelected()&&!oeCheck.isSelected()&&!owsCheck.isSelected())
+                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                    "No times selected: " + otherMedField.getText() + " not saved");
+                    }
+
+                    writeMedFile(morningList, eveningList, withSymptomList);
+
+                }
+
+                private void writeMedFile(ArrayList<String> morningList, ArrayList<String> eveningList, ArrayList<String> wsList)
+                {
+                    BufferedWriter bw;
                     try {
-                        AirQualityReadings aqr = database.findAirQualityReadingsForPatient(patientID, start, end);
-                        if (aqr != null && aqr.size() > 0) {
-                            writetobook.appendFromAirQualityReadings(aqr.iterator());
-                            aqExport = true;
+                        bw = new BufferedWriter(new FileWriter(medTextLocation));
+                        bw.write("Morning - 0800##\n");
+                        bw.write("Evening - 1500##\n");
+                        bw.write("Morning##\n");
+                        if(morningList.size() == 0)
+                            bw.write("##\n");
+                        else
+                        {
+                            for(int i = 0; i < morningList.size(); i++){
+                                if(i != 0)
+                                    bw.write("\n");
+                                bw.write(morningList.get(i));
+                            }
+                            bw.write("##\n");
                         }
-                    } catch (DMPException e) {
-                        LOGGER.log(Level.SEVERE, "Unable to retrieve air quality readings for log export");
-                        aqExport = false;
-                    }
-                }
-                if(chckbxUIEvent.isSelected()){
-                    fname.append("UI");
-                    try {
-                        UIEvents uie = database.findUIEventsForPatient(patientID, start, end);
-                        if (uie != null && uie.size() > 0) {
-                            writetobook.writeEvents(uie);
-                            uiExport = true;
+                        bw.write("Evening##\n");
+                        if(eveningList.size() == 0)
+                            bw.write("##\n");
+                        else
+                        {
+                            for(int i = 0; i < eveningList.size(); i++){
+                                if(i != 0)
+                                    bw.write("\n");
+                                bw.write(eveningList.get(i));
+                            }
+                            bw.write("##\n");
                         }
-                    } catch (DMPException e) {
-                        LOGGER.log(Level.SEVERE, "Unable to retrieve User Interaction readings for log export");
-                        uiExport = false;
-                    }
-                }
-                StringBuffer msg = new StringBuffer("Export result:");               
-                if (! (spExport || aqExport || uiExport)) {
-                    msg.append("\nNo Readings selected for export");
-                } else {
-                    if (spExport) msg.append("\nSpirometer Readings exported successfully");
-                    if (aqExport) msg.append("\nAir Quality Readings exported successfully");
-                    if (uiExport) msg.append("\nUser Interaction Readings exported successfully");
-                    try {
-                        SimpleDateFormat fnameFormat = new SimpleDateFormat("MMddyy_HHmmss");
-                        fname.append("_" + fnameFormat.format(start) + "_TO_" + fnameFormat.format(end)+".xls");
-                        writetobook.exportToExcel(fname.toString());                        
-                    } catch (Throwable t) {
-                        msg = new StringBuffer("Error trying to export " + t.getMessage());                        
-                    }
-                }
-                JOptionPane.showMessageDialog(AdminConfigWindow.this, msg.toString());
-            }
-        });
-
-        javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
-        logPanelLayout.setHorizontalGroup(
-                logPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(logPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(logPanelLayout.createSequentialGroup()
-                                        .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                        .addComponent(lblType)
-                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                        .addComponent(chckbxSpirometer)
-                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                        .addComponent(chckbxAirQuality))
-                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                .addComponent(lblFrom)
-                                                                .addGap(6)
-                                                                .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)))
-                                                                .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                        .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                .addGap(20)
-                                                                                .addComponent(lblTo)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-                                                                                .addGroup(logPanelLayout.createSequentialGroup()
-                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                        .addComponent(chckbxUIEvent))))
-                                                                                        .addComponent(btnExport))
-                                                                                        .addContainerGap(401, Short.MAX_VALUE))
-                );
-        logPanelLayout.setVerticalGroup(
-                logPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(logPanelLayout.createSequentialGroup()
-                        .addGap(40)
-                        .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(lblType)
-                                .addComponent(chckbxSpirometer)
-                                .addComponent(chckbxAirQuality)
-                                .addComponent(chckbxUIEvent))
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblTo)
-                                        .addComponent(lblFrom))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addComponent(btnExport)
-                                        .addContainerGap(359, Short.MAX_VALUE))
-                );
-        logPanel.setLayout(logPanelLayout);
-
-        jTabbedPane1.addTab("Logs", logPanel);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 782, GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(19, Short.MAX_VALUE))
-                );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane1, GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-                        .addContainerGap())
-                );
-        getContentPane().setLayout(layout);
-        MedicationPanel = new javax.swing.JPanel();
-        medPannelSaveButton = new javax.swing.JButton();
-        medPannelSaveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<String> morningList = new ArrayList<String>();
-                ArrayList<String> eveningList = new ArrayList<String>();
-                ArrayList<String> withSymptomList = new ArrayList<String>();
-                String newLine;
-                if(albInhalCB.isSelected())
-                {
-                    newLine = "Albuterol (inhaler) > " + aiDescField.getText();
-                    if(aimCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(aieCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(aiwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!aimCheck.isSelected()&&!aieCheck.isSelected()&&!aiwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Albuterol (inhaler) not saved");
-                }
-                if(albNebCB.isSelected())
-                {
-                    newLine = "Albuterol (nebulizer) > " + anDescField.getText();
-                    if(anmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(aneCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(anwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!anmCheck.isSelected()&&!aneCheck.isSelected()&&!anwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Albuterol (nebulizer) not saved");
-                }
-                if(floDiskCB.isSelected())
-                {
-                    newLine = "Flovent (diskus) > " + fdDescField.getText();
-                    if(fdmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(fdeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(fdwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!fdmCheck.isSelected()&&!fdeCheck.isSelected()&&!fdwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Flovent (diskus) not saved");
-                }
-                if(floInhalCB.isSelected())
-                {
-                    newLine = "Flovent (inhaler) > " + fiDescField.getText();
-                    if(fimCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(fieCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(fiwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!fimCheck.isSelected()&&!fieCheck.isSelected()&&!fiwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Flovent (inhaler) not saved");
-                }
-                if(qvarCB.isSelected())
-                {
-                    newLine = "Qvar > " + qDescField.getText();
-                    if(qmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(qeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(qmwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!qmCheck.isSelected()&&!qeCheck.isSelected()&&!qmwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Qvar not saved");
-                }
-                if(adDiskCB.isSelected())
-                {
-                    newLine = "Advair (diskus) > " + adDescField.getText();
-                    if(admCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(adeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(adwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!admCheck.isSelected()&&!adeCheck.isSelected()&&!adwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Advair (diskus) not saved");
-                }
-                if(adInhalCB.isSelected())
-                {
-                    newLine = "Advair (inhaler) > " + adiDescField.getText();
-                    if(adimCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(adieCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(adiwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!adimCheck.isSelected()&&!adieCheck.isSelected()&&!aiwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Advair (inhaler) not saved");
-                }
-                if(budesonideCB.isSelected())
-                {
-                    newLine = "Budesonide > " + bDescField.getText();
-                    if(bmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(bmeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(bmwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!bmCheck.isSelected()&&!bmeCheck.isSelected()&&!bmwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Budesonide not saved");
-                }
-                if(pulmiTwistCB.isSelected())
-                {
-                    newLine = "Pulmicort (twisthaler) > " + ptDescField.getText();
-                    if(ptmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(pteCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(ptwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!ptmCheck.isSelected()&&!pteCheck.isSelected()&&!ptwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Pulmicort (twisthaler) not saved");
-                }
-                if(pulmiNebCB.isSelected())
-                {
-                    newLine = "Pulmicort (nebulizer) > " + pnDescField.getText();
-                    if(pnmCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(pneCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(pnwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!pnmCheck.isSelected()&&!pneCheck.isSelected()&&!pnwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Pulmicort (nebulizer) not saved");
-                }
-                if(singulairCB.isSelected())
-                {
-                    newLine = "Singulair > " + sDescField.getText();
-                    if(smCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(smeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(smwsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!smCheck.isSelected()&&!smeCheck.isSelected()&&!smwsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: Singulair not saved");
-                }
-                if(otherMedCB.isSelected())
-                {
-                    newLine = "Other: " +otherMedField.getText() +" > " + oDescField.getText();
-                    if(omCheck.isSelected()){
-                        morningList.add(newLine);
-                    }
-                    if(oeCheck.isSelected())
-                    {
-                        eveningList.add(newLine);
-                    }
-                    if(owsCheck.isSelected())
-                    {
-                        withSymptomList.add(newLine);
-                    }
-                    if(!omCheck.isSelected()&&!oeCheck.isSelected()&&!owsCheck.isSelected())
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, 
-                                "No times selected: " + otherMedField.getText() + " not saved");
-                }
-
-                writeMedFile(morningList, eveningList, withSymptomList);
-
-            }
-
-            private void writeMedFile(ArrayList<String> morningList, ArrayList<String> eveningList, ArrayList<String> wsList)
-            {
-                BufferedWriter bw;
-                try {
-                    bw = new BufferedWriter(new FileWriter(medTextLocation));
-                    bw.write("Morning - 0800##\n");
-                    bw.write("Evening - 1500##\n");
-                    bw.write("Morning##\n");
-                    if(morningList.size() == 0)
-                        bw.write("##\n");
-                    else
-                    {
-                        for(int i = 0; i < morningList.size(); i++){
-                            if(i != 0)
-                                bw.write("\n");
-                            bw.write(morningList.get(i));
+                        bw.write("Symptoms##\n");
+                        if(wsList.size() == 0)
+                            bw.write("##\n");
+                        else
+                        {
+                            for(int i = 0; i < wsList.size(); i++){
+                                if(i != 0)
+                                    bw.write("\n");
+                                bw.write(wsList.get(i));
+                            }
+                            bw.write("##\n");
                         }
-                        bw.write("##\n");
+                        bw.close();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "medicationReminder.txt write error", "File error", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    bw.write("Evening##\n");
-                    if(eveningList.size() == 0)
-                        bw.write("##\n");
-                    else
-                    {
-                        for(int i = 0; i < eveningList.size(); i++){
-                            if(i != 0)
-                                bw.write("\n");
-                            bw.write(eveningList.get(i));
-                        }
-                        bw.write("##\n");
-                    }
-                    bw.write("With Symptoms##\n");
-                    if(wsList.size() == 0)
-                        bw.write("##\n");
-                    else
-                    {
-                        for(int i = 0; i < wsList.size(); i++){
-                            if(i != 0)
-                                bw.write("\n");
-                            bw.write(wsList.get(i));
-                        }
-                        bw.write("##\n");
-                    }
-                    bw.close();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "medicationReminder.txt write error", "File error", JOptionPane.ERROR_MESSAGE);
-                    return;
+
+
+
                 }
+            });
+            medResetClearButton = new javax.swing.JButton();
+            medResetClearButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    medicineInit();
+                }
+            });
+            albInhalCB = new javax.swing.JCheckBox();
+            albNebCB = new javax.swing.JCheckBox();
+            floDiskCB = new javax.swing.JCheckBox();
+            floInhalCB = new javax.swing.JCheckBox();
+            qvarCB = new javax.swing.JCheckBox();
+            adDiskCB = new javax.swing.JCheckBox();
+            adInhalCB = new javax.swing.JCheckBox();
+            budesonideCB = new javax.swing.JCheckBox();
+            pulmiTwistCB = new javax.swing.JCheckBox();
+            otherMedCB = new javax.swing.JCheckBox();
+            singulairCB = new javax.swing.JCheckBox();
+            otherMedField = new javax.swing.JTextField();
+            pulmiNebCB = new javax.swing.JCheckBox();
 
+            albInhalCB.addItemListener(new MedicineCheckBoxListener());
+            albNebCB.addItemListener(new MedicineCheckBoxListener());
+            floDiskCB.addItemListener(new MedicineCheckBoxListener());
+            floInhalCB.addItemListener(new MedicineCheckBoxListener());
+            qvarCB.addItemListener(new MedicineCheckBoxListener());
+            adDiskCB.addItemListener(new MedicineCheckBoxListener());
+            adInhalCB.addItemListener(new MedicineCheckBoxListener());
+            budesonideCB.addItemListener(new MedicineCheckBoxListener());
+            pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
+            singulairCB.addItemListener(new MedicineCheckBoxListener());
+            otherMedCB.addItemListener(new MedicineCheckBoxListener());
+            pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
 
+            medPannelSaveButton.setText("Save");
 
-            }
-        });
-        medResetClearButton = new javax.swing.JButton();
-        medResetClearButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                medicineInit();
-            }
-        });
-        albInhalCB = new javax.swing.JCheckBox();
-        albNebCB = new javax.swing.JCheckBox();
-        floDiskCB = new javax.swing.JCheckBox();
-        floInhalCB = new javax.swing.JCheckBox();
-        qvarCB = new javax.swing.JCheckBox();
-        adDiskCB = new javax.swing.JCheckBox();
-        adInhalCB = new javax.swing.JCheckBox();
-        budesonideCB = new javax.swing.JCheckBox();
-        pulmiTwistCB = new javax.swing.JCheckBox();
-        otherMedCB = new javax.swing.JCheckBox();
-        singulairCB = new javax.swing.JCheckBox();
-        otherMedField = new javax.swing.JTextField();
-        pulmiNebCB = new javax.swing.JCheckBox();
+            medResetClearButton.setText("Reset");
 
-        albInhalCB.addItemListener(new MedicineCheckBoxListener());
-        albNebCB.addItemListener(new MedicineCheckBoxListener());
-        floDiskCB.addItemListener(new MedicineCheckBoxListener());
-        floInhalCB.addItemListener(new MedicineCheckBoxListener());
-        qvarCB.addItemListener(new MedicineCheckBoxListener());
-        adDiskCB.addItemListener(new MedicineCheckBoxListener());
-        adInhalCB.addItemListener(new MedicineCheckBoxListener());
-        budesonideCB.addItemListener(new MedicineCheckBoxListener());
-        pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
-        singulairCB.addItemListener(new MedicineCheckBoxListener());
-        otherMedCB.addItemListener(new MedicineCheckBoxListener());
-        pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
+            albInhalCB.setText("Albuteral (inhaler)");
 
-        medPannelSaveButton.setText("Save");
+            albNebCB.setText("Albuterol (nebulizer)");
 
-        medResetClearButton.setText("Reset");
+            floDiskCB.setText("Flovent (diskus)");
 
-        albInhalCB.setText("Albuteral (inhaler)");
+            floInhalCB.setText("Flovent (inhaler)");
 
-        albNebCB.setText("Albuterol (nebulizer)");
+            qvarCB.setText("Qvar");
 
-        floDiskCB.setText("Flovent (diskus)");
+            adDiskCB.setText("Advair (diskus)");
 
-        floInhalCB.setText("Flovent (inhaler)");
+            adInhalCB.setText("Advair (inhaler)");
 
-        qvarCB.setText("Qvar");
+            budesonideCB.setText("Budesonide");
 
-        adDiskCB.setText("Advair (diskus)");
+            pulmiTwistCB.setText("Pulmicort (twisthaler)");
 
-        adInhalCB.setText("Advair (inhaler)");
+            otherMedCB.setText("Other:");
 
-        budesonideCB.setText("Budesonide");
+            singulairCB.setText("Singulair");
 
-        pulmiTwistCB.setText("Pulmicort (twisthaler)");
+            otherMedField.setText("Other");
 
-        otherMedCB.setText("Other:");
+            pulmiNebCB.setText("Pulmicort (nebulizer)");
 
-        singulairCB.setText("Singulair");
+            aiwsCheck = new JCheckBox("Symptoms");
 
-        otherMedField.setText("Other");
+            aieCheck = new JCheckBox("evening");
 
-        pulmiNebCB.setText("Pulmicort (nebulizer)");
+            aimCheck = new JCheckBox("morning");
 
-        aiwsCheck = new JCheckBox("with symptoms");
+            anDescField = new JTextField();
+            anDescField.setColumns(10);
 
-        aieCheck = new JCheckBox("evening");
+            aiDescField = new JTextField();
+            aiDescField.setColumns(10);
 
-        aimCheck = new JCheckBox("morning");
+            anwsCheck = new JCheckBox("Symptoms");
 
-        anDescField = new JTextField();
-        anDescField.setColumns(10);
+            aneCheck = new JCheckBox("evening");
 
-        aiDescField = new JTextField();
-        aiDescField.setColumns(10);
+            anmCheck = new JCheckBox("morning");
 
-        anwsCheck = new JCheckBox("with symptoms");
+            fdwsCheck = new JCheckBox("Symptoms");
 
-        aneCheck = new JCheckBox("evening");
+            fdeCheck = new JCheckBox("evening");
 
-        anmCheck = new JCheckBox("morning");
+            fdmCheck = new JCheckBox("morning");
 
-        fdwsCheck = new JCheckBox("with symptoms");
+            fdDescField = new JTextField();
+            fdDescField.setColumns(10);
 
-        fdeCheck = new JCheckBox("evening");
+            fiwsCheck = new JCheckBox("Symptoms");
 
-        fdmCheck = new JCheckBox("morning");
+            fieCheck = new JCheckBox("evening");
 
-        fdDescField = new JTextField();
-        fdDescField.setColumns(10);
+            fimCheck = new JCheckBox("morning");
 
-        fiwsCheck = new JCheckBox("with symptoms");
+            qmwsCheck = new JCheckBox("Symptoms");
 
-        fieCheck = new JCheckBox("evening");
+            qeCheck = new JCheckBox("evening");
 
-        fimCheck = new JCheckBox("morning");
+            qmCheck = new JCheckBox("morning");
 
-        qmwsCheck = new JCheckBox("with symptoms");
+            adwsCheck = new JCheckBox("Symptoms");
 
-        qeCheck = new JCheckBox("evening");
+            adeCheck = new JCheckBox("evening");
 
-        qmCheck = new JCheckBox("morning");
+            admCheck = new JCheckBox("morning");
 
-        adwsCheck = new JCheckBox("with symptoms");
+            adiwsCheck = new JCheckBox("Symptoms");
 
-        adeCheck = new JCheckBox("evening");
+            adieCheck = new JCheckBox("evening");
 
-        admCheck = new JCheckBox("morning");
+            adimCheck = new JCheckBox("morning");
 
-        adiwsCheck = new JCheckBox("with symptoms");
+            bmwsCheck = new JCheckBox("Symptoms");
 
-        adieCheck = new JCheckBox("evening");
+            bmeCheck = new JCheckBox("evening");
 
-        adimCheck = new JCheckBox("morning");
+            bmCheck = new JCheckBox("morning");
 
-        bmwsCheck = new JCheckBox("with symptoms");
+            ptwsCheck = new JCheckBox("Symptoms");
 
-        bmeCheck = new JCheckBox("evening");
+            pteCheck = new JCheckBox("evening");
 
-        bmCheck = new JCheckBox("morning");
+            ptmCheck = new JCheckBox("morning");
 
-        ptwsCheck = new JCheckBox("with symptoms");
+            pnwsCheck = new JCheckBox("Symptoms");
 
-        pteCheck = new JCheckBox("evening");
-
-        ptmCheck = new JCheckBox("morning");
-
-        pnwsCheck = new JCheckBox("with symptoms");
-
-        pneCheck = new JCheckBox("evening");
-
-        pnmCheck = new JCheckBox("morning");
-
-        smwsCheck = new JCheckBox("with symptoms");
-
-        smeCheck = new JCheckBox("evening");
-
-        smCheck = new JCheckBox("morning");
-
-        owsCheck = new JCheckBox("with symptoms");
-
-        oeCheck = new JCheckBox("evening");
-
-        omCheck = new JCheckBox("morning");
-
-        fiDescField = new JTextField();
-        fiDescField.setColumns(10);
-
-        qDescField = new JTextField();
-        qDescField.setColumns(10);
-
-        adDescField = new JTextField();
-        adDescField.setColumns(10);
-
-        adiDescField = new JTextField();
-        adiDescField.setColumns(20);
-
-        bDescField = new JTextField();
-        bDescField.setColumns(20);
-
-        ptDescField = new JTextField();
-        ptDescField.setColumns(20);
-
-        pnDescField = new JTextField();
-        pnDescField.setColumns(10);
-
-        sDescField = new JTextField();
-        sDescField.setColumns(10);
-
-        oDescField = new JTextField();
-        oDescField.setColumns(20);
-
-        javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
-        MedicationPanelLayout.setHorizontalGroup(
-                MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                .addComponent(pulmiTwistCB)
-                                                                .addComponent(albNebCB)
-                                                                .addComponent(floDiskCB)
-                                                                .addComponent(floInhalCB)
-                                                                .addComponent(qvarCB)
-                                                                .addComponent(adDiskCB)
-                                                                .addComponent(budesonideCB)
-                                                                .addComponent(adInhalCB))
-                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
-                                                                        .addComponent(ptDescField)
-                                                                        .addComponent(bDescField)
-                                                                        .addComponent(adiDescField)
-                                                                        .addComponent(adDescField)
-                                                                        .addComponent(qDescField)
-                                                                        .addComponent(fiDescField)
-                                                                        .addComponent(fdDescField)
-                                                                        .addComponent(anDescField)
-                                                                        .addComponent(aiDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
-                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING, false)
-                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                        .addComponent(otherMedCB)
-                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                        .addComponent(otherMedField))
-                                                                                                        .addComponent(pulmiNebCB, Alignment.LEADING))
-                                                                                                        .addComponent(singulairCB))
-                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
-                                                                                                                .addComponent(pnDescField)
-                                                                                                                .addComponent(sDescField)
-                                                                                                                .addComponent(oDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
-                                                                                                                .addComponent(albInhalCB))
-                                                                                                                .addGap(18)
-                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
-                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                .addComponent(anmCheck)
-                                                                                                                                .addComponent(fdmCheck)
-                                                                                                                                .addComponent(fimCheck)
-                                                                                                                                .addComponent(qmCheck)
-                                                                                                                                .addComponent(admCheck)
-                                                                                                                                .addComponent(adimCheck)
-                                                                                                                                .addComponent(bmCheck)
-                                                                                                                                .addComponent(ptmCheck)
-                                                                                                                                .addComponent(pnmCheck)
-                                                                                                                                .addComponent(smCheck)
-                                                                                                                                .addComponent(omCheck))
-                                                                                                                                .addComponent(aimCheck))
-                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                        .addComponent(aneCheck)
-                                                                                                                                        .addComponent(aieCheck)
-                                                                                                                                        .addComponent(fdeCheck)
-                                                                                                                                        .addComponent(fieCheck)
-                                                                                                                                        .addComponent(qeCheck)
-                                                                                                                                        .addComponent(adeCheck)
-                                                                                                                                        .addComponent(adieCheck)
-                                                                                                                                        .addComponent(bmeCheck)
-                                                                                                                                        .addComponent(pteCheck)
-                                                                                                                                        .addComponent(pneCheck)
-                                                                                                                                        .addComponent(smeCheck)
-                                                                                                                                        .addComponent(oeCheck))
-                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                .addComponent(anwsCheck)
-                                                                                                                                                .addComponent(aiwsCheck)
-                                                                                                                                                .addComponent(fiwsCheck)
-                                                                                                                                                .addComponent(fdwsCheck)
-                                                                                                                                                .addComponent(qmwsCheck)
-                                                                                                                                                .addComponent(adwsCheck)
-                                                                                                                                                .addComponent(adiwsCheck)
-                                                                                                                                                .addComponent(bmwsCheck)
-                                                                                                                                                .addComponent(ptwsCheck)
-                                                                                                                                                .addComponent(pnwsCheck)
-                                                                                                                                                .addComponent(smwsCheck)
-                                                                                                                                                .addComponent(owsCheck)))
-                                                                                                                                                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                        .addGap(239)
-                                                                                                                                                        .addComponent(medPannelSaveButton)
-                                                                                                                                                        .addGap(18)
-                                                                                                                                                        .addComponent(medResetClearButton)))
-                                                                                                                                                        .addContainerGap(215, Short.MAX_VALUE))
-                );
-        MedicationPanelLayout.setVerticalGroup(
-                MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(MedicationPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(albInhalCB)
-                                .addComponent(aiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(aieCheck)
-                                .addComponent(aiwsCheck)
-                                .addComponent(aimCheck))
-                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(albNebCB)
-                                        .addComponent(anDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(anmCheck)
-                                        .addComponent(aneCheck)
-                                        .addComponent(anwsCheck))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                .addComponent(floDiskCB)
-                                                .addComponent(fdDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fdmCheck)
-                                                .addComponent(fdeCheck)
-                                                .addComponent(fdwsCheck))
-                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                        .addComponent(floInhalCB)
-                                                        .addComponent(fiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(fimCheck)
-                                                        .addComponent(fieCheck)
-                                                        .addComponent(fiwsCheck))
-                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                .addComponent(qvarCB)
-                                                                .addComponent(qDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(qmCheck)
-                                                                .addComponent(qeCheck)
-                                                                .addComponent(qmwsCheck))
-                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                        .addComponent(adDiskCB)
-                                                                        .addComponent(adDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(admCheck)
-                                                                        .addComponent(adeCheck)
-                                                                        .addComponent(adwsCheck))
-                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                .addComponent(adInhalCB)
-                                                                                .addComponent(adiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(adimCheck)
-                                                                                .addComponent(adieCheck)
-                                                                                .addComponent(adiwsCheck))
-                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(budesonideCB)
-                                                                                        .addComponent(bDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(bmCheck)
-                                                                                        .addComponent(bmeCheck)
-                                                                                        .addComponent(bmwsCheck))
-                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                .addComponent(pulmiTwistCB)
-                                                                                                .addComponent(ptDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addComponent(ptmCheck)
-                                                                                                .addComponent(pteCheck)
-                                                                                                .addComponent(ptwsCheck))
-                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                        .addComponent(pulmiNebCB)
-                                                                                                        .addComponent(pnDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(pnmCheck)
-                                                                                                        .addComponent(pneCheck)
-                                                                                                        .addComponent(pnwsCheck))
-                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                .addComponent(singulairCB)
-                                                                                                                .addComponent(sDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addComponent(smCheck)
-                                                                                                                .addComponent(smeCheck)
-                                                                                                                .addComponent(smwsCheck))
-                                                                                                                .addGap(11)
-                                                                                                                .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                        .addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(otherMedCB)
-                                                                                                                        .addComponent(oDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(omCheck)
-                                                                                                                        .addComponent(oeCheck)
-                                                                                                                        .addComponent(owsCheck))
-                                                                                                                        .addGap(72)
-                                                                                                                        .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                .addComponent(medPannelSaveButton)
-                                                                                                                                .addComponent(medResetClearButton))
-                                                                                                                                .addContainerGap())
-                );
-
-        MedicationPanel.setLayout(MedicationPanelLayout);
-
-        jTabbedPane1.addTab("Medication", MedicationPanel);
-
-        medicineInit();
-
-        pack();
+            pneCheck = new JCheckBox("evening");
+
+            pnmCheck = new JCheckBox("morning");
+
+            smwsCheck = new JCheckBox("Symptoms");
+
+            smeCheck = new JCheckBox("evening");
+
+            smCheck = new JCheckBox("morning");
+
+            owsCheck = new JCheckBox("Symptoms");
+
+            oeCheck = new JCheckBox("evening");
+
+            omCheck = new JCheckBox("morning");
+
+            fiDescField = new JTextField();
+            fiDescField.setColumns(10);
+
+            qDescField = new JTextField();
+            qDescField.setColumns(10);
+
+            adDescField = new JTextField();
+            adDescField.setColumns(10);
+
+            adiDescField = new JTextField();
+            adiDescField.setColumns(20);
+
+            bDescField = new JTextField();
+            bDescField.setColumns(20);
+
+            ptDescField = new JTextField();
+            ptDescField.setColumns(20);
+
+            pnDescField = new JTextField();
+            pnDescField.setColumns(10);
+
+            sDescField = new JTextField();
+            sDescField.setColumns(10);
+
+            oDescField = new JTextField();
+            oDescField.setColumns(20);
+
+            javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
+            MedicationPanelLayout.setHorizontalGroup(
+                    MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                    .addComponent(pulmiTwistCB)
+                                                                    .addComponent(albNebCB)
+                                                                    .addComponent(floDiskCB)
+                                                                    .addComponent(floInhalCB)
+                                                                    .addComponent(qvarCB)
+                                                                    .addComponent(adDiskCB)
+                                                                    .addComponent(budesonideCB)
+                                                                    .addComponent(adInhalCB))
+                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                            .addComponent(ptDescField)
+                                                                            .addComponent(bDescField)
+                                                                            .addComponent(adiDescField)
+                                                                            .addComponent(adDescField)
+                                                                            .addComponent(qDescField)
+                                                                            .addComponent(fiDescField)
+                                                                            .addComponent(fdDescField)
+                                                                            .addComponent(anDescField)
+                                                                            .addComponent(aiDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                                                                            .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                                                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                            .addComponent(otherMedCB)
+                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                            .addComponent(otherMedField))
+                                                                                                            .addComponent(pulmiNebCB, Alignment.LEADING))
+                                                                                                            .addComponent(singulairCB))
+                                                                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING, false)
+                                                                                                                    .addComponent(pnDescField)
+                                                                                                                    .addComponent(sDescField)
+                                                                                                                    .addComponent(oDescField, GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)))
+                                                                                                                    .addComponent(albInhalCB))
+                                                                                                                    .addGap(18)
+                                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                    .addComponent(anmCheck)
+                                                                                                                                    .addComponent(fdmCheck)
+                                                                                                                                    .addComponent(fimCheck)
+                                                                                                                                    .addComponent(qmCheck)
+                                                                                                                                    .addComponent(admCheck)
+                                                                                                                                    .addComponent(adimCheck)
+                                                                                                                                    .addComponent(bmCheck)
+                                                                                                                                    .addComponent(ptmCheck)
+                                                                                                                                    .addComponent(pnmCheck)
+                                                                                                                                    .addComponent(smCheck)
+                                                                                                                                    .addComponent(omCheck))
+                                                                                                                                    .addComponent(aimCheck))
+                                                                                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                            .addComponent(aneCheck)
+                                                                                                                                            .addComponent(aieCheck)
+                                                                                                                                            .addComponent(fdeCheck)
+                                                                                                                                            .addComponent(fieCheck)
+                                                                                                                                            .addComponent(qeCheck)
+                                                                                                                                            .addComponent(adeCheck)
+                                                                                                                                            .addComponent(adieCheck)
+                                                                                                                                            .addComponent(bmeCheck)
+                                                                                                                                            .addComponent(pteCheck)
+                                                                                                                                            .addComponent(pneCheck)
+                                                                                                                                            .addComponent(smeCheck)
+                                                                                                                                            .addComponent(oeCheck))
+                                                                                                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                    .addComponent(anwsCheck)
+                                                                                                                                                    .addComponent(aiwsCheck)
+                                                                                                                                                    .addComponent(fiwsCheck)
+                                                                                                                                                    .addComponent(fdwsCheck)
+                                                                                                                                                    .addComponent(qmwsCheck)
+                                                                                                                                                    .addComponent(adwsCheck)
+                                                                                                                                                    .addComponent(adiwsCheck)
+                                                                                                                                                    .addComponent(bmwsCheck)
+                                                                                                                                                    .addComponent(ptwsCheck)
+                                                                                                                                                    .addComponent(pnwsCheck)
+                                                                                                                                                    .addComponent(smwsCheck)
+                                                                                                                                                    .addComponent(owsCheck)))
+                                                                                                                                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                            .addGap(239)
+                                                                                                                                                            .addComponent(medPannelSaveButton)
+                                                                                                                                                            .addGap(18)
+                                                                                                                                                            .addComponent(medResetClearButton)))
+                                                                                                                                                            .addContainerGap(215, Short.MAX_VALUE))
+                    );
+            MedicationPanelLayout.setVerticalGroup(
+                    MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                    .addComponent(albInhalCB)
+                                    .addComponent(aiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(aieCheck)
+                                    .addComponent(aiwsCheck)
+                                    .addComponent(aimCheck))
+                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                            .addComponent(albNebCB)
+                                            .addComponent(anDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(anmCheck)
+                                            .addComponent(aneCheck)
+                                            .addComponent(anwsCheck))
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                    .addComponent(floDiskCB)
+                                                    .addComponent(fdDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(fdmCheck)
+                                                    .addComponent(fdeCheck)
+                                                    .addComponent(fdwsCheck))
+                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                            .addComponent(floInhalCB)
+                                                            .addComponent(fiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(fimCheck)
+                                                            .addComponent(fieCheck)
+                                                            .addComponent(fiwsCheck))
+                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                    .addComponent(qvarCB)
+                                                                    .addComponent(qDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                    .addComponent(qmCheck)
+                                                                    .addComponent(qeCheck)
+                                                                    .addComponent(qmwsCheck))
+                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                            .addComponent(adDiskCB)
+                                                                            .addComponent(adDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                            .addComponent(admCheck)
+                                                                            .addComponent(adeCheck)
+                                                                            .addComponent(adwsCheck))
+                                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                    .addComponent(adInhalCB)
+                                                                                    .addComponent(adiDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                    .addComponent(adimCheck)
+                                                                                    .addComponent(adieCheck)
+                                                                                    .addComponent(adiwsCheck))
+                                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                            .addComponent(budesonideCB)
+                                                                                            .addComponent(bDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                            .addComponent(bmCheck)
+                                                                                            .addComponent(bmeCheck)
+                                                                                            .addComponent(bmwsCheck))
+                                                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                    .addComponent(pulmiTwistCB)
+                                                                                                    .addComponent(ptDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                    .addComponent(ptmCheck)
+                                                                                                    .addComponent(pteCheck)
+                                                                                                    .addComponent(ptwsCheck))
+                                                                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                            .addComponent(pulmiNebCB)
+                                                                                                            .addComponent(pnDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                            .addComponent(pnmCheck)
+                                                                                                            .addComponent(pneCheck)
+                                                                                                            .addComponent(pnwsCheck))
+                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                    .addComponent(singulairCB)
+                                                                                                                    .addComponent(sDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                    .addComponent(smCheck)
+                                                                                                                    .addComponent(smeCheck)
+                                                                                                                    .addComponent(smwsCheck))
+                                                                                                                    .addGap(11)
+                                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                            .addComponent(otherMedField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                            .addComponent(otherMedCB)
+                                                                                                                            .addComponent(oDescField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                                                                            .addComponent(omCheck)
+                                                                                                                            .addComponent(oeCheck)
+                                                                                                                            .addComponent(owsCheck))
+                                                                                                                            .addGap(72)
+                                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                    .addComponent(medPannelSaveButton)
+                                                                                                                                    .addComponent(medResetClearButton))
+                                                                                                                                    .addContainerGap())
+                    );
+
+            MedicationPanel.setLayout(MedicationPanelLayout);
+
+            jTabbedPane1.addTab("Medication", MedicationPanel);
+
+            medicineInit();
+
+            pack();
+        } catch (Throwable tall) {
+            tall.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error initializing Admin application in initComponents, exiting");
+            LOGGER.throwing("AdminConfigWindow", "initComponents", tall);
+            System.out.println("Error initializing Admin application in initComponents, exiting");
+            System.exit(0);
+        }
     }// </editor-fold>                        
-    public void readingInit()
+    public boolean readingInit()
     {
-        JSONParser parser = new JSONParser();
-        JSONObject jo;
         try {
-            jo = (JSONObject)parser.parse(new FileReader(configLocation));
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-            return;
-        } catch (org.json.simple.parser.ParseException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-            return;
+            JSONParser parser = new JSONParser();
+            JSONObject jo;
+            try {
+                jo = (JSONObject)parser.parse(new FileReader(configLocation));
+            } catch (FileNotFoundException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+                return false;
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+                return false;
+            } catch (org.json.simple.parser.ParseException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+                return false;
+            }
+            JSONObject configObject = (JSONObject)jo.get("config");
+            JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+            JSONArray readingArray = (JSONArray)alertObject.get("spiroReadingTime");
+
+            SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
+            SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm");
+
+            Date reading;
+            int amOrPM = -1;
+            Date noon;
+            try {
+                noon = readingTimeFormat.parse("1200");
+            } catch (ParseException e) {
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+                return false;
+            }
+            try {
+                reading = readingTimeFormat.parse((String)readingArray.get(0));
+                read1Field.setText(displayFormat.format(reading));
+                amOrPM = reading.compareTo(noon);
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+                amOrPM = -2;
+            }
+
+            if(amOrPM < 0)
+                read1TimeCB.setSelectedIndex(0);
+            else
+                read1TimeCB.setSelectedIndex(1);
+
+            amOrPM = -1;
+
+            try {
+                reading = readingTimeFormat.parse((String)readingArray.get(1));
+                read2Field.setText(displayFormat.format(reading));
+                amOrPM = reading.compareTo(noon);
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+            }
+            if(amOrPM < 0)
+                read2TimeCB.setSelectedIndex(0);
+            else
+                read2TimeCB.setSelectedIndex(1);
+            amOrPM = -1;
+
+            try {
+                reading = readingTimeFormat.parse((String)readingArray.get(2));
+                read3Field.setText(displayFormat.format(reading));
+                amOrPM = reading.compareTo(noon);
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "readingInit", e);
+            }
+            if(amOrPM < 0)
+                read3TimeCB.setSelectedIndex(0);
+            else
+                read3TimeCB.setSelectedIndex(1);
+
+            return true;
+        } catch (Throwable t) {
+            LOGGER.throwing("AdminConfigWindow", "readingInit", t);
+            return false;
         }
-        JSONObject configObject = (JSONObject)jo.get("config");
-        JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
-        JSONArray readingArray = (JSONArray)alertObject.get("spiroReadingTime");
-
-        SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
-        SimpleDateFormat displayFormat = new SimpleDateFormat("hh:mm");
-
-        Date reading;
-        int amOrPM = -1;
-        Date noon;
-        try {
-            noon = readingTimeFormat.parse("1200");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            reading = readingTimeFormat.parse((String)readingArray.get(0));
-            read1Field.setText(displayFormat.format(reading));
-            amOrPM = reading.compareTo(noon);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 1 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
-            amOrPM = -2;
-        }
-
-        if(amOrPM < 0)
-            read1TimeCB.setSelectedIndex(0);
-        else
-            read1TimeCB.setSelectedIndex(1);
-
-        amOrPM = -1;
-
-        try {
-            reading = readingTimeFormat.parse((String)readingArray.get(1));
-            read2Field.setText(displayFormat.format(reading));
-            amOrPM = reading.compareTo(noon);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 2 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-        if(amOrPM < 0)
-            read2TimeCB.setSelectedIndex(0);
-        else
-            read2TimeCB.setSelectedIndex(1);
-        amOrPM = -1;
-
-        try {
-            reading = readingTimeFormat.parse((String)readingArray.get(2));
-            read3Field.setText(displayFormat.format(reading));
-            amOrPM = reading.compareTo(noon);
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Reading 3 data corrupted", "Data corruption", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-        if(amOrPM < 0)
-            read3TimeCB.setSelectedIndex(0);
-        else
-            read3TimeCB.setSelectedIndex(1);
     }
 
     public void readingsHandled()
@@ -1551,56 +1569,56 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         }
     }
 
-    public void configInit()
+    public boolean configInit()
     {
-
-        JSONParser parser = new JSONParser();
-        JSONObject jo;
         try {
-            jo = (JSONObject)parser.parse(new FileReader(configLocation));
-        } catch (FileNotFoundException e1) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
-            e1.printStackTrace();
-            return;
-        } catch (IOException e1) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
-            e1.printStackTrace();
-            return;
-        } catch (org.json.simple.parser.ParseException e1) {
-            JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
-            e1.printStackTrace();
-            return;
-        }
-        JSONObject configObject = (JSONObject)jo.get("config");
-        JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
+            JSONParser parser = new JSONParser();
+            JSONObject jo;
+            try {
+                jo = (JSONObject)parser.parse(new FileReader(configLocation));
+            } catch (FileNotFoundException e1) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file not found", "File not found", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "configInit", e1);
+                return false;
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file error", "File error", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "configInit", e1);
+                return false;
+            } catch (org.json.simple.parser.ParseException e1) {
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file corrupted", "File error", JOptionPane.ERROR_MESSAGE);
+                LOGGER.throwing("AdminConfigWindow", "configInit", e1);
+                return false;
+            }
+            JSONObject configObject = (JSONObject)jo.get("config");
+            JSONObject alertObject = (JSONObject)configObject.get("alertInfo");
 
 
-        JSONObject animationObject = (JSONObject)configObject.get("animation");
-        JSONObject minObject = (JSONObject)configObject.get("minValues");
-        JSONObject maxObject = (JSONObject)configObject.get("maxValues");
-        Object patientIDObject = configObject.get("patientID");
-        patientID = patientIDObject.toString();
-        patientIDDisplay.setText(patientIDObject.toString());  // not assuming Long anymore
-        /*
+            JSONObject animationObject = (JSONObject)configObject.get("animation");
+            JSONObject minObject = (JSONObject)configObject.get("minValues");
+            JSONObject maxObject = (JSONObject)configObject.get("maxValues");
+            Object patientIDObject = configObject.get("patientID");
+            patientID = patientIDObject.toString();
+            patientIDDisplay.setText(patientIDObject.toString());  // not assuming Long anymore
+            /*
         if(patientIDObject instanceof Long)
             patientIDDisplay.setText(((Long)patientIDObject).toString());
         else
             JOptionPane.showMessageDialog(this, "PatientID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-         */
-        SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/yy");
-        Date startDate = new Date();
-        Object startDateObject = animationObject.get("startDateMilliSec");
-        //Date d = null;
-        // XXX KG Check that start date is in the future 
-        if(startDateObject instanceof Long) // && (d = new Date((Long)startDateObject)).after(new Date(System.currentTimeMillis() - 72L * 60L * 60L * 1000L)))
-            startDate = new Date((Long)startDateObject);
-        else
-            JOptionPane.showMessageDialog(this, "Start date value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+             */
+            SimpleDateFormat startAndEndFormat = new SimpleDateFormat("MM/dd/yy");
+            Date startDate = new Date();
+            Object startDateObject = animationObject.get("startDateMilliSec");
+            //Date d = null;
+            // XXX KG Check that start date is in the future 
+            if(startDateObject instanceof Long) // && (d = new Date((Long)startDateObject)).after(new Date(System.currentTimeMillis() - 72L * 60L * 60L * 1000L)))
+                startDate = new Date((Long)startDateObject);
+            else
+                JOptionPane.showMessageDialog(this, "Start date value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
 
-        // XXX KG Do we need air quality config in here, other than the checkbox to enable dynamic alerts? NO WE DO NOT
-        // but we do need the dynamicObject for the checkbox
-        JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
-        /*
+            // XXX KG Do we need air quality config in here, other than the checkbox to enable dynamic alerts? NO WE DO NOT
+            // but we do need the dynamicObject for the checkbox
+            JSONObject dynamicObject = (JSONObject)configObject.get("airQualityConfig");
+            /*
         Double mean = 0.0;
         Double deviation = 0.0;
         Object meanObject = dynamicObject.get("mean");
@@ -1631,62 +1649,62 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         if(red == -1.0)
             red = mean + 1.5*deviation;
-         */
+             */
 
-        Object soundObject = alertObject.get("sound");
-        if(soundObject instanceof Boolean)
-            soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
-        else
-            JOptionPane.showMessageDialog(this, "Sound enabled value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        soundCB.setText("Play sound with alarm");
-        long days = 28;
-        Object daysObject = animationObject.get("totalDays");
-        if(daysObject instanceof Long)
-            days = ((Long)animationObject.get("totalDays")).longValue();
-        else
-            JOptionPane.showMessageDialog(this, "Study length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        long weeks = days/7;
-        long alertMinutes = 3;
-        Object alertLengthObject = alertObject.get("alertLength");
-        if(alertLengthObject instanceof Long)
-            alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
-        else
-            JOptionPane.showMessageDialog(this, "Alert length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        alarmLengthField.setText("" + alertMinutes);
+            Object soundObject = alertObject.get("sound");
+            if(soundObject instanceof Boolean)
+                soundCB.setSelected(((Boolean)alertObject.get("sound")).booleanValue());
+            else
+                JOptionPane.showMessageDialog(this, "Sound enabled value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            soundCB.setText("Play sound with alarm");
+            long days = 28;
+            Object daysObject = animationObject.get("totalDays");
+            if(daysObject instanceof Long)
+                days = ((Long)animationObject.get("totalDays")).longValue();
+            else
+                JOptionPane.showMessageDialog(this, "Study length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            long weeks = days/7;
+            long alertMinutes = 3;
+            Object alertLengthObject = alertObject.get("alertLength");
+            if(alertLengthObject instanceof Long)
+                alertMinutes = ((Long)alertObject.get("alertLength")).longValue()/60000;
+            else
+                JOptionPane.showMessageDialog(this, "Alert length value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            alarmLengthField.setText("" + alertMinutes);
 
-        alarmSoundPromptLabel.setText("How long alarm sounds: ");
+            alarmSoundPromptLabel.setText("How long alarm sounds: ");
 
-        alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        alarmTimeUnitsLabel.setText("minutes");
+            alarmLengthField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+            alarmTimeUnitsLabel.setText("minutes");
 
-        startDateLabel.setText("Trial Start Date:");
+            startDateLabel.setText("Trial Start Date:");
 
-        spiroRangeLabel.setText("Spirometer range: ");
-        Object minPefValueObject = minObject.get("PEFValue");
-        if(minPefValueObject instanceof Long)
-            pefLowerRangeField.setText("" + minObject.get("PEFValue"));
-        else
-            JOptionPane.showMessageDialog(this, "Minimum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            spiroRangeLabel.setText("Spirometer range: ");
+            Object minPefValueObject = minObject.get("PEFValue");
+            if(minPefValueObject instanceof Long)
+                pefLowerRangeField.setText("" + minObject.get("PEFValue"));
+            else
+                JOptionPane.showMessageDialog(this, "Minimum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
 
-        Object maxPefValueObject = maxObject.get("PEFValue");
-        if(maxPefValueObject instanceof Long)
-            pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
-        else
-            JOptionPane.showMessageDialog(this, "Maximum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        lowerTextLabel.setText("Lower");
+            Object maxPefValueObject = maxObject.get("PEFValue");
+            if(maxPefValueObject instanceof Long)
+                pefUpperRangeField.setText("" + maxObject.get("PEFValue"));
+            else
+                JOptionPane.showMessageDialog(this, "Maximum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            lowerTextLabel.setText("Lower");
 
-        upperRangeLabel.setText("Upper");
-        startDateField.setText(startAndEndFormat.format(startDate));
+            upperRangeLabel.setText("Upper");
+            startDateField.setText(startAndEndFormat.format(startDate));
 
-        saveConfigButton.setText("Save");
+            saveConfigButton.setText("Save");
 
-        resetConfigButton.setText("Reset");
+            resetConfigButton.setText("Reset");
 
-        Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
-        boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
-        chckbxEnableDynamicAlerts.setSelected(enabled);
+            Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
+            boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
+            chckbxEnableDynamicAlerts.setSelected(enabled);
 
-        /*
+            /*
         lblMean.setEnabled(chckbxEnableDynamicAlerts.isSelected());
         meanParticleDisplay.setText(""+ mean);
         meanParticleDisplay.setEnabled(chckbxEnableDynamicAlerts.isSelected());
@@ -1713,41 +1731,47 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         redZoneField.setEnabled(chckbxEnableDynamicAlerts.isSelected());
         redZoneField.setColumns(10);
         redZoneField.setText(""+red);
-         */
+             */
 
-        pefRangeLabel = new JLabel("PEF");
+            pefRangeLabel = new JLabel("PEF");
 
-        fevRangeLabel = new JLabel("Fev1");
+            fevRangeLabel = new JLabel("Fev1");
 
-        lblLower = new JLabel("Lower");
+            lblLower = new JLabel("Lower");
 
-        fevLowerRangeField = new JTextField();
-        fevLowerRangeField.setColumns(10);
-        Object minFEVValueObject = minObject.get("FEVValue");
-        if(minFEVValueObject instanceof Double)
-            fevLowerRangeField.setText(((Double)minObject.get("FEVValue")).toString());
-        else
-            JOptionPane.showMessageDialog(this, "Miniimum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            fevLowerRangeField = new JTextField();
+            fevLowerRangeField.setColumns(10);
+            Object minFEVValueObject = minObject.get("FEVValue");
+            if(minFEVValueObject instanceof Double)
+                fevLowerRangeField.setText(((Double)minObject.get("FEVValue")).toString());
+            else
+                JOptionPane.showMessageDialog(this, "Miniimum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
 
-        fevUpperLabel = new JLabel("Upper");
+            fevUpperLabel = new JLabel("Upper");
 
-        fevUpperRangeField = new JTextField();
-        fevUpperRangeField.setColumns(10);
-        Object maxFEVValueObject = maxObject.get("FEVValue");
-        if(maxFEVValueObject instanceof Double)
-            fevUpperRangeField.setText(((Double)maxObject.get("FEVValue")).toString());
-        else
-            JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-        Object deviceIDObject = configObject.get("deviceID");
-        // 
-        /*
+            fevUpperRangeField = new JTextField();
+            fevUpperRangeField.setColumns(10);
+            Object maxFEVValueObject = maxObject.get("FEVValue");
+            if(maxFEVValueObject instanceof Double)
+                fevUpperRangeField.setText(((Double)maxObject.get("FEVValue")).toString());
+            else
+                JOptionPane.showMessageDialog(this, "Maximum FEV value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            Object deviceIDObject = configObject.get("deviceID");
+            // 
+            /*
         if(deviceIDObject instanceof Long)
             deviceIDField.setText("" +(Long)configObject.get("deviceID"));
         else
             JOptionPane.showMessageDialog(this, "deviceID value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
-         */
-        lblSpirometerDeviceId.setText("Spirometer ID: " + deviceIDObject.toString());  // XXX KG changed from above
-        trialLengthField.setText("" + weeks);
+             */
+            lblSpirometerDeviceId.setText("Spirometer ID: " + deviceIDObject.toString());  // XXX KG changed from above
+            trialLengthField.setText("" + weeks);
+
+            return true;
+        } catch (Throwable tall) {
+            LOGGER.throwing("AdminConfigWindow", "configInit", tall);
+            return false;
+        }
     }
     /**
      * @param args the command line arguments
@@ -1791,7 +1815,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 eveningLine = br.readLine();
                 if(eveningLine == null)
                     EoF = true;
-                else if(eveningLine.compareToIgnoreCase("with symptoms##")==0)
+                else if(eveningLine.compareToIgnoreCase("Symptoms##")==0)
                     reachedNextLine = true;
                 else
                     eveningList.add(eveningLine);
