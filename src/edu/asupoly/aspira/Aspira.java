@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.FileHandler;
@@ -246,7 +247,8 @@ public final class Aspira {
             if (logFileName == null || logFileName.trim().equals("")) {
                 logFileName = "aspiradefault";
             }
-            logFileName = "logs" + File.separator + logFileName + "." + new Date(__startTime) + ".log";
+            SimpleDateFormat format = new SimpleDateFormat("E_MM_dd_yy__HH_mm_ss");
+            logFileName = "logs" + File.separator + logFileName + "." + format.format(new Date(__startTime)) + ".log";
             FileHandler fhandler = new FileHandler(logFileName);
             SimpleFormatter sformatter = new SimpleFormatter();
             fhandler.setFormatter(sformatter);
