@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -60,11 +62,12 @@ import javax.swing.JButton;
  */
 @SuppressWarnings("serial")
 public class AdminConfigWindow extends javax.swing.JFrame {
-
-    private Properties _configProperties;
+    private static final Logger LOGGER = Aspira.getAspiraLogger();
+    //private Properties _configProperties;
     private URL pushURL;
-    private static String PROPERTY_FILENAME = "properties/config.properties";
-    private static final String PUSH_URL_PROPERTY_KEY = "push.url";
+    private static String CONFIG_PROPERTY_FILENAME = "properties/config.json";
+    private static String MEDICATION_REMINDERS_FILENAME = "properties/medicationReminder.txt";
+    //private static final String PUSH_URL_PROPERTY_KEY = "push.url";
     private static String patientID;
     private String configLocation;
     private String medTextLocation;
@@ -103,20 +106,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         return false;
     }
     private void initComponents() {
-
-        _configProperties = new Properties();
-        try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
-            _configProperties.load(isr);
-            // let's create a DAO based on a known property
-        } catch (Throwable t1) {
-            //t1.printStackTrace();
-            //TODO
-        }
         // all impls need to figure out if they need to push
-        setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
-        configLocation = Aspira.getAspiraHome() + _configProperties.getProperty("config.fileLocation");
-        medTextLocation = Aspira.getAspiraHome() + _configProperties.getProperty("medication.fileLocation");
+        //setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
+        configLocation = Aspira.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
+        medTextLocation = Aspira.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
@@ -544,95 +537,120 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
         JLabel lblTo = new JLabel("To:");
 
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        Date now = new Date();
+        Date twoWeeksAgo = new Date(System.currentTimeMillis() - 168L*60L*60L*1000L*2L); 
+        
         dateFromField = new JTextField();
-        dateFromField.setText("dd/MM/yy");
+        dateFromField.setText(sdf.format(twoWeeksAgo));
         dateFromField.setColumns(10);
 
         dateToField = new JTextField();
-        dateToField.setText("dd/MM/yy");
+        dateToField.setText(sdf.format(now));
         dateToField.setColumns(10);
 
         JLabel lblFrom = new JLabel("From:");
 
         timeFromField = new JTextField();
-        timeFromField.setText("HH:mm:ss");
+        timeFromField.setText("00:00:00");
         timeFromField.setColumns(10);
 
         timeToField = new JTextField();
-        timeToField.setText("HH:mm:ss");
+        timeToField.setText("00:00:00");
         timeToField.setColumns(10);
 
         btnExport = new JButton("Export");
         btnExport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                StringBuffer fname = new StringBuffer("export_");
 
-                String fname = "";
+                // These flags determine which we export
+                boolean spExport = false;
+                boolean aqExport = false;
+                boolean uiExport = false;
+
                 AspiraWorkbook writetobook = new AspiraWorkbook("Exported logs");
-                IAspiraDAO database;
+                IAspiraDAO database = null;
                 try {
                     database = AspiraDAO.getDAO();
                 } catch (DMPException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Unable to get persistence store handle for Export");
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Unable to connect to database, cannot export");
                     return;
                 }
 
-                SimpleDateFormat lookupFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                Date start;
+                SimpleDateFormat lookupFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+                Date start = new Date();
+                Date end = new Date();
                 try {
                     start = lookupFormat.parse(dateFromField.getText() + " " + timeFromField.getText());
-                } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    return;
-                }
-                Date end;
-                try {
                     end = lookupFormat.parse(dateToField.getText() + " " + timeToField.getText());
+                    if (start.compareTo(end) > 0) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Start date after end date, cannot export");
+                        return;
+                    }
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Invalid date time format for log export");
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Invalid dates entered, cannot export");
                     return;
                 }
 
                 if(chckbxSpirometer.isSelected())
                 {
-                    fname.concat("Spiro");
+                    fname.append("SR");
                     try {
                         SpirometerReadings sr = database.findSpirometerReadingsForPatient(patientID, start, end);
-                        writetobook.appendFromSpirometerReadings(sr.iterator());
+                        if (sr != null && sr.size() > 0) {
+                            writetobook.appendFromSpirometerReadings(sr.iterator());
+                            spExport = true;
+                        }
                     } catch (DMPException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Unable to retrieve spirometer readings for log export");
+                        spExport = false;
                     }
                 }
                 if(chckbxAirQuality.isSelected()){
-                    fname.concat("AirQ");
+                    fname.append("AQ");
                     try {
                         AirQualityReadings aqr = database.findAirQualityReadingsForPatient(patientID, start, end);
-                        writetobook.appendFromAirQualityReadings(aqr.iterator());
+                        if (aqr != null && aqr.size() > 0) {
+                            writetobook.appendFromAirQualityReadings(aqr.iterator());
+                            aqExport = true;
+                        }
                     } catch (DMPException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Unable to retrieve air quality readings for log export");
+                        aqExport = false;
                     }
                 }
                 if(chckbxUIEvent.isSelected()){
-                    fname.concat("UIEvents");
+                    fname.append("UI");
                     try {
                         UIEvents uie = database.findUIEventsForPatient(patientID, start, end);
-                        writetobook.writeEvents(uie);
+                        if (uie != null && uie.size() > 0) {
+                            writetobook.writeEvents(uie);
+                            uiExport = true;
+                        }
                     } catch (DMPException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Unable to retrieve User Interaction readings for log export");
+                        uiExport = false;
                     }
                 }
-                if(fname != "")
-                {
-                    SimpleDateFormat fnameFormat = new SimpleDateFormat("MM-dd-yy");
-                    fname.concat("_" + fnameFormat.format(start) + "_" + fnameFormat.format(end)+".xls");
-                    writetobook.exportToExcel(fname);
+                StringBuffer msg = new StringBuffer("Export result:");               
+                if (! (spExport || aqExport || uiExport)) {
+                    msg.append("\nNo Readings selected for export");
+                } else {
+                    if (spExport) msg.append("\nSpirometer Readings exported successfully");
+                    if (aqExport) msg.append("\nAir Quality Readings exported successfully");
+                    if (uiExport) msg.append("\nUser Interaction Readings exported successfully");
+                    try {
+                        SimpleDateFormat fnameFormat = new SimpleDateFormat("MMddyy_HHmmss");
+                        fname.append("_" + fnameFormat.format(start) + "_TO_" + fnameFormat.format(end)+".xls");
+                        writetobook.exportToExcel(fname.toString());                        
+                    } catch (Throwable t) {
+                        msg = new StringBuffer("Error trying to export " + t.getMessage());                        
+                    }
                 }
-
+                JOptionPane.showMessageDialog(AdminConfigWindow.this, msg.toString());
             }
         });
 
@@ -653,17 +671,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                         .addGroup(logPanelLayout.createSequentialGroup()
                                                                 .addComponent(lblFrom)
                                                                 .addGap(6)
-                                                                .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(dateFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                                                .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
+                                                                .addComponent(timeFromField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)))
                                                                 .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
                                                                         .addGroup(logPanelLayout.createSequentialGroup()
                                                                                 .addGap(20)
                                                                                 .addComponent(lblTo)
                                                                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(dateToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
                                                                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+                                                                                .addComponent(timeToField, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
                                                                                 .addGroup(logPanelLayout.createSequentialGroup()
                                                                                         .addPreferredGap(ComponentPlacement.RELATED)
                                                                                         .addComponent(chckbxUIEvent))))
@@ -1561,7 +1579,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         JSONObject minObject = (JSONObject)configObject.get("minValues");
         JSONObject maxObject = (JSONObject)configObject.get("maxValues");
         Object patientIDObject = configObject.get("patientID");
-        patientID = ((Long)patientIDObject).toString();
+        patientID = patientIDObject.toString();
         patientIDDisplay.setText(patientIDObject.toString());  // not assuming Long anymore
         /*
         if(patientIDObject instanceof Long)
@@ -1648,7 +1666,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         if(minPefValueObject instanceof Long)
             pefLowerRangeField.setText("" + minObject.get("PEFValue"));
         else
-            JOptionPane.showMessageDialog(this, "Mininmum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Minimum PEF value in config file is invalid", "Bad config value", JOptionPane.ERROR_MESSAGE);
 
         Object maxPefValueObject = maxObject.get("PEFValue");
         if(maxPefValueObject instanceof Long)

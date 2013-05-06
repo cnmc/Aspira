@@ -469,7 +469,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         
         return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientBetween"),      
-                null, null);
+                start, end);
     }
     
     @Override
