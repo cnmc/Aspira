@@ -8,11 +8,13 @@ import jssc.SerialPortTimeoutException;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.AspiraDAO;
+import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.ParticleReading;
@@ -28,10 +30,12 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
     private static final int TIMEOUT   = 500; // 1/2 sec timeout on serial port read
     
     private static final Logger LOGGER = Aspira.getAspiraLogger();
-    private static int __eventCount = 0;
     
-    private SerialPort __serialPort;
-    private Properties __props;
+    private SerialPort    __serialPort;
+    private Properties    __props;
+    private AirQualityReadings __aqReadings = new AirQualityReadings();
+    private String        __deviceId;
+    private String        __patientId;
     
     public AirQualitySerialMonitorTask() {
         super();
@@ -39,8 +43,33 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
     
     @Override
     public void run() {
-        System.out.println("IN AQSMTask, processed serial events since last call: " + __eventCount);
-        __eventCount = 0;
+        if (_isInitialized) {
+            LOGGER.log(Level.INFO, "MonitorService: executing AQMonitor Serial Port Reading Task");
+
+            synchronized(__aqReadings) {
+                if (__aqReadings.size() > 0) {
+                    IAspiraDAO dao;
+                    try {
+                        dao = AspiraDAO.getDAO();
+                        if (dao.importAirQualityReadings(__aqReadings, true)) { // return a boolean if we need it
+                            ParticleReading pr = __aqReadings.getLastReading();
+                            _lastRead = pr.getDateTime();  // for completeness even though we don't use it
+                            
+                            // Log how many we imported here
+                            LOGGER.log(Level.INFO, "Imported AQ Readings " + __aqReadings.size());
+                            // clear out __aqReadings by creating a new one
+                            __aqReadings = new AirQualityReadings();
+                        } else { // If the DAO didn't work we keep the air quality readings for the next try
+                            LOGGER.log(Level.INFO, "Failed to Import AQ Readings in DAO");
+                        }                     
+                    } catch (DMPException e) {
+                        LOGGER.log(Level.WARNING, "DMPException writing serial ParticleReadings to database");
+                    }                    
+                }
+            }
+        } else {
+            LOGGER.log(Level.INFO, "MonitorService: trying to execute uninitialized AQMonitor Serial Port Reading Task");
+        }
     }
     
     @Override
@@ -65,6 +94,8 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
         String patientId    = Aspira.getPatientId();
         String serialPort   = p.getProperty("aqmSerialPort");
         if (deviceId != null && patientId != null && serialPort != null) {
+            __deviceId  = deviceId;
+            __patientId = patientId;
             __props.setProperty("deviceid", deviceId);
             __props.setProperty("patientid", patientId);
             __props.setProperty("aqmSerialPort", serialPort);
@@ -73,7 +104,7 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
                 // this section initializes the serialPort
                 __serialPort = new SerialPort(serialPort);
                 rval = __serialPort.openPort();
-                if (rval) {
+                if (rval) {                   
                     __serialPort.setParams(BAUD_RATE, DATA_BITS, STOP_BITS, PARITY);
                     __serialPort.setEventsMask(MASK);
                     // we purge initially to try and clear buffers
@@ -109,40 +140,59 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
     }
     
     // nested class
-    class AspiraDylosSerialEventListener implements SerialPortEventListener {        
+    class AspiraDylosSerialEventListener implements SerialPortEventListener {
+        private StringBuffer __serialBuffer = new StringBuffer();
         @Override
         public void serialEvent(SerialPortEvent event) {
             if(event.isRXCHAR()){//If data is available
                 if(event.getEventValue() > 0){//Check bytes count in the input buffer
-                    //Read data, if 10 bytes available 
+                    //Read data 
                     try {
                         byte buffer[] = __serialPort.readBytes(event.getEventValue(), TIMEOUT);
-                        System.out.print("SERIAL EVENT LISTENER #" + ++__eventCount + ":\t" + new String(buffer));
+                        
+                        // Need to convert what is in our buffer to a ParticleReading
+                        // each reading format is <small>,<large>CRLF  (CRLF = \r\n)
+                        // 4 bytes = 1 int in Java, char is 2 bytes, so we'll scan 2 bytes at a time
+
+                        // This is not the most efficient conversion but it is the simplest
+                        // We convert the byte buffer to a StringBuffer
+                        String toProcess = null;
+                        __serialBuffer.append(new String(buffer));
+                        int lastIndexOf = __serialBuffer.lastIndexOf("\r\n");
+                        if (lastIndexOf != -1) {
+                            toProcess = __serialBuffer.substring(0, lastIndexOf);
+                            __serialBuffer.delete(0, lastIndexOf+1);
+                        }
+                        // then we process the StringBuffer up to the last CRLF
+                        if (toProcess != null) {
+                            StringTokenizer st  = new StringTokenizer(toProcess, "\r\n");
+                            StringTokenizer st2 = null;
+                            synchronized (__aqReadings) {
+                                while (st.hasMoreTokens()) {
+                                    st2 = new StringTokenizer(st.nextToken(), ",");
+                                    if (st2.countTokens() == 2) { // should always be the case
+                                        ParticleReading pr = new ParticleReading(__deviceId, __patientId, new Date(), 
+                                                Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
+                                        __aqReadings.addReading(pr);
+                                        LOGGER.log(Level.INFO, "Importing ParticleReading " + pr);                      
+                                    } else {
+                                        LOGGER.log(Level.WARNING, "Unable to process serial port event in AQSM Timer Task"); 
+                                    }
+                                }
+                            } //synch on __aqReadings
+                        }
                     }
                     catch (SerialPortException ex) {
-                        ex.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Unable to read from Serial Port " + ex.getMessage());
                     }
                     catch (SerialPortTimeoutException spte) {
-                        spte.printStackTrace();
+                        LOGGER.log(Level.SEVERE, "Timeout reading from Serial Port " + spte.getMessage());
                     }
-                }
-            }
-            else if(event.isCTS()){//If CTS line has changed state
-                if(event.getEventValue() == 1){//If line is ON
-                    System.out.println("CTS - ON");
-                }
-                else {
-                    System.out.println("CTS - OFF");
-                }
-            }
-            else if(event.isDSR()){///If DSR line has changed state
-                if(event.getEventValue() == 1){//If line is ON
-                    System.out.println("DSR - ON");
-                }
-                else {
-                    System.out.println("DSR - OFF");
+                    catch (Throwable t) {
+                        LOGGER.log(Level.SEVERE, "Unknown error processing events from Serial Port " + t.getMessage());
+                    }
                 }
             }
         }
-    }
+    }  // end nested class
 }

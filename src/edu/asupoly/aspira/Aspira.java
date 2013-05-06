@@ -251,6 +251,12 @@ public final class Aspira {
             SimpleFormatter sformatter = new SimpleFormatter();
             fhandler.setFormatter(sformatter);
             ASPIRA_LOGGER.addHandler(fhandler);
+            
+            // Tell the User
+            System.out.println("Aspira system starting with values:");
+            System.out.println("\tASPIRA_HOME =\t" + ASPIRA_HOME);
+            System.out.println("\tLog file = \t" + logFileName);
+            System.out.println("\tLog Level =\t" + ASPIRA_LOGLEVEL.toString());
         } catch (Throwable t1) {            
             System.out.println("Unable to initialize Aspira Monitoring Service, exiting");
             ASPIRA_LOGGER.log(Level.SEVERE, "Unable to initialize Aspira Monitoring Service, exiting");

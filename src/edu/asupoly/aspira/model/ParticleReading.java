@@ -47,6 +47,10 @@ public class ParticleReading implements java.io.Serializable, Comparable<Particl
         this.groupId = groupid;
     }
     
+    public ParticleReading(String deviceId, String patientId, Date d, int s, int l)  {
+        this(deviceId, patientId, d, s, l, DEFAULT_NO_GROUP_ASSIGNED);
+    }
+    
     @Override
     public int compareTo(ParticleReading other) {
         return dateTime.compareTo(other.dateTime);
