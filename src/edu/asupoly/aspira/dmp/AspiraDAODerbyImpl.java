@@ -1107,7 +1107,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement();
                 if (key.startsWith("sql") || key.startsWith("derby")) {
-                    LOGGER.log(Level.INFO, CLASS, "found property with key, value\t" + key + ", " + p.getProperty(key));                    
+                    LOGGER.log(Level.FINEST, CLASS, "found property with key, value\t" + key + ", " + p.getProperty(key));                    
                     __derbyProperties.setProperty(key, p.getProperty(key));
                 }
             }
@@ -1116,6 +1116,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             // test the connection
             if (!__testConnection(jdbcURL, p.getProperty("sql.checkConnectionQuery"))) {
                 throw new DMPException("Unable to connect to database");
+            } else {
+                LOGGER.log(Level.FINEST, "Testing DAO Connection -- OK");
             }
             __jdbcURL = jdbcURL;
             __derbyProperties.setProperty("jdbc.driver", jdbcDriver);

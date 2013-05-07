@@ -247,7 +247,7 @@ public final class Aspira {
             if (logFileName == null || logFileName.trim().equals("")) {
                 logFileName = "aspiradefault";
             }
-            SimpleDateFormat format = new SimpleDateFormat("E_MM_dd_yy__HH_mm_ss");
+            SimpleDateFormat format = new SimpleDateFormat("E_MMddyy_HHmmss");
             logFileName = ASPIRA_HOME + "logs" + File.separator + logFileName + "." + format.format(new Date(__startTime)) + ".log";
             FileHandler fhandler = new FileHandler(logFileName);
             SimpleFormatter sformatter = new SimpleFormatter();

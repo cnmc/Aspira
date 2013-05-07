@@ -137,6 +137,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     JSONParser parser = new JSONParser();
+                    FileWriter fw = null;
                     JSONObject jo;
                     JSONObject configObject;
                     JSONObject alertObject;
@@ -206,8 +207,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(AdminConfigWindow.this, "Range values must be integers", "Bad input", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
-
+                        
                         dynamicObject.put("airQualityMonitoringEnabled", chckbxEnableDynamicAlerts.isSelected());
                         /*
                     double curRed;
@@ -232,22 +232,28 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
                         jo.put("config", configObject);
 
-                        FileWriter fw = new FileWriter(configLocation);
+                        fw = new FileWriter(configLocation);
                         fw.write(jo.toJSONString());
                         fw.flush();
                         fw.close();
 
                         readingsHandled();
-
-
-
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Wrote new configuration to " + configLocation, 
+                                "Saved config json", JOptionPane.INFORMATION_MESSAGE);
                     } catch (FileNotFoundException e1) {
                         JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file missing", "Missing config", JOptionPane.ERROR_MESSAGE);
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file IO error", "Input Output Error", JOptionPane.ERROR_MESSAGE);
                     } catch (org.json.simple.parser.ParseException e1) {
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Missing config", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Config file invalid", "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                    } finally {
+                        try {
+                            if (fw != null) fw.close();
+                        } catch (Throwable t) {
+                            LOGGER.log(Level.FINE, "Unable to close config json file after save");
+                        }
                     }
                 }
             });
@@ -957,17 +963,22 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                     "No times selected: " + otherMedField.getText() + " not saved");
                     }
 
-                    writeMedFile(morningList, eveningList, withSymptomList);
-
+                    if (writeMedFile(morningList, eveningList, withSymptomList)) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Saved medical reminders to " + medTextLocation, 
+                                "File saved", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, medTextLocation + " write error", 
+                                "File error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
 
-                private void writeMedFile(ArrayList<String> morningList, ArrayList<String> eveningList, ArrayList<String> wsList)
+                private boolean writeMedFile(ArrayList<String> morningList, ArrayList<String> eveningList, ArrayList<String> wsList)
                 {
-                    BufferedWriter bw;
+                    BufferedWriter bw = null;
                     try {
                         bw = new BufferedWriter(new FileWriter(medTextLocation));
                         bw.write("Morning - 0800##\n");
-                        bw.write("Evening - 1500##\n");
+                        bw.write("Evening - 1700##\n");
                         bw.write("Morning##\n");
                         if(morningList.size() == 0)
                             bw.write("##\n");
@@ -1004,14 +1015,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             }
                             bw.write("##\n");
                         }
-                        bw.close();
+                        return true;
                     } catch (IOException e) {
-                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "medicationReminder.txt write error", "File error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                        LOGGER.log(Level.SEVERE, "Unable to write medical reminders file at " + medTextLocation);
+                        return false;
+                    } finally {
+                        try {
+                            if (bw != null) bw.close();
+                        } catch (IOException ie) {
+                            LOGGER.log(Level.WARNING, "Unable to properly close " + medTextLocation);
+                        }
                     }
-
-
-
                 }
             });
             medResetClearButton = new javax.swing.JButton();
@@ -1484,18 +1498,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         JSONObject alertObject = null;
         final long THIRTY_MINUTES_IN_MILLISECONDS = 1800000;
         try {
-            jo = (JSONObject)parser.parse(new FileReader("Config/config.json"));
+            jo = (JSONObject)parser.parse(new FileReader(configLocation));
             configObject = (JSONObject)jo.get("config");
             alertObject = (JSONObject)configObject.get("alertInfo");
         } catch (FileNotFoundException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to find file " + configLocation);
         } catch (IOException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to open file " + configLocation);
         } catch (org.json.simple.parser.ParseException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Unable to parse file " + configLocation);
         }
         Date reading1=null;
         Date reading2=null;
@@ -1526,7 +1537,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             validInputs = false;
         }
 
-
         if(validInputs)
         {
             boolean readingsInOrder = true;
@@ -1545,7 +1555,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 readingsInOrder = false;
             }
 
-
             if(jo != null && readingsInOrder){
                 JSONArray readings = new JSONArray();
                 SimpleDateFormat readingFormat = new SimpleDateFormat("HHmm");
@@ -1557,13 +1566,14 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 jo.put("config", configObject);
 
                 try {
-                    FileWriter jsonWriter = new FileWriter("Config/config.json");
+                    FileWriter jsonWriter = new FileWriter(configLocation);
                     jsonWriter.write(jo.toJSONString());
                     jsonWriter.flush();
                     jsonWriter.close();
                 } catch (IOException e1) {
-                    //TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Unable to write config json file out in readingsHandled");
+                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Unable to write json file " + configLocation,
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
