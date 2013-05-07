@@ -98,7 +98,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                 __numReadings = new Integer(pollingTime);
                 __yellowZoneThreshold = new Integer(yellowThreshold);
                 __redZoneThreshold = new Integer(redThreshold);                
-                __airQualityStatusFile = statusfile;
+                __airQualityStatusFile = Aspira.getAspiraHome() + statusfile;
             } else {
                 rval = false;
             }

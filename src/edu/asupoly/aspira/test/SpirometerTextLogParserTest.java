@@ -1,5 +1,6 @@
 package edu.asupoly.aspira.test;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.dmp.devicelogs.DeviceLogException;
 import edu.asupoly.aspira.dmp.devicelogs.SpirometerTextLogParser;
 import edu.asupoly.aspira.model.SpirometerReading;
@@ -40,7 +41,7 @@ public class SpirometerTextLogParserTest {
         __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-29T14:20:30-00:00", "-1", false, "452.2", "111.1", "0", "-1", __F));
         p.put("deviceid", "device_one");
         p.put("patientid", "p_one");
-        p.put("sptxtlogfile", "devicelogsamples/samplespirometerlog.txt"); 
+        p.put("sptxtlogfile", Aspira.getAspiraHome() + "devicelogsamples/samplespirometerlog.txt"); 
     } catch (DeviceLogException ex) {
             Logger.getLogger(SpirometerTextLogParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }

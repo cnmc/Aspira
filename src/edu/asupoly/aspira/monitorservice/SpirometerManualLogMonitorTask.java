@@ -69,7 +69,7 @@ public class SpirometerManualLogMonitorTask extends AspiraTimerTask {
         if (deviceId != null && patientId != null && logfile != null) {
             __props.setProperty("deviceid", deviceId);
             __props.setProperty("patientid", patientId);
-            __props.setProperty("sptxtlogfile", logfile);
+            __props.setProperty("sptxtlogfile", Aspira.getAspiraHome() + logfile);
         } else {
             rval = false;
         }
