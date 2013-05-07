@@ -35,7 +35,7 @@ public class UIEventLogParser implements UIEventsFactory  {
         StringTokenizer st;
 
         try {
-            String filename = props.getProperty("uilogfile");           
+            String filename = props.getProperty("uilogfile"); 
             br = new BufferedReader(new FileReader(filename));
             String finput = br.readLine();
             while (finput != null && !finput.isEmpty())

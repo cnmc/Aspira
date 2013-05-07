@@ -72,9 +72,8 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
         String logfile   = p.getProperty("uilogfile");
         if (patientId != null && logfile != null) {
             __props.setProperty("patientid", patientId);
-            __props.setProperty("uilogfile", logfile);
+            __props.setProperty("uilogfile", Aspira.getAspiraHome() + logfile);
         } else {
-            System.out.println("HERE");
             rval = false;
         }
         _isInitialized = rval;

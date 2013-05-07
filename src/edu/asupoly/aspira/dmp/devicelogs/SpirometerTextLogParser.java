@@ -45,7 +45,7 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
         BufferedReader br = null;
         StringTokenizer st;
         try {
-            String filename = Aspira.getAspiraHome() + props.getProperty("sptxtlogfile");
+            String filename = props.getProperty("sptxtlogfile");
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String dateLine = null;

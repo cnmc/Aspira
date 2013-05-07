@@ -50,7 +50,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                 AirQualityReadings  aqr = dao.findAirQualityReadingsForPatientTail(__patientId, __numReadings);
 
                 ParticleReading _pr = aqr.getLastReading();               
-                if(_pr.getDateTime().equals(__lastRead)) {
+                if(_pr == null || _pr.getDateTime().equals(__lastRead)) {
                     // If no new reading that means something is wrong with DylosLogger
                     __connected = false;
                     __zone = Zones.UNKNOWN;
