@@ -534,8 +534,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     );
             configPanel.setLayout(configPanelLayout);
 
-            jTabbedPane1.addTab("App Config", configPanel);
-
             JLabel lblType = new JLabel("Type:");
 
             chckbxSpirometer = new JCheckBox("Spirometer");
@@ -719,8 +717,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                             .addContainerGap(359, Short.MAX_VALUE))
                     );
             logPanel.setLayout(logPanelLayout);
-
-            jTabbedPane1.addTab("Logs", logPanel);
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
             layout.setHorizontalGroup(
@@ -1390,8 +1386,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
             MedicationPanel.setLayout(MedicationPanelLayout);
 
+            jTabbedPane1.addTab("App Config", configPanel);
             jTabbedPane1.addTab("Medication", MedicationPanel);
-
+            jTabbedPane1.addTab("Logs", logPanel);
+            
             medicineInit();
 
             pack();
