@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,8 +70,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private static String patientID;
     private String configLocation;
     private String medTextLocation;
-
-
+    
     /**
      * Creates new form NewJFrame
      */
@@ -80,6 +81,19 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         initComponents();
     }
 
+    public class AdminConfigWindowCloseListener extends WindowAdapter {
+        public void windowClosing(WindowEvent e) {
+            if (JOptionPane.showConfirmDialog(AdminConfigWindow.this,
+                    "Are you sure you want to exit? Any unsaved changes will be lost!",
+                    "Confirm Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+                    != JOptionPane.YES_OPTION) {
+                return;
+            }
+            AdminConfigWindow.thisFrame.dispose();
+        }
+    }
+        
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,19 +118,19 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     }
     private void initComponents() {
         try {
+            this.addWindowListener(new AdminConfigWindowCloseListener());
+            
             // all impls need to figure out if they need to push
             //setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
             configLocation = Aspira.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
             medTextLocation = Aspira.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
-
-            System.out.println("Config file " + configLocation);
-            System.out.println("Med Text file " + medTextLocation);
             
             jTabbedPane1 = new javax.swing.JTabbedPane();
             jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
             logPanel = new javax.swing.JPanel();
 
-            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            // we handle close with a WindowListener
+            setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
             setName("Administrator Config Window"); // NOI18N
 
             configPanel = new javax.swing.JPanel();
@@ -136,6 +150,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    
                     JSONParser parser = new JSONParser();
                     FileWriter fw = null;
                     JSONObject jo;
@@ -1044,19 +1059,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             otherMedField = new javax.swing.JTextField();
             pulmiNebCB = new javax.swing.JCheckBox();
 
-            albInhalCB.addItemListener(new MedicineCheckBoxListener());
-            albNebCB.addItemListener(new MedicineCheckBoxListener());
-            floDiskCB.addItemListener(new MedicineCheckBoxListener());
-            floInhalCB.addItemListener(new MedicineCheckBoxListener());
-            qvarCB.addItemListener(new MedicineCheckBoxListener());
-            adDiskCB.addItemListener(new MedicineCheckBoxListener());
-            adInhalCB.addItemListener(new MedicineCheckBoxListener());
-            budesonideCB.addItemListener(new MedicineCheckBoxListener());
-            pulmiTwistCB.addItemListener(new MedicineCheckBoxListener());
-            singulairCB.addItemListener(new MedicineCheckBoxListener());
-            otherMedCB.addItemListener(new MedicineCheckBoxListener());
-            pulmiNebCB.addItemListener(new MedicineCheckBoxListener());
-
             medPannelSaveButton.setText("Save");
 
             medResetClearButton.setText("Reset");
@@ -1392,6 +1394,21 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             
             medicineInit();
 
+            // do these after to avoid initial true setting on medical reminders with no state change #67
+            MedicineCheckBoxListener mcbl = new MedicineCheckBoxListener();
+            albInhalCB.addItemListener(mcbl);
+            albNebCB.addItemListener(mcbl);
+            floDiskCB.addItemListener(mcbl);
+            floInhalCB.addItemListener(mcbl);
+            qvarCB.addItemListener(mcbl);
+            adDiskCB.addItemListener(mcbl);
+            adInhalCB.addItemListener(mcbl);
+            budesonideCB.addItemListener(mcbl);
+            pulmiTwistCB.addItemListener(mcbl);
+            singulairCB.addItemListener(mcbl);
+            otherMedCB.addItemListener(mcbl);
+            pulmiNebCB.addItemListener(mcbl);
+            
             pack();
         } catch (Throwable tall) {
             tall.printStackTrace();
@@ -2418,59 +2435,79 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
-            smwsCheck.setEnabled(singulairCB.isSelected());
-            pnwsCheck.setEnabled(pulmiNebCB.isSelected());
-            ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
-            bmwsCheck.setEnabled(budesonideCB.isSelected());
-            adiwsCheck.setEnabled(adInhalCB.isSelected());
-            adwsCheck.setEnabled(adDiskCB.isSelected());
-            qmwsCheck.setEnabled(qvarCB.isSelected());
-            fiwsCheck.setEnabled(floInhalCB.isSelected());
-            fdwsCheck.setEnabled(floDiskCB.isSelected());
-            anwsCheck.setEnabled(albNebCB.isSelected());
-            aiwsCheck.setEnabled(albInhalCB.isSelected());
-
-            smeCheck.setEnabled(singulairCB.isSelected());
-            pneCheck.setEnabled(pulmiNebCB.isSelected());
-            pteCheck.setEnabled(pulmiTwistCB.isSelected());
-            bmeCheck.setEnabled(budesonideCB.isSelected());
-            adieCheck.setEnabled(adInhalCB.isSelected());
-            adeCheck.setEnabled(adDiskCB.isSelected());
-            qeCheck.setEnabled(qvarCB.isSelected());
-            fieCheck.setEnabled(floInhalCB.isSelected());
-            fdeCheck.setEnabled(floDiskCB.isSelected());
-            aneCheck.setEnabled(albNebCB.isSelected());
-            aieCheck.setEnabled(albInhalCB.isSelected());
-
-            smCheck.setEnabled(singulairCB.isSelected());
-            pnmCheck.setEnabled(pulmiNebCB.isSelected());
-            ptmCheck.setEnabled(pulmiTwistCB.isSelected());
-            bmCheck.setEnabled(budesonideCB.isSelected());
-            adimCheck.setEnabled(adInhalCB.isSelected());
-            admCheck.setEnabled(adDiskCB.isSelected());
-            qmCheck.setEnabled(qvarCB.isSelected());
-            fimCheck.setEnabled(floInhalCB.isSelected());
-            fdmCheck.setEnabled(floDiskCB.isSelected());
-            anmCheck.setEnabled(albNebCB.isSelected());
-            aimCheck.setEnabled(albInhalCB.isSelected());
-
-            sDescField.setEnabled(singulairCB.isSelected());
-            pnDescField.setEnabled(pulmiNebCB.isSelected());
-            ptDescField.setEnabled(pulmiTwistCB.isSelected());
-            bDescField.setEnabled(budesonideCB.isSelected());
-            adiDescField.setEnabled(adInhalCB.isSelected());
-            adDescField.setEnabled(adDiskCB.isSelected());
-            qDescField.setEnabled(qvarCB.isSelected());
-            fiDescField.setEnabled(floInhalCB.isSelected());
-            fdDescField.setEnabled(floDiskCB.isSelected());
-            anDescField.setEnabled(albNebCB.isSelected());
-            aiDescField.setEnabled(albInhalCB.isSelected());
-
-            omCheck.setEnabled(otherMedCB.isSelected());
-            oeCheck.setEnabled(otherMedCB.isSelected());
-            owsCheck.setEnabled(otherMedCB.isSelected());
-            oDescField.setEnabled(otherMedCB.isSelected());
-            otherMedField.setEnabled(otherMedCB.isSelected());
+            if (e.getItem() == singulairCB) {
+                smwsCheck.setEnabled(singulairCB.isSelected());
+                smeCheck.setEnabled(singulairCB.isSelected());
+                smCheck.setEnabled(singulairCB.isSelected());
+                sDescField.setEnabled(singulairCB.isSelected());
+            }
+            else if (e.getItem() == pulmiNebCB) {
+                pnwsCheck.setEnabled(pulmiNebCB.isSelected());
+                pneCheck.setEnabled(pulmiNebCB.isSelected());
+                pnmCheck.setEnabled(pulmiNebCB.isSelected());
+                pnDescField.setEnabled(pulmiNebCB.isSelected());
+            }
+            else if (e.getItem() == pulmiTwistCB) {
+                ptwsCheck.setEnabled(pulmiTwistCB.isSelected());
+                pteCheck.setEnabled(pulmiTwistCB.isSelected());
+                ptmCheck.setEnabled(pulmiTwistCB.isSelected());
+                ptDescField.setEnabled(pulmiTwistCB.isSelected());
+            }
+            else if (e.getItem() == budesonideCB) {
+                bmwsCheck.setEnabled(budesonideCB.isSelected());
+                bmeCheck.setEnabled(budesonideCB.isSelected());
+                bmCheck.setEnabled(budesonideCB.isSelected());
+                bDescField.setEnabled(budesonideCB.isSelected());
+            }
+            else if (e.getItem() == adInhalCB) {
+                adiwsCheck.setEnabled(adInhalCB.isSelected());
+                adieCheck.setEnabled(adInhalCB.isSelected());
+                adimCheck.setEnabled(adInhalCB.isSelected());
+                adiDescField.setEnabled(adInhalCB.isSelected());
+            }
+            else if (e.getItem() == adDiskCB) {
+                adwsCheck.setEnabled(adDiskCB.isSelected());
+                adeCheck.setEnabled(adDiskCB.isSelected());
+                admCheck.setEnabled(adDiskCB.isSelected());
+                adDescField.setEnabled(adDiskCB.isSelected());                                        
+            }
+            else if (e.getItem() == qvarCB) {
+                qmwsCheck.setEnabled(qvarCB.isSelected());
+                qeCheck.setEnabled(qvarCB.isSelected());
+                qmCheck.setEnabled(qvarCB.isSelected());
+                qDescField.setEnabled(qvarCB.isSelected());
+            }
+            else if (e.getItem() == floInhalCB) {
+                fiwsCheck.setEnabled(floInhalCB.isSelected());
+                fieCheck.setEnabled(floInhalCB.isSelected());
+                fimCheck.setEnabled(floInhalCB.isSelected());
+                fiDescField.setEnabled(floInhalCB.isSelected());               
+            }
+            else if (e.getItem() == floDiskCB) {
+                fdwsCheck.setEnabled(floDiskCB.isSelected());
+                fdeCheck.setEnabled(floDiskCB.isSelected());
+                fdmCheck.setEnabled(floDiskCB.isSelected());
+                fdDescField.setEnabled(floDiskCB.isSelected());
+            }
+            else if (e.getItem() == albNebCB) {
+                anwsCheck.setEnabled(albNebCB.isSelected());
+                aneCheck.setEnabled(albNebCB.isSelected());
+                anmCheck.setEnabled(albNebCB.isSelected());
+                anDescField.setEnabled(albNebCB.isSelected());
+            }
+            else if (e.getItem() == albInhalCB) {
+                aiwsCheck.setEnabled(albInhalCB.isSelected());
+                aieCheck.setEnabled(albInhalCB.isSelected());
+                aimCheck.setEnabled(albInhalCB.isSelected());
+                aiDescField.setEnabled(albInhalCB.isSelected());
+            }
+            else if (e.getItem() == otherMedCB) {
+                omCheck.setEnabled(otherMedCB.isSelected());
+                oeCheck.setEnabled(otherMedCB.isSelected());
+                owsCheck.setEnabled(otherMedCB.isSelected());
+                oDescField.setEnabled(otherMedCB.isSelected());
+                otherMedField.setEnabled(otherMedCB.isSelected());
+            }
         }
     }
 }
