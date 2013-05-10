@@ -71,12 +71,26 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private String configLocation;
     private String medTextLocation;
     
+    // KG for med reminder times
+    Date morningTime = null;
+    Date eveningTime = null;
+    
     /**
      * Creates new form NewJFrame
      */
 
     public AdminConfigWindow(String title){
         super(title);
+        
+        SimpleDateFormat sdfm = new SimpleDateFormat("HHmm");
+        try {
+            morningTime = sdfm.parse("0800");
+            eveningTime = sdfm.parse("1900");
+        } catch (ParseException e) {
+            if (morningTime == null) morningTime = new Date();
+            if (eveningTime == null) eveningTime = new Date();
+        }
+        
         setAlwaysOnTop(true);
         initComponents();
     }
@@ -749,6 +763,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             .addContainerGap())
                     );
             getContentPane().setLayout(layout);
+            
+            // KG Med Panel
             MedicationPanel = new javax.swing.JPanel();
             medPannelSaveButton = new javax.swing.JButton();
             medPannelSaveButton.addActionListener(new ActionListener() {
@@ -757,6 +773,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     ArrayList<String> eveningList = new ArrayList<String>();
                     ArrayList<String> withSymptomList = new ArrayList<String>();
                     String newLine;
+                    
+                    SimpleDateFormat sdfm = new SimpleDateFormat("HHmm");
+                    try {
+                        morningTime = sdfm.parse(morningField.getText());
+                        eveningTime = sdfm.parse(eveningField.getText());
+                    } catch (ParseException e1) {
+                        JOptionPane.showMessageDialog(AdminConfigWindow.this, "Morning or evening time is invalid",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
                     if(albInhalCB.isSelected())
                     {
                         newLine = "Albuterol (inhaler) > " + aiDescField.getText();
@@ -988,8 +1015,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     BufferedWriter bw = null;
                     try {
                         bw = new BufferedWriter(new FileWriter(medTextLocation));
-                        bw.write("Morning - 0800##\n");
-                        bw.write("Evening - 1700##\n");
+                       
+                        SimpleDateFormat sdfm = new SimpleDateFormat("HHmm");
+                        try {
+                            morningTime = sdfm.parse(morningField.getText());
+                            eveningTime = sdfm.parse(eveningField.getText());
+                        } catch (Exception e1) {
+                            LOGGER.log(Level.WARNING, "Unable to parse entered medication reminder times, no change");
+                        }
+                        
+                        bw.write("Morning - " + sdfm.format(morningTime) + "##\n");
+                        bw.write("Evening - " + sdfm.format(eveningTime) + "##\n");
                         bw.write("Morning##\n");
                         if(morningList.size() == 0)
                             bw.write("##\n");
@@ -1197,6 +1233,17 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             oDescField = new JTextField();
             oDescField.setColumns(20);
 
+            // KG Added to set morning and evening times
+            morningField = new JTextField();
+            morningField.setColumns(10);
+            eveningField = new JTextField();
+            eveningField.setColumns(10);
+            SimpleDateFormat readingTimeFormat = new SimpleDateFormat("HHmm");
+            morningField.setText(readingTimeFormat.format(morningTime));
+            eveningField.setText(readingTimeFormat.format(eveningTime));
+            JLabel mtLabel = new JLabel("Morning time: ");
+            JLabel etLabel = new JLabel("Evening time: ");
+            
             javax.swing.GroupLayout MedicationPanelLayout = new javax.swing.GroupLayout(MedicationPanel);
             MedicationPanelLayout.setHorizontalGroup(
                     MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
@@ -1283,14 +1330,23 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                                     .addComponent(ptwsCheck)
                                                                                                                                                     .addComponent(pnwsCheck)
                                                                                                                                                     .addComponent(smwsCheck)
-                                                                                                                                                    .addComponent(owsCheck)))
-                                                                                                                                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
-                                                                                                                                                            .addGap(239)
-                                                                                                                                                            .addComponent(medPannelSaveButton)
-                                                                                                                                                            .addGap(18)
-                                                                                                                                                            .addComponent(medResetClearButton)))
-                                                                                                                                                            .addContainerGap(215, Short.MAX_VALUE))
-                    );
+                                                                                                                                                    .addComponent(owsCheck)))                                                                                                                                                  
+                                                                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING))
+                                                                                                                                                        .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                .addComponent(mtLabel)
+                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                .addComponent(morningField)
+                                                                                                                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                                                                .addComponent(etLabel)
+                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                .addComponent(eveningField))                                                                                                                                                        
+                                                                                                                                                    .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.LEADING))                                                                                    
+                                                                                                                                                                    .addGroup(MedicationPanelLayout.createSequentialGroup()
+                                                                                                                                                                            .addGap(239)
+                                                                                                                                                                            .addComponent(medPannelSaveButton)
+                                                                                                                                                                            .addGap(18)
+                                                                                                                                                                            .addComponent(medResetClearButton)))
+                                                                                                                                                                            .addContainerGap(215, Short.MAX_VALUE)));
             MedicationPanelLayout.setVerticalGroup(
                     MedicationPanelLayout.createParallelGroup(Alignment.LEADING)
                     .addGroup(MedicationPanelLayout.createSequentialGroup()
@@ -1379,7 +1435,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                             .addComponent(omCheck)
                                                                                                                             .addComponent(oeCheck)
                                                                                                                             .addComponent(owsCheck))
-                                                                                                                            .addGap(72)
+                                                                                                                            .addGap(33)
+                                                                                                                            .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)                                                                                                                                           
+                                                                                                                                    .addComponent(mtLabel)                                                                                                                                    
+                                                                                                                                    .addComponent(morningField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)                                                                                                             
+                                                                                                                                    .addComponent(etLabel)
+                                                                                                                                    .addComponent(eveningField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                    .addGap(33)
                                                                                                                             .addGroup(MedicationPanelLayout.createParallelGroup(Alignment.BASELINE)
                                                                                                                                     .addComponent(medPannelSaveButton)
                                                                                                                                     .addComponent(medResetClearButton))
@@ -1803,7 +1865,6 @@ public class AdminConfigWindow extends javax.swing.JFrame {
      */
     public void medicineInit()
     {
-
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(medTextLocation));
@@ -1820,9 +1881,31 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         ArrayList<String> withSymptomsList = new ArrayList<String>();
         Boolean reachedNextLine = false;
         Boolean EoF = false;
+        SimpleDateFormat dfformatter = new SimpleDateFormat("HHmm");
         try {
+            // first line is Morning reminder time
             morningLine = br.readLine();
-            morningLine = br.readLine();
+            // The length is 16 because string has to be "Morning - HHmm##"
+            if (morningLine != null && morningLine.length() == 16) {
+                morningLine = morningLine.substring(10,  14);
+                try {
+                    morningTime = dfformatter.parse(morningLine);
+                } catch (ParseException pe) {
+                    LOGGER.log(Level.WARNING, "Invalid morning time format read from file, using default");
+                }
+            }
+            // second line is Evening reminder time
+            eveningLine = br.readLine();
+            // The length is 16 because string has to be "Evening - HHmm##"
+            if (eveningLine != null && eveningLine.length() == 16) {
+                eveningLine = eveningLine.substring(10,  14);
+                try {
+                    eveningTime = dfformatter.parse(eveningLine);
+                } catch (ParseException pe) {
+                    LOGGER.log(Level.WARNING, "Invalid evening time format read from file, using default");
+                }
+            }
+            
             morningLine = br.readLine();
             while(!reachedNextLine&&!EoF)
             {
@@ -2420,8 +2503,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JComboBox read1TimeCB;
     private JComboBox read2TimeCB;
     private JComboBox read3TimeCB;
-    private double yellow;
-    private double red;
+    //private double yellow;
+    //private double red;
     private JLabel patientIDDisplay;
     private JTextField dateFromField;
     private JTextField dateToField;
@@ -2432,6 +2515,9 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JCheckBox chckbxAirQuality;
     private JCheckBox chckbxUIEvent;
 
+    // KG added these components for morning and evening time settings on med tab
+    private JTextField morningField;
+    private JTextField eveningField;
 
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
