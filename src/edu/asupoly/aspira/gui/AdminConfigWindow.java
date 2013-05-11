@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -150,17 +151,28 @@ public class AdminConfigWindow extends javax.swing.JFrame {
         return false;
     }
     
-    private SortedMap<String, JTextField> readProps(String filename) {
-        SortedMap<String, JTextField> rval = new TreeMap<String, JTextField>();
+    // KG our own local class for managing property data
+    private class PropertyFileData {
+        String propertyName;
+        JTextField propertyValue;
+        PropertyFileData(String key, JTextField value) {
+            propertyName  = key;
+            propertyValue = value;
+        }        
+    }
+    private List<PropertyFileData> readProps(String filename) {
+        List<PropertyFileData> rval = new ArrayList<PropertyFileData>();
         
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             String line = br.readLine();
             while (line != null) {
-                String[] prop = line.split("=");
-                if (prop != null && prop.length == 2) {
-                    rval.put(prop[0], new JTextField(prop[1]));
+                if (!line.trim().startsWith("#")) {
+                    String[] prop = line.split("=");
+                    if (prop != null && prop.length == 2) {
+                        rval.add(new PropertyFileData(prop[0], new JTextField(prop[1])));
+                    }
                 }
                 line = br.readLine();
             }
@@ -180,14 +192,13 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private javax.swing.JPanel __createPropsPanel(String filename) {
         final String fname = filename;
         javax.swing.JPanel propsPanel = new javax.swing.JPanel();
-        SortedMap<String, JTextField> props = readProps(filename);
-        propsPanel.setLayout(new GridLayout(0, 2));
-        final Set<Entry<String, JTextField>> ps = props.entrySet();
-        Iterator<Entry<String,JTextField>> iter = ps.iterator();
+        final List<PropertyFileData> props = readProps(filename);
+        propsPanel.setLayout(new GridLayout(0, 2));        
+        Iterator<PropertyFileData> iter = props.iterator();
         while (iter.hasNext()) {
-            Map.Entry<String, JTextField> entry = iter.next();
-            propsPanel.add(new JLabel(entry.getKey()));
-            propsPanel.add(entry.getValue());
+            PropertyFileData entry = iter.next();
+            propsPanel.add(new JLabel(entry.propertyName));
+            propsPanel.add(entry.propertyValue);
         }
         propsPanel.add(new JLabel(""));
         propsPanel.add(new JLabel(""));
@@ -200,10 +211,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                 try {
                     pw = new PrintWriter(new FileOutputStream(fname));
 
-                    Iterator<Entry<String,JTextField>> iter = ps.iterator();
+                    Iterator<PropertyFileData> iter = props.iterator();
                     while (iter.hasNext()) {
-                        Map.Entry<String, JTextField> entry = iter.next();
-                        pw.println(entry.getKey()+"="+entry.getValue().getText());
+                        PropertyFileData entry = iter.next();
+                        pw.println(entry.propertyName+"="+entry.propertyValue.getText());
                     }
                     JOptionPane.showMessageDialog(AdminConfigWindow.this, 
                             "Properties saved, restart Aspira services", "Properties saved", 
@@ -2616,7 +2627,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     }
                 }
                 // change labels
-                meanLabel.setText(     "Average of small particle readings: " + mean);
+                meanLabel.setText(     "Average of small particle readings: " + (int)mean);
                 recYellowLabel.setText("Recommended Yellow Zone Threshold:  " + recYellow);
                 recRedLabel.setText(   "Recommended Red Zone Threshold:     " + recRed);
                 recMsgLabel.setText(recMsg);
