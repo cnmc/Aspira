@@ -11,6 +11,7 @@ import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.dmp.devicelogs.SpirometerXMLLogParser;
 import edu.asupoly.aspira.model.AirQualityReadings;
+import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
 import edu.asupoly.aspira.model.UIEvents;
@@ -432,9 +433,20 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                             .addComponent(alarmLengthField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(ComponentPlacement.RELATED)
                                             .addComponent(alarmTimeUnitsLabel))
+                                            .addGroup(configPanelLayout.createSequentialGroup()                                                    
+                                                    .addComponent(chckbxEnableDynamicAlerts))
                                             .addGroup(configPanelLayout.createSequentialGroup()
                                                     .addGap(39)
-                                                    .addComponent(chckbxEnableDynamicAlerts))                        
+                                                    .addComponent(meanLabel))
+                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                    .addGap(39)         
+                                                    .addComponent(recYellowLabel))
+                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                    .addGap(39)
+                                                    .addComponent(recRedLabel))
+                                            .addGroup(configPanelLayout.createSequentialGroup()
+                                                    .addGap(39)
+                                                    .addComponent(recMsgLabel))                                                                           
                                                     .addGroup(configPanelLayout.createSequentialGroup()
                                                             .addGap(39)
                                                             .addComponent(saveConfigButton)
@@ -568,7 +580,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                                                                     .addComponent(fevUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                                                     .addComponent(pefUpperRangeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                                                                                                     .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                    .addComponent(chckbxEnableDynamicAlerts)
+                                                                                                                                    .addComponent(chckbxEnableDynamicAlerts)                                                                                                                                                                     
+                                                                                                                                    .addComponent(meanLabel)
+                                                                                                                                    .addComponent(recYellowLabel)
+                                                                                                                                    .addComponent(recRedLabel)
+                                                                                                                                    .addComponent(recMsgLabel)
                                                                                                                                     .addPreferredGap(ComponentPlacement.RELATED)                                                                                                              
                                                                                                                                     .addPreferredGap(ComponentPlacement.RELATED)                                                                                                    
                                                                                                                                     .addGap(3)                                                                                                               
@@ -1549,7 +1565,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     jTabbedPane1.addTab("Logs", logPanel);
                     jTabbedPane1.addTab("Aspira", __createPropsPanel("properties/aspira.properties"));
                     jTabbedPane1.addTab("Monitoring", __createPropsPanel("properties/monitoringservice.properties"));
-
+                    
                     medicineInit();
 
                     // do these after to avoid initial true setting on medical reminders with no state change #67
@@ -1565,8 +1581,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     pulmiTwistCB.addItemListener(mcbl);
                     singulairCB.addItemListener(mcbl);
                     otherMedCB.addItemListener(mcbl);
-                    pulmiNebCB.addItemListener(mcbl);
-
+                    pulmiNebCB.addItemListener(mcbl);                    
+                    
                     pack();
         } catch (Throwable tall) {
             tall.printStackTrace();
@@ -1851,6 +1867,10 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
             resetConfigButton.setText("Reset");
 
+            // KG: Do this before the dynamic alerts checkbox initialization
+            DynamicAlertsCheckBoxListener dacbl = new DynamicAlertsCheckBoxListener();
+            chckbxEnableDynamicAlerts.addItemListener(dacbl);
+            
             Object dynamicAlertsEnabledObject = dynamicObject.get("airQualityMonitoringEnabled");
             boolean enabled = ((Boolean)dynamicAlertsEnabledObject).booleanValue();
             chckbxEnableDynamicAlerts.setSelected(enabled);
@@ -2546,8 +2566,69 @@ public class AdminConfigWindow extends javax.swing.JFrame {
     private JTextField morningField;
     private JTextField eveningField;
 
-    // KG added this to mess around with property editor
-    private javax.swing.JPanel __propsPanel;
+    private JLabel meanLabel   = new JLabel("");
+    private JLabel recYellowLabel = new JLabel("");
+    private JLabel recRedLabel = new JLabel("");
+    private JLabel recMsgLabel = new JLabel("");
+    private static String recMsg = "To set these recommended values to the thresholds,\ncopy them to the threshold properties on the Monitoring tab";
+    
+    private class DynamicAlertsCheckBoxListener implements ItemListener {
+        int recYellow = 1050;
+        int recRed    = 3000;
+        double mean      = 0.0;
+        double stddev    = 0.0;
+        boolean calcFlag = false;
+    
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getItem() == chckbxEnableDynamicAlerts && chckbxEnableDynamicAlerts.isSelected()) {
+                if (!calcFlag) {
+                    try {                
+                        IAspiraDAO dao = AspiraDAO.getDAO();
+                        Date d = new Date();
+                        Date w = new Date(d.getTime() - 604800000L);  // minus one week
+                        AirQualityReadings aqrs = dao.findAirQualityReadingsForPatient(Aspira.getPatientId(), w, d);
+                        if (aqrs != null && aqrs.size() > 0) {                        
+                            int count = 0;
+                            long sumSquares = 0L;
+                            long sum = 0L;
+                            Iterator<ParticleReading> iter = aqrs.iterator();
+                            while (iter.hasNext()) {                            
+                                ParticleReading pr = iter.next();
+                                int spc = pr.getSmallParticleCount();
+                                sum += spc;                                
+                                count++;
+                            }
+                            mean   = sum*1.0/count;
+                            iter = aqrs.iterator();
+                            while (iter.hasNext()) {                            
+                                ParticleReading pr = iter.next();
+                                int spc = pr.getSmallParticleCount();                                
+                                sumSquares += (spc-mean)*(spc-mean);                                
+                            }
+                            stddev = Math.sqrt(sumSquares*1.0/count);
+                            recYellow = (int)(mean + stddev);
+                            recRed = (int)(mean + 1.5 * stddev);
+                            calcFlag = true;
+                        }    
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                        LOGGER.log(Level.WARNING, "Unable to calculate mean and standard deviation for small particle readings");
+                    }
+                }
+                // change labels
+                meanLabel.setText(     "Average of small particle readings: " + mean);
+                recYellowLabel.setText("Recommended Yellow Zone Threshold:  " + recYellow);
+                recRedLabel.setText(   "Recommended Red Zone Threshold:     " + recRed);
+                recMsgLabel.setText(recMsg);
+            } else {
+                // change labels
+                meanLabel.setText("");
+                recYellowLabel.setText("");
+                recRedLabel.setText("");
+                recMsgLabel.setText("");
+            }
+        }
+    }
     
     private class MedicineCheckBoxListener implements ItemListener{
         public void itemStateChanged(ItemEvent e) {
