@@ -30,13 +30,13 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     private int    error;
     private int    bestValue;
     private int    groupId;
-    private Boolean hasSymptoms;
+    private boolean hasSymptoms;
     
     @Override
     public String toString() {
         return "SpirometerReading(deviceId, patientId, measureId, date, manual, pef, fev1, error, bv, group) (" + deviceId + ", " +
                 pid + ", " + measureID + ", " + measureDate + ", " + (manual ? "TRUE" : "FALSE") + ", " + pefValue + ", " +
-                fev1Value + ", " + error + ", " + bestValue + ", " + groupId + ")";
+                fev1Value + ", " + error + ", " + bestValue + ", " + (hasSymptoms ? "TRUE" : "FALSE") + groupId + ")";
     }
     @Override
     public int compareTo(SpirometerReading other) {
@@ -73,7 +73,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
     public int getBestValue() {
         return bestValue;
     }
-    public Boolean getHasSymptoms() {
+    public boolean getHasSymptoms() {
         return hasSymptoms;
     }
 
@@ -107,6 +107,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             fev1Value = Float.valueOf(fev.trim()).floatValue();
             error = Integer.parseInt(err);
             bestValue = Integer.parseInt(bvalue);
+            if (hasSymptoms == null) hasSymptoms = false;
             this.hasSymptoms = hasSymptoms;  // could be null
             this.groupId = DEFAULT_NO_GROUP_ASSIGNED;
         }
@@ -129,6 +130,7 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         fev1Value = fev;
         error = err;
         bestValue = bvalue;
+        if (hasSymptoms == null) hasSymptoms = false;
         this.hasSymptoms = hasSymptoms;
         this.groupId = groupid;
     }

@@ -9,8 +9,10 @@ import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.AspiraWorkbook;
 import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
+import edu.asupoly.aspira.dmp.devicelogs.SpirometerXMLLogParser;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
 import edu.asupoly.aspira.model.UIEvents;
 
 import java.awt.event.ActionEvent;
@@ -23,10 +25,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -34,6 +36,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.GroupLayout.Alignment;
@@ -45,6 +48,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -62,6 +66,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this template, choose Tools | Templates
@@ -574,12 +579,67 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                             );
                     configPanel.setLayout(configPanelLayout);
 
-                    JLabel lblType = new JLabel("Type:");
+                    JLabel lblExport = new JLabel("Select data for Export to spreadsheet:");
+                    JLabel lblType   = new JLabel("Type:");
+                    JLabel lblImport = new JLabel("Choose XML file for Spirometer reading import: ");
+                    final JFileChooser spirometerXmlFileChooser = new JFileChooser(Aspira.getAspiraHome());
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                            "XML files", "xml", "XML", "Xml");
+                    spirometerXmlFileChooser.setFileFilter(filter);
+                    final JButton btnImport = new JButton("Import");
+                    final JButton btnSelect = new JButton("Select");
+                    final JLabel xmlFile    = new JLabel("");
+                    
+                    btnImport.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            //Handle import button action.
+                            if (e.getSource() == btnImport) {
+                                String fname = xmlFile.getText();
+                                try {
+                                    if (fname != null && fname.length() > 0) {                              
+                                        Properties p = new Properties();
+                                        p.put("deviceid", Aspira.getSpirometerId());
+                                        p.put("patientid", Aspira.getPatientId());
+                                        p.put("splogfile", fname); 
+                                        SpirometerXMLReadingsFactory factory = new SpirometerXMLLogParser();
+                                        SpirometerReadings sprs = factory.createSpirometerXMLReadings(p);
+                                        IAspiraDAO database = AspiraDAO.getDAO();
+                                        if (database.importSpirometerReadings(sprs, false)) {
+                                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                                    "Successfully imported spirometer readings from file " + fname);
+                                        } else {
+                                            JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                                    "Unsuccessful importing spirometer readings from file " + fname);
+                                        }
+                                    }
+                                } catch (DMPException exc) {
+                                    LOGGER.log(Level.SEVERE, "Unable to get persistence store handle for Import");
+                                    JOptionPane.showMessageDialog(AdminConfigWindow.this, "Unable to connect to database, cannot import");                                    
+                                } catch (Throwable t) {
+                                    JOptionPane.showMessageDialog(AdminConfigWindow.this, 
+                                            "Unable to import spirometer readings from file " + fname);
+                                    LOGGER.log(Level.SEVERE, "Unable to import spirometer readings from " + fname);
+                                }
+                            }
+                        }
+                    });
+                    
+                    btnSelect.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            //Handle import button action.
+                            if (e.getSource() == btnSelect) {
+                                int returnVal = spirometerXmlFileChooser.showOpenDialog(AdminConfigWindow.this);
 
+                                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                    File file = spirometerXmlFileChooser.getSelectedFile();
+                                    xmlFile.setText(file.getPath());
+                                }
+                            }
+                        }
+                    });
+                    
                     chckbxSpirometer = new JCheckBox("Spirometer");
-
                     chckbxAirQuality = new JCheckBox("Air Quality");
-
                     chckbxUIEvent = new JCheckBox("UI Event");
 
                     JLabel lblTo = new JLabel("To:");
@@ -701,6 +761,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         }
                     });
 
+                    // KG logPanelLayout
                     javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
                     logPanelLayout.setHorizontalGroup(
                             logPanelLayout.createParallelGroup(Alignment.LEADING)
@@ -709,6 +770,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                     .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
                                             .addGroup(logPanelLayout.createSequentialGroup()
                                                     .addGroup(logPanelLayout.createParallelGroup(Alignment.LEADING)
+                                                            .addGroup(logPanelLayout.createSequentialGroup()
+                                                                    .addComponent(lblExport))
                                                             .addGroup(logPanelLayout.createSequentialGroup()
                                                                     .addComponent(lblType)
                                                                     .addPreferredGap(ComponentPlacement.UNRELATED)
@@ -732,13 +795,25 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                                                             .addGroup(logPanelLayout.createSequentialGroup()
                                                                                                     .addPreferredGap(ComponentPlacement.RELATED)
                                                                                                     .addComponent(chckbxUIEvent))))
-                                                                                                    .addComponent(btnExport))
-                                                                                                    .addContainerGap(401, Short.MAX_VALUE))
+                                                                                                    .addComponent(btnExport)))
+                                                                                                    //.addContainerGap(401, Short.MAX_VALUE)                                                                                                    
+                                                                                                    .addGroup(logPanelLayout.createSequentialGroup()
+                                                                                                            .addComponent(lblImport)
+                                                                                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                            .addComponent(btnSelect)
+                                                                                                            .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                            .addComponent(xmlFile)
+                                                                                                            .addPreferredGap(ComponentPlacement.RELATED))
+                                                                                                      .addGroup(logPanelLayout.createSequentialGroup()      
+                                                                                                            .addComponent(btnImport))                                                                                                            
                             );
                     logPanelLayout.setVerticalGroup(
                             logPanelLayout.createParallelGroup(Alignment.LEADING)
                             .addGroup(logPanelLayout.createSequentialGroup()
-                                    .addGap(40)
+                                    .addGap(25)
+                                    .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                            .addComponent(lblExport))
+                                    .addGap(15)
                                     .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
                                             .addComponent(lblType)
                                             .addComponent(chckbxSpirometer)
@@ -754,7 +829,15 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                                     .addComponent(lblFrom))
                                                     .addPreferredGap(ComponentPlacement.UNRELATED)
                                                     .addComponent(btnExport)
-                                                    .addContainerGap(359, Short.MAX_VALUE))
+                                                    //.addContainerGap(3, Short.MAX_VALUE)
+                                                    .addGap(25)
+                                                    .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                            .addComponent(lblImport)                                                            
+                                                            .addComponent(btnSelect)                                                            
+                                                            .addComponent(xmlFile)                                                            
+                                                            )
+                                                            .addGroup(logPanelLayout.createParallelGroup(Alignment.BASELINE)
+                                                                    .addComponent(btnImport)))
                             );
                     logPanel.setLayout(logPanelLayout);
 

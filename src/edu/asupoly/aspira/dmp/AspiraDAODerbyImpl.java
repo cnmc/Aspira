@@ -730,6 +730,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             Iterator<SpirometerReading> iter = toImport.iterator();
             while (iter.hasNext()) {
                 next = iter.next();
+                // deviceid,patientid,readingtime,measureid,manual,pefvalue,fev1value,error,bestvalue,symptoms,groupid
                 ps.setString(1, next.getDeviceId());
                 ps.setString(2, next.getPatientId());
                 // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
@@ -747,10 +748,10 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }
             c.commit();
         } catch (SQLException se) {
-            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings on " + next.toString(), "SQL Error");            
+            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings on " + se.getMessage(), "SQL Error");            
             throw new DMPException(se);
         } catch (Throwable t) {
-            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings on " + next.toString(), "Throwable");            
+            LOGGER.logp(Level.SEVERE, CLASS, "importSpirometerReadings Throwable on " + t.getMessage(), "Throwable");            
             throw new DMPException(t);
         } finally {
             try {
