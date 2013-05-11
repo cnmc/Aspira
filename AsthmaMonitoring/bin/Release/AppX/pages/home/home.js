@@ -46,13 +46,9 @@
                 AsthmaGlobals.hasSymptoms = false;
             }
             if (AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == true) {
-                var readingInterval = 0;
-                if (AsthmaGlobals.airQualityConfig == null) {
-                    readingInterval = 30000;
-                } else {
-                    readingInterval = AsthmaGlobals.airQualityConfig.airQualityMeter.frequencyReadingThisFile;
-                }
-                Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setInterval(
+                var readingInterval = 900000; // initial 15 mins delay
+                
+                Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setTimeout(
                   this.checkAirQuality, readingInterval);//check air qulity regularly
             }
         },
@@ -115,9 +111,17 @@
                 AsthmaGlobals.dynamicAlertDisplay = true;
             } else if (AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "false" && AsthmaGlobals.notifiedDisconnection == false) {
                 generateToast("The air quality meter seems to be disconnected, please refer the help manual and connect it again.")
-                setTimeout(function () { AsthmaGlobals.notifiedDisconnection = false; }, 60000);
+                setTimeout(function () { AsthmaGlobals.notifiedDisconnection = false; }, 900000);
                 AsthmaGlobals.notifiedDisconnection = true;
             }
+            var readingInterval = 0;
+            if (AsthmaGlobals.airQualityConfig == null) {
+                readingInterval = 30000;
+            } else {
+                readingInterval = AsthmaGlobals.airQualityConfig.airQualityMeter.frequencyReadingThisFile;
+            }
+            Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setTimeout(
+                 this.checkAirQuality, readingInterval);//check air qulity regularly
         }
     });
 })();
