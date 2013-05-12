@@ -46,8 +46,12 @@
                 AsthmaGlobals.hasSymptoms = false;
             }
             if (AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == true) {
-                var readingInterval = 900000; // initial 15 mins delay
-                
+                var readingInterval = 450000; // initial 15 mins delay
+                if (AsthmaGlobals.airQualityConfig == null) {
+                    readingInterval = 450000;
+                } else {
+                    readingInterval = AsthmaGlobals.airQualityConfig.airQualityMeter.initialDelayReadingThisFile;
+                }
                 Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setTimeout(
                   this.checkAirQuality, readingInterval);//check air qulity regularly
             }
@@ -114,7 +118,7 @@
                 setTimeout(function () { AsthmaGlobals.notifiedDisconnection = false; }, 900000);
                 AsthmaGlobals.notifiedDisconnection = true;
             }
-            var readingInterval = 0;
+            var readingInterval = 30000;
             if (AsthmaGlobals.airQualityConfig == null) {
                 readingInterval = 30000;
             } else {

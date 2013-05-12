@@ -5,24 +5,24 @@
     <WindowsUser>vasu</WindowsUser>
     <SolutionConfiguration>Release|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
-    <RegisteredManifestChecksum>0CB8A77343B4B162F1D267D6BFF18F8F238E843A4D80B256D87D4900EAEC1EDE</RegisteredManifestChecksum>
-    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd5_1.0.0.1_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
+    <RegisteredManifestChecksum>DEDB5BD5EF4418A9B686F158590D61F31972A309E01B3B70A09599F394C504BC</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>99d9a641-35c0-46a2-8473-11baca999bd5_1.0.0.2_neutral__qrw6ghay3f4aj</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>99d9a641-35c0-46a2-8473-11baca999bd5_qrw6ghay3f4aj!App</RegisteredUserModeAppID>
     <RegisteredPackageID>99d9a641-35c0-46a2-8473-11baca999bd5</RegisteredPackageID>
     <RegisteredPackagePublisher>CN=vasu</RegisteredPackagePublisher>
-    <RegisteredVersion>1.0.0.1</RegisteredVersion>
+    <RegisteredVersion>1.0.0.2</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Release\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-04-29T00:25:56.229</Modified>
+      <Modified>2013-05-11T08:06:34.874</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\airQualityStatus.json">
       <PackagePath>airQualityStatus.json</PackagePath>
-      <Modified>2013-04-15T23:28:08.238</Modified>
+      <Modified>2013-05-12T06:30:35.525</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\config.json">
       <PackagePath>config.json</PackagePath>
@@ -438,7 +438,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\home\home.js">
       <PackagePath>pages\home\home.js</PackagePath>
-      <Modified>2013-05-11T08:01:53.231</Modified>
+      <Modified>2013-05-12T06:29:36.701</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\pages\readingPage\readingPage.js">
       <PackagePath>pages\readingPage\readingPage.js</PackagePath>
@@ -482,7 +482,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\bin\Release\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-04-29T00:25:55.894</Modified>
+      <Modified>2013-05-11T08:06:34.666</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
