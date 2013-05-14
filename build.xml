@@ -2,11 +2,14 @@
     <property name="src" value="src" />
     <property name="classes" value="classes" />
 	<property name="build-dmp" value="build_dmp"/>
+	<property name="build-tc" value="build_tc"/>
 	<property name="build-config" value="build_config"/>
 	<property name="lib" value="lib"/>
 	<property name="properties" value="properties"/>
 	<property name="configapp.jar" value="AspiraConfig.jar"/>
 	<property name="junit4.jar" value="jars/junit-4.10.jar"/>
+	<property name="tomcat.home" value="../aspiratc7029"/>
+	<property name="dist.war" value="aspira.war"/>
 	
     <path id="compile.classpath">
        <pathelement path="${classes}"/>  
@@ -15,23 +18,33 @@
        </fileset>
        <pathelement location="${junit4.jar}"/>   
     </path>
-    
-	<target name="prepare">
-		<tstamp/>
-		<mkdir dir="${build}" />
-	</target>
 
-	<target name="compile" depends="prepare">
+	<target name="compile">
 		<javac target="1.6" srcdir="${src}" destdir="${classes}">
 			<classpath refid="compile.classpath"/>
 		</javac>
 	</target>
-	
-	<target name="doc" depends="prepare">
-		<mkdir dir="${build}/doc" />
-		<javadoc sourcepath="${src}" classpath="${compile.classpath}" destdir="${build}/doc" Public="Yes" />
-	</target>
 		
+	<target name="build-tc" depends="compile">
+		<tstamp/>
+		<mkdir dir="${build-tc}"/>
+		<mkdir dir="${build-tc}/WEB-INF"/>
+		<copy todir="${build-tc}/WEB-INF" overwrite="true">
+			<fileset dir="." excludes="${lib}/servlet-api.jar" includes="${classes}/**,${lib}/**,${properties}/**"/>		
+		</copy>
+		<copy todir="${build-tc}/WEB-INF/${classes}" overwrite="true">
+      		<fileset dir="${properties}"/>
+    		</copy>
+    		<copy file="web.xml" tofile="${build-tc}/WEB-INF/web.xml" overwrite="true"/>		
+	</target>
+
+	<target name="dist" depends="build-tc">
+    		<jar destfile="${dist.war}" basedir="${build-tc}"/>    
+  	</target>
+  	<target name="deploy" depends="dist">
+    		<copy file="${dist.war}" todir="${tomcat.home}/webapps" overwrite="yes"/>
+  	</target>  
+
 	<!-- The excludes don't work. Ant is very frustrating sometimes -->
 	<target name="build-dmp" depends="compile">
 		<copy todir="${build-dmp}/classes">
@@ -57,7 +70,7 @@
 	</target>
 
 	<!-- create the given .java files -->
-	<target name="dist" depends="build-config">
+	<target name="dist-config" depends="build-config">
 		<delete file="${configapp.jar}" />
 		<!-- need to make a manifest XXX -->
 		<jar jarfile="${configapp.jar}"  basedir="build" />
@@ -66,6 +79,8 @@
 	<target name="clean">
 		<delete dir="${build-dmp}" />
 		<delete dir="${build-config}" />
+		<delete dir="${build-tc}" />
+		<delete file="${dist.war}" />
 		<delete file="${configapp.jar}" />
 	</target>
 </project>
