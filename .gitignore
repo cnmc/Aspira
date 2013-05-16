@@ -3,6 +3,7 @@ classes/*
 build/*
 build_dmp/*
 build_config/*
+build_tc/*
 logs/*
 
 # Derby, uncomment to update db

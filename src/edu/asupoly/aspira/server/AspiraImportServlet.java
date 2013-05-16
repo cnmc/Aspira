@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Hashtable;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -66,7 +65,7 @@ public class AspiraImportServlet extends HttpServlet {
         // Get the input stream and read the object off of it
         ObjectInputStream  ois = null;
         ServletInputStream sis = null;        
-        int appReturnValue = 0;
+        int appReturnValue = AspiraDAO.PUSH_UNSET;
         try {
             String objectType = request.getPathInfo();            
             if (objectType != null && objectType.length() > 0) {
@@ -78,29 +77,29 @@ public class AspiraImportServlet extends HttpServlet {
                     if (objectType.startsWith("airqualityreadings")) {
                         AirQualityReadings aqrs = (AirQualityReadings)ois.readObject();
                         if (aqrs != null && aqrs.size() > 0) {                            
-                            appReturnValue = (dao.importAirQualityReadings(aqrs, false) ? aqrs.size() : -20);                                                        
+                            appReturnValue = (dao.importAirQualityReadings(aqrs, false) ? aqrs.size() : AspiraDAO.SERVER_AQ_IMPORT_FAILED);                                                        
                         } else {
-                            appReturnValue = -21;
+                            appReturnValue = AspiraDAO.SERVER_NO_AQ_READINGS;
                         }
                     } 
                     else if (objectType.startsWith("spirometerreadings")) {
                         SpirometerReadings sprs = (SpirometerReadings)ois.readObject();
                         if (sprs != null && sprs.size() > 0) {                            
-                            appReturnValue = (dao.importSpirometerReadings(sprs, false) ? sprs.size() : -30);                            
+                            appReturnValue = (dao.importSpirometerReadings(sprs, false) ? sprs.size() : AspiraDAO.SERVER_SPIROMETER_IMPORT_FAILED);
                         } else {
-                            appReturnValue = -31;
+                            appReturnValue = AspiraDAO.SERVER_NO_SPIROMETER_READINGS;
                         }
                     } 
                     else if (objectType.startsWith("uievents")) {
                         UIEvents events = (UIEvents)ois.readObject();
                         if (events != null && events.size() > 0) {
-                            appReturnValue = (dao.importUIEvents(events, false) ? events.size() : -40); 
+                            appReturnValue = (dao.importUIEvents(events, false) ? events.size() : AspiraDAO.SERVER_UIEVENT_IMPORT_FAILED); 
                         } else {
-                            appReturnValue = -41;
+                            appReturnValue = AspiraDAO.SERVER_NO_UIEVENTS;
                         }
                     }                     
-                } else appReturnValue = -1;
-            } else appReturnValue = -2;
+                } else appReturnValue = AspiraDAO.SERVER_STREAM_ERROR;
+            } else appReturnValue = AspiraDAO.SERVER_BAD_OBJECT_TYPE;
             if (appReturnValue >= 0) {
                 synchronized (lastImportTime) {
                     lastImportTime = new Date();
@@ -108,19 +107,19 @@ public class AspiraImportServlet extends HttpServlet {
             }
         } catch (StreamCorruptedException sce) {
             sce.printStackTrace();
-            appReturnValue = -10;
+            appReturnValue = AspiraDAO.SERVER_STREAM_CORRUPTED_EXCEPTION;
         } catch (IOException ie) {
             ie.printStackTrace();
-            appReturnValue = -11;
+            appReturnValue = AspiraDAO.SERVER_IO_EXCEPTION;
         } catch (SecurityException se) {
             se.printStackTrace();
-            appReturnValue = -12;
+            appReturnValue = AspiraDAO.SERVER_SECURITY_EXCEPTION;
         } catch (NullPointerException npe) {
             npe.printStackTrace();
-            appReturnValue = -13;
+            appReturnValue = AspiraDAO.SERVER_NULL_POINTER_EXCEPTION;
         } catch (Throwable t) {
             t.printStackTrace();
-            appReturnValue = -99;
+            appReturnValue = AspiraDAO.SERVER_UNKNOWN_ERROR;
         } 
         PrintWriter pw = null;
         try {

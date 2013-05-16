@@ -1,7 +1,6 @@
 package edu.asupoly.aspira;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -65,6 +64,9 @@ public final class Aspira {
     }
     public static String getClinicianId() {
         return getAspiraProperty("clinician.id");
+    }
+    public static String getPushURL() {
+        return getAspiraProperty("push.url");
     }
     
     public String getGlobalProperty(String key) {
@@ -192,7 +194,8 @@ public final class Aspira {
     private Aspira() throws Exception {
         InputStreamReader isr = null;
         try {
-            isr = new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
+            isr = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(PROPERTY_FILENAME));
+                    //new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
             __globalProperties = new Properties();
             __globalProperties.load(isr);
             

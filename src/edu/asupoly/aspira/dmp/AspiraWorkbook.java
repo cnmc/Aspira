@@ -17,11 +17,6 @@ import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 
-
-// XXX
-// make column mod to separate data and time as requested by Kristin
-// Update the unit test, have it work together with AQR/SR unit tests
-// KEEP IT SIMPLE IN THE INTERESTS OF TIME!!!
 public class AspiraWorkbook {
     
     Workbook __wb;

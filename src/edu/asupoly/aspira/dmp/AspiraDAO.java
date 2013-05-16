@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +24,6 @@ import edu.asupoly.aspira.model.Patient;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
-import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 
 /**
@@ -33,6 +31,23 @@ import edu.asupoly.aspira.model.UIEvents;
  *
  */
 public final class AspiraDAO implements IAspiraDAO {
+    public static final int PUSH_UNSET = 0;    
+    public static final int PUSH_BAD_RESPONSE_CODE = -101;
+    public static final int PUSH_MALFORMED_URL = -102;
+    public static final int PUSH_UNABLE_TO_CONNECT = -100;
+    public static final int SERVER_AQ_IMPORT_FAILED = -20;
+    public static final int SERVER_NO_AQ_READINGS = -21;
+    public static final int SERVER_SPIROMETER_IMPORT_FAILED = -30;
+    public static final int SERVER_NO_SPIROMETER_READINGS = -31;
+    public static final int SERVER_UIEVENT_IMPORT_FAILED = -40;
+    public static final int SERVER_NO_UIEVENTS = -41;
+    public static final int SERVER_STREAM_ERROR = -1;
+    public static final int SERVER_BAD_OBJECT_TYPE = -2;
+    public static final int SERVER_STREAM_CORRUPTED_EXCEPTION = -10;
+    public static final int SERVER_IO_EXCEPTION = -11;
+    public static final int SERVER_SECURITY_EXCEPTION = -12;
+    public static final int SERVER_NULL_POINTER_EXCEPTION = -13;
+    public static final int SERVER_UNKNOWN_ERROR = -99;
     
     private static String PROPERTY_FILENAME = "properties/dao.properties";
     private static String DAO_CLASS_PROPERTY_KEY = "daoClassName";
@@ -71,6 +86,8 @@ public final class AspiraDAO implements IAspiraDAO {
             Class<?> daoClass = Class.forName(daoClassName);
             __dao = (AspiraDAOBaseImpl)daoClass.newInstance();
             __dao.init(__daoProperties);
+            
+            __pushURL = Aspira.getPushURL();
         } catch (Throwable t1) {
             LOGGER.log(Level.SEVERE, "Throwable in constructor for AspiraDAO");
             //t1.printStackTrace();
@@ -321,6 +338,9 @@ public final class AspiraDAO implements IAspiraDAO {
                     rval = -101;
                 }
             }
+        } catch (MalformedURLException mue) {
+            LOGGER.log(Level.SEVERE, "Malformed URL " + __pushURL+type);
+            rval = -102;
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, "Error trying to connect to push server");
             rval = -100;
