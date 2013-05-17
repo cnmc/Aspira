@@ -2,8 +2,6 @@
 
 -- This file was created using Derby's dblook utility.
 -- Timestamp: 2013-04-11 21:20:21.696
--- Source database is: /Users/kevinagary/CNMC/projects/AsthmaMobile/Aspira/db/derby_home/aspiradb
--- Connection URL is: jdbc:derby:/Users/kevinagary/CNMC/projects/AsthmaMobile/Aspira/db/derby_home/aspiradb
 -- Specified schema is: APP
 -- appendLogs: false
 
@@ -39,6 +37,8 @@ CREATE TABLE "APP"."SPIROMETERREADING" ("DEVICEID" VARCHAR(16) NOT NULL, "PATIEN
 CREATE TABLE "APP"."PATIENT_CLINICIAN" ("PATIENTID" VARCHAR(16) NOT NULL, "CLINICIANID" VARCHAR(16) NOT NULL);
 
 CREATE TABLE "APP"."UIEVENT" ("DEVICEID" VARCHAR(16) NOT NULL, "PATIENTID" VARCHAR(16) NOT NULL, "VERSION" VARCHAR(16) NOT NULL, "EVENTTYPE" VARCHAR(64) NOT NULL, "EVENTTARGET" VARCHAR(64) NOT NULL, "EVENTVALUE" VARCHAR(1024) NOT NULL, "EVENTTIME" TIMESTAMP NOT NULL, "GROUPID" INTEGER NOT NULL);
+
+CREATE TABLE "APP".SERVERPUSHEVENTLOG ("EVENTTIME" TIMESTAMP NOT NULL, RESPONSECODE INTEGER NOT NULL, OBJECTTYPE INTEGER, MESSAGE VARCHAR(1024));
 
 -- ----------------------------------------------
 -- DDL Statements for keys

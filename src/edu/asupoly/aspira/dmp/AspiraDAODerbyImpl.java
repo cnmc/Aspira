@@ -17,12 +17,13 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.Clinician;
 import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.Patient;
+import edu.asupoly.aspira.model.ServerPushEvent;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
@@ -36,7 +37,7 @@ import edu.asupoly.aspira.model.UIEvents;
 public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
     private static final int NO_GROUP_IDENTIFIER = -2;
-    private static final Logger LOGGER = Aspira.getAspiraLogger();
+    private static final Logger LOGGER = AspiraSettings.getAspiraLogger();
     private static final String CLASS  = "AspiraDAODerbyImpl";
     private static final long MS_ONE_YEAR_FROM_NOW = 1000L * 60L * 60 * 24L * 365L;
     
@@ -1151,4 +1152,139 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
     private String __jdbcURL;
     private Properties __derbyProperties;
+
+    @Override
+    public ServerPushEvent getLastServerPush() throws DMPException {
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, true);
+    }
+
+    @Override
+    public ServerPushEvent getLastValidServerPush() throws DMPException {
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, false);
+    }
+    
+    @Override
+    public ServerPushEvent[] getServerPushEvents() throws DMPException {
+        return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, true);
+    }
+
+    @Override
+    public boolean addPushEvent(ServerPushEvent s) throws DMPException {
+        if (s == null) return false;
+
+        Connection c = null;
+        PreparedStatement ps = null;
+
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(__derbyProperties.getProperty("sql.addServerPushEvent"));
+            ps.setTimestamp(1, new java.sql.Timestamp(s.getEventDate().getTime()));
+            ps.setInt(2,  s.getResponseCode());
+            ps.setInt(3, s.getImportType());
+            ps.setString(4, s.getMessage());
+            return (ps.executeUpdate() == 1);
+        } catch (SQLException se) {
+            LOGGER.log(Level.SEVERE, "addPushEvent SQL Error");
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            LOGGER.log(Level.SEVERE, "addPushEvent Throwable");
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                LOGGER.logp(Level.FINE, CLASS, "addPushEvent", "SQL close in finally block");
+            }
+        }
+    }
+    
+
+    private ServerPushEvent[] __findServerPushEventsByQuery(String query, int type, boolean includeErrors) 
+            throws DMPException {
+
+        if (query == null || query.trim().length() == 0) return null;
+        
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<ServerPushEvent> rval = new ArrayList<ServerPushEvent>();
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(query);
+            int minCode = 0;
+            if (includeErrors) {
+                minCode = -9999;
+            }
+            ps.setInt(1,  minCode);
+            if (type > 0) {
+                ps.setInt(2, type);
+            }
+ 
+            rs = ps.executeQuery();
+            while (rs.next()) {
+               rval.add(new ServerPushEvent(new Date(rs.getTimestamp("eventtime").getTime()),
+                       rs.getInt("responsecode"), rs.getInt("objecttype"), rs.getString("message")));
+            }            
+            return rval.toArray(new ServerPushEvent[0]);
+        } catch (SQLException se) {
+            LOGGER.logp(Level.SEVERE, CLASS, "__findServerPushEventsByQuery", "SQL Error");
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            LOGGER.logp(Level.SEVERE, CLASS, "__findServerPushEventsByQuery", "Throwable");
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                LOGGER.logp(Level.FINE, CLASS, "__findServerPushEventsByQuery", "SQL close in finally block");
+            }
+        }
+    }
+    
+    private ServerPushEvent __findLastServerPushEventByQuery(String query, int type, boolean includeErrors) 
+            throws DMPException {
+
+        if (query == null || query.trim().length() == 0) return null;
+        
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ServerPushEvent rval = null;
+        try {
+            c = DriverManager.getConnection(__jdbcURL);
+            ps = c.prepareStatement(query);
+            int minCode = 0;
+            if (includeErrors) {
+                minCode = -9999;
+            }
+            ps.setInt(1,  minCode);
+            if (type > 0) {
+                ps.setInt(2, type);
+            }
+ 
+            rs = ps.executeQuery();
+            if (rs.next()) {
+               rval = new ServerPushEvent(new Date(rs.getTimestamp("eventtime").getTime()),
+                       rs.getInt("responsecode"), rs.getInt("objecttype"), rs.getString("message"));
+            }            
+            return rval;
+        } catch (SQLException se) {
+            LOGGER.logp(Level.SEVERE, CLASS, "__findLastServerPushEventByQuery", "SQL Error");
+            throw new DMPException(se);
+        } catch (Throwable t) {
+            LOGGER.logp(Level.SEVERE, CLASS, "__findLastServerPushEventByQuery", "Throwable");
+            throw new DMPException(t);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (c != null) c.close();
+            } catch (SQLException se2) {
+                LOGGER.logp(Level.FINE, CLASS, "__findLastServerPushEventByQuery", "SQL close in finally block");
+            }
+        }
+    }
 }

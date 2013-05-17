@@ -6,6 +6,7 @@ package edu.asupoly.aspira.dmp;
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.Clinician;
 import edu.asupoly.aspira.model.Patient;
+import edu.asupoly.aspira.model.ServerPushEvent;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -29,6 +30,11 @@ public interface IAspiraDAO {
     AirQualityMonitor findAirQualityMonitorForPatient(String patientId) throws DMPException;
     Clinician findClinicianForPatient(String patientId) throws DMPException;
     
+    // For server push
+    ServerPushEvent getLastServerPush() throws DMPException;
+    ServerPushEvent getLastValidServerPush() throws DMPException;
+    ServerPushEvent[] getServerPushEvents() throws DMPException;
+
     AirQualityReadings findAirQualityReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId,int groupId) throws DMPException;
@@ -47,6 +53,9 @@ public interface IAspiraDAO {
     boolean importAirQualityReadings(AirQualityReadings toImport, boolean overwrite) throws DMPException;
     boolean importSpirometerReadings(SpirometerReadings toImport, boolean overwrite) throws DMPException;
     boolean importUIEvents(UIEvents toImport, boolean overwrite) throws DMPException;
+    
+    // For Server Push
+    boolean addPushEvent(ServerPushEvent s) throws DMPException;
     
     // This is for the manual readings we can get via data entry
     boolean addManualSpirometerReading(SpirometerReading sr, boolean overwrite) throws DMPException;

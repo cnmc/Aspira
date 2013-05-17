@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.DMPException;
 
 /**
@@ -39,7 +39,7 @@ public final class MonitoringService {
             try {
                 __theMonitoringService = new MonitoringService();
             } catch (Throwable t) {
-                Aspira.getAspiraLogger().log(Level.INFO, "MonitorService unable to initialize");
+                AspiraSettings.getAspiraLogger().log(Level.INFO, "MonitorService unable to initialize");
                 __theMonitoringService = null;
             }
         }
@@ -76,7 +76,7 @@ public final class MonitoringService {
         __timer.cancel();
         // If the singleton accessor is called again it will fire up another Timer
         MonitoringService.__theMonitoringService = null;
-        Aspira.getAspiraLogger().log(Level.INFO, "Shutting down MonitorService");
+        AspiraSettings.getAspiraLogger().log(Level.INFO, "Shutting down MonitorService");
     }
     
     /**
@@ -96,7 +96,7 @@ public final class MonitoringService {
             defaultInterval = Integer.parseInt(__props.getProperty(DEFAULT_INTERVAL_KEY));
             maxTimerTasks = Integer.parseInt(__props.getProperty(MAX_TIMERTASKS_KEY));
         } catch (NumberFormatException nfe) {
-            Aspira.getAspiraLogger().log(Level.INFO, 
+            AspiraSettings.getAspiraLogger().log(Level.INFO, 
                     "NFE Problem initializing MonitorService from properties, continuing with defaults\n" + nfe.getMessage());
             defaultInterval = DEFAULT_INTERVAL;
             maxTimerTasks   = DEFAULT_MAX_TIMER_TASKS;
@@ -105,18 +105,18 @@ public final class MonitoringService {
                 npe.printStackTrace();
                 throw new DMPException(npe);
             }
-            Aspira.getAspiraLogger().log(Level.INFO, 
+            AspiraSettings.getAspiraLogger().log(Level.INFO, 
                     "NPE Problem initializing MonitorService from properties, continuing with defaults\n" + npe.getMessage());
             defaultInterval = DEFAULT_INTERVAL;
             maxTimerTasks   = DEFAULT_MAX_TIMER_TASKS;
         }
         catch (IOException ie) {
-            Aspira.getAspiraLogger().log(Level.INFO, 
+            AspiraSettings.getAspiraLogger().log(Level.INFO, 
                     "IO Problem initializing MonitorService from properties, aborting\n" + ie.getMessage());
             throw new DMPException(ie);
         }
         catch (Throwable t1) {
-            Aspira.getAspiraLogger().log(Level.INFO, 
+            AspiraSettings.getAspiraLogger().log(Level.INFO, 
                     "Unknown problem initializing MonitorService from properties, aborting\n" + t1.getMessage());
             throw new DMPException(t1);
         } finally {
@@ -125,7 +125,7 @@ public final class MonitoringService {
                     isr.close();
                 }
             } catch (Throwable t) {
-                Aspira.getAspiraLogger().log(Level.INFO, 
+                AspiraSettings.getAspiraLogger().log(Level.INFO, 
                         "Unable to close properties input stream" + t.getMessage());
             }
         }
@@ -144,7 +144,7 @@ public final class MonitoringService {
                         interval = Integer.parseInt(intervalProp);
                     } catch (NumberFormatException nfe) {
                         interval = defaultInterval;
-                        Aspira.getAspiraLogger().log(Level.INFO, 
+                        AspiraSettings.getAspiraLogger().log(Level.INFO, 
                                 "NFE initializing MonitorService task from properties, using default\n" + nfe.getMessage());
                     }
                 } else { // no interval specified, use default
@@ -157,15 +157,15 @@ public final class MonitoringService {
                     __tasks.put(TASK_KEY_PREFIX+i, nextTask);
                     // fire up the task 1 second from now
                     __timer.scheduleAtFixedRate(nextTask, 1000L, interval*1000L); // repeat task in seconds
-                    Aspira.getAspiraLogger().log(Level.INFO, 
+                    AspiraSettings.getAspiraLogger().log(Level.INFO, 
                             "Created timer task " + (TASK_KEY_PREFIX+i) + " for task class " + taskClassName);
                 } else {
-                    Aspira.getAspiraLogger().log(Level.INFO, 
+                    AspiraSettings.getAspiraLogger().log(Level.INFO, 
                             "1. Unable to initialize MonitorService task from properties, skipping " + taskClassName);
                 }
             } catch (Throwable t) {
                 // something prevented us from creating the task, skip it
-                Aspira.getAspiraLogger().log(Level.INFO, 
+                AspiraSettings.getAspiraLogger().log(Level.INFO, 
                         "2. Unable to initialize MonitorService task from properties, skipping\n" + 
                                 edu.asupoly.aspira.Aspira.stackToString(t));
             }

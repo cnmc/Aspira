@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
@@ -29,7 +29,7 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
             SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;
     private static final int TIMEOUT   = 500; // 1/2 sec timeout on serial port read
     
-    private static final Logger LOGGER = Aspira.getAspiraLogger();
+    private static final Logger LOGGER = AspiraSettings.getAspiraLogger();
     
     private SerialPort    __serialPort;
     private Properties    __props;
@@ -90,8 +90,8 @@ public class AirQualitySerialMonitorTask extends AspiraTimerTask {
         // check we have deviceId, patientId, and file
         __props = new Properties();
 
-        String deviceId     = Aspira.getAirQualityMonitorId();
-        String patientId    = Aspira.getPatientId();
+        String deviceId     = AspiraSettings.getAirQualityMonitorId();
+        String patientId    = AspiraSettings.getPatientId();
         String serialPort   = p.getProperty("aqmSerialPort");
         if (deviceId != null && patientId != null && serialPort != null) {
             __deviceId  = deviceId;

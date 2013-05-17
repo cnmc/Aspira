@@ -1,0 +1,37 @@
+package edu.asupoly.aspira.model;
+
+import java.util.Date;
+
+public class ServerPushEvent implements java.io.Serializable {
+
+    private static final long serialVersionUID = 6862032958238175093L;
+    
+    public Date getEventDate() {
+        return __eventDate;
+    }
+
+    public int getResponseCode() {
+        return __responseCode;
+    }
+
+    public int getImportType() {
+        return __importType;
+    }
+
+    public String getMessage() {
+        return __msg;
+    }
+
+    private Date __eventDate;
+    private int  __responseCode;
+    private int  __importType;
+    private String __msg;
+    
+    public ServerPushEvent(Date d, int c, int t, String m) {
+        __eventDate = d;
+        __responseCode = c;
+        __importType = t;
+        __msg = m;        
+    }
+
+}

@@ -3,7 +3,7 @@ package edu.asupoly.aspira.monitorservice;
 import java.util.Date;
 import java.util.Properties;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.dmp.devicelogs.UIEventLogParser;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * last time we read them - so we have to store the last event or timestamp
  */
 public class UIInteractionMonitorTask extends AspiraTimerTask {
-    private static final Logger LOGGER = Aspira.getAspiraLogger();
+    private static final Logger LOGGER = AspiraSettings.getAspiraLogger();
 
     private Properties __props;
 
@@ -68,11 +68,11 @@ public class UIInteractionMonitorTask extends AspiraTimerTask {
         // check we have  patientId, and file
         __props = new Properties();
         //String patientId = p.getProperty("patientid");
-        String patientId = Aspira.getPatientId();
+        String patientId = AspiraSettings.getPatientId();
         String logfile   = p.getProperty("uilogfile");
         if (patientId != null && logfile != null) {
             __props.setProperty("patientid", patientId);
-            __props.setProperty("uilogfile", Aspira.getAspiraHome() + logfile);
+            __props.setProperty("uilogfile", AspiraSettings.getAspiraHome() + logfile);
         } else {
             rval = false;
         }

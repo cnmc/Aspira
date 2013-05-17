@@ -4,7 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.AspiraWorkbook;
 import edu.asupoly.aspira.dmp.DMPException;
@@ -76,7 +76,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 @SuppressWarnings("serial")
 public class AdminConfigWindow extends javax.swing.JFrame {
-    private static final Logger LOGGER = Aspira.getAspiraLogger();
+    private static final Logger LOGGER = AspiraSettings.getAspiraLogger();
     //private Properties _configProperties;
     private URL pushURL;
     private static String CONFIG_PROPERTY_FILENAME = "config.json";
@@ -239,8 +239,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
 
             // all impls need to figure out if they need to push
             //setURL(_configProperties.getProperty(PUSH_URL_PROPERTY_KEY));
-            configLocation = Aspira.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
-            medTextLocation = Aspira.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
+            configLocation = AspiraSettings.getAspiraHome() + CONFIG_PROPERTY_FILENAME;
+            medTextLocation = AspiraSettings.getAspiraHome() + MEDICATION_REMINDERS_FILENAME;
 
             jTabbedPane1 = new javax.swing.JTabbedPane();
             jTabbedPane1.setMaximumSize(new Dimension(33000, 33000));
@@ -604,7 +604,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                     JLabel lblExport = new JLabel("Select data for Export to spreadsheet:");
                     JLabel lblType   = new JLabel("Type:");
                     JLabel lblImport = new JLabel("Choose XML file for Spirometer reading import: ");
-                    final JFileChooser spirometerXmlFileChooser = new JFileChooser(Aspira.getAspiraHome());
+                    final JFileChooser spirometerXmlFileChooser = new JFileChooser(AspiraSettings.getAspiraHome());
                     FileNameExtensionFilter filter = new FileNameExtensionFilter(
                             "XML files", "xml", "XML", "Xml");
                     spirometerXmlFileChooser.setFileFilter(filter);
@@ -620,8 +620,8 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                                 try {
                                     if (fname != null && fname.length() > 0) {                              
                                         Properties p = new Properties();
-                                        p.put("deviceid", Aspira.getSpirometerId());
-                                        p.put("patientid", Aspira.getPatientId());
+                                        p.put("deviceid", AspiraSettings.getSpirometerId());
+                                        p.put("patientid", AspiraSettings.getPatientId());
                                         p.put("splogfile", fname); 
                                         SpirometerXMLReadingsFactory factory = new SpirometerXMLLogParser();
                                         SpirometerReadings sprs = factory.createSpirometerXMLReadings(p);
@@ -2592,7 +2592,7 @@ public class AdminConfigWindow extends javax.swing.JFrame {
                         IAspiraDAO dao = AspiraDAO.getDAO();
                         Date d = new Date();
                         Date w = new Date(d.getTime() - 604800000L);  // minus one week
-                        AirQualityReadings aqrs = dao.findAirQualityReadingsForPatient(Aspira.getPatientId(), w, d);
+                        AirQualityReadings aqrs = dao.findAirQualityReadingsForPatient(AspiraSettings.getPatientId(), w, d);
                         if (aqrs != null && aqrs.size() > 0) {                        
                             int count = 0;
                             long sumSquares = 0L;

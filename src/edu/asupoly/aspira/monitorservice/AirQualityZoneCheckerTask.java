@@ -1,6 +1,6 @@
 package edu.asupoly.aspira.monitorservice;
 
-import edu.asupoly.aspira.Aspira;
+import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -42,7 +42,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
 
     public void run() {
         if (_isInitialized) {
-            Aspira.getAspiraLogger().log(Level.INFO, "Monitoring Service: running AQ Zone Checker Task");
+            AspiraSettings.getAspiraLogger().log(Level.INFO, "Monitoring Service: running AQ Zone Checker Task");
             try {
                 //System.out.println("Executing  Air Quality Zone Checker Timer Task!");           
                 // Now we need to call DAOManager to get DAO
@@ -63,10 +63,10 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                         _pr = iterator.next();
                         if (_pr.getSmallParticleCount() < __yellowZoneThreshold) {
                             z = Zones.GREEN;
-                            Aspira.getAspiraLogger().log(Level.INFO, "AQ Zone GREEN");
+                            AspiraSettings.getAspiraLogger().log(Level.INFO, "AQ Zone GREEN");
                         } else if (_pr.getSmallParticleCount() < __redZoneThreshold) {
                             z = Zones.YELLOW;
-                            Aspira.getAspiraLogger().log(Level.INFO, "AQ Zone YELLOW");
+                            AspiraSettings.getAspiraLogger().log(Level.INFO, "AQ Zone YELLOW");
                         }
                     }
                     __zone = z;
@@ -74,7 +74,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                 editAirQualityStatus();
             }
             catch (Throwable t) {
-                Aspira.getAspiraLogger().log(Level.SEVERE, null, t);
+                AspiraSettings.getAspiraLogger().log(Level.SEVERE, null, t);
             }
         }
     }
@@ -85,7 +85,7 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
         try {
             // check we have deviceId, patientId, and file
             //String patientId = p.getProperty("patientid");
-            String patientId = Aspira.getPatientId();
+            String patientId = AspiraSettings.getPatientId();
             String pollingTime = p.getProperty("airQualityNumReadings");
             String yellowThreshold = p.getProperty("yellowZoneThreshhold");
             String redThreshold = p.getProperty("redZoneThreshhold");
@@ -98,13 +98,13 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
                 __numReadings = new Integer(pollingTime);
                 __yellowZoneThreshold = new Integer(yellowThreshold);
                 __redZoneThreshold = new Integer(redThreshold);                
-                __airQualityStatusFile = Aspira.getAspiraHome() + statusfile;
+                __airQualityStatusFile = AspiraSettings.getAspiraHome() + statusfile;
             } else {
                 rval = false;
             }
             _isInitialized = rval;
         } catch (Throwable t) {
-            Aspira.getAspiraLogger().log(Level.SEVERE, "Cannot parse Zone properties", t);
+            AspiraSettings.getAspiraLogger().log(Level.SEVERE, "Cannot parse Zone properties", t);
             _isInitialized = false;
         }
         return rval;
@@ -137,13 +137,13 @@ public class AirQualityZoneCheckerTask extends AspiraTimerTask {
             fop.close();
         }
         catch(Throwable th) {
-            Aspira.getAspiraLogger().log(Level.SEVERE, null, th);
+            AspiraSettings.getAspiraLogger().log(Level.SEVERE, null, th);
         } finally {
             try {
                 if (fr != null) fr.close();
                 if (fop != null) fop.close();
             } catch (Throwable t2) {
-                Aspira.getAspiraLogger().log(Level.SEVERE, null, t2);
+                AspiraSettings.getAspiraLogger().log(Level.SEVERE, null, t2);
             }
         }
     }

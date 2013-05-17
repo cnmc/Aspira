@@ -44,16 +44,18 @@
 				<exclude name="*/test/**"/>
 				<exclude name="${lib}/servlet-api.jar"/>
 				<exclude name="${properties}"/>
-				<include name="${classes}"/>
-				<include name="${lib}"/>
+				<include name="${classes}/**"/>
+				<include name="${lib}/**"/>
 			</fileset>	
 		</copy>
 		<copy todir="${build-tc}/WEB-INF/${classes}/${properties}" overwrite="true">
       		<fileset dir="${properties}">
-      		      <include name="dao.properties"/>
+      		      <include name="daoserver.properties"/>
       		      <include name="aspira.properties"/>
 			</fileset>
     		</copy>
+    		<move   file="${build-tc}/WEB-INF/${classes}/${properties}/daoserver.properties" 
+    		      tofile="${build-tc}/WEB-INF/${classes}/${properties}/dao.properties"/>
     		<copy file="web.xml" tofile="${build-tc}/WEB-INF/web.xml" overwrite="true"/>		
 	</target>
 

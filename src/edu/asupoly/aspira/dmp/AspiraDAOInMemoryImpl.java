@@ -14,6 +14,7 @@ import edu.asupoly.aspira.model.AirQualityReadings;
 import edu.asupoly.aspira.model.Clinician;
 import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.Patient;
+import edu.asupoly.aspira.model.ServerPushEvent;
 import edu.asupoly.aspira.model.Spirometer;
 import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
@@ -450,5 +451,29 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
             // XXX log
             throw new DMPException(t);
         }
+    }
+
+    @Override
+    public ServerPushEvent getLastServerPush() throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ServerPushEvent[] getServerPushEvents() throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ServerPushEvent getLastValidServerPush() throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean addPushEvent(ServerPushEvent s) throws DMPException {
+        // TODO Auto-generated method stub
+        return false;
     }
 }
