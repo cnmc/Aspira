@@ -79,17 +79,27 @@ public final class AspiraDAO implements IAspiraDAO {
     public ServerPushEvent getLastServerPush() throws DMPException {
         return __dao.getLastServerPush();
     }
-    
+    // For server push
+    @Override
+    public ServerPushEvent getLastServerPush(int type) throws DMPException {
+        return __dao.getLastServerPush();
+    }
     @Override
     public ServerPushEvent getLastValidServerPush() throws DMPException {
         return __dao.getLastServerPush();
     }
-    
+    @Override
+    public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
+        return __dao.getLastServerPush();
+    }
     @Override
     public ServerPushEvent[] getServerPushEvents() throws DMPException {
         return __dao.getServerPushEvents();
     }
-    
+    @Override
+    public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
+        return __dao.getServerPushEvents();
+    }
     @Override
     public boolean addPushEvent(ServerPushEvent s) throws DMPException {
         return __dao.addPushEvent(s);

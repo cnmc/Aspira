@@ -1157,17 +1157,27 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     public ServerPushEvent getLastServerPush() throws DMPException {
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, true);
     }
-
+    @Override
+    public ServerPushEvent getLastServerPush(int type) throws DMPException {
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, true);
+    }
     @Override
     public ServerPushEvent getLastValidServerPush() throws DMPException {
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, false);
     }
-    
+    @Override
+    public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, false);
+    }
     @Override
     public ServerPushEvent[] getServerPushEvents() throws DMPException {
         return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, true);
     }
-
+    @Override
+    public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
+        return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, true);
+    }
+    
     @Override
     public boolean addPushEvent(ServerPushEvent s) throws DMPException {
         if (s == null) return false;

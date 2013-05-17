@@ -33,7 +33,10 @@ public interface IAspiraDAO {
     // For server push
     ServerPushEvent getLastServerPush() throws DMPException;
     ServerPushEvent getLastValidServerPush() throws DMPException;
+    ServerPushEvent getLastServerPush(int type) throws DMPException;
+    ServerPushEvent getLastValidServerPush(int type) throws DMPException;
     ServerPushEvent[] getServerPushEvents() throws DMPException;
+    ServerPushEvent[] getServerPushEvents(int type) throws DMPException;
 
     AirQualityReadings findAirQualityReadingsForPatient(String patientId, Date start, Date end) throws DMPException;
     AirQualityReadings findAirQualityReadingsForPatient(String patientId) throws DMPException;

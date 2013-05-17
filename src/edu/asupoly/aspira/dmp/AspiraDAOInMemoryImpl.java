@@ -458,19 +458,31 @@ public class AspiraDAOInMemoryImpl extends AspiraDAOBaseImpl implements Serializ
         // TODO Auto-generated method stub
         return null;
     }
-
+    @Override
+    public ServerPushEvent getLastServerPush(int type) throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public ServerPushEvent[] getServerPushEvents() throws DMPException {
         // TODO Auto-generated method stub
         return null;
     }
-
+    @Override
+    public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public ServerPushEvent getLastValidServerPush() throws DMPException {
         // TODO Auto-generated method stub
         return null;
     }
-
+    @Override
+    public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public boolean addPushEvent(ServerPushEvent s) throws DMPException {
         // TODO Auto-generated method stub

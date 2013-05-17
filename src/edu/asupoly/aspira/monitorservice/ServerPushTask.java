@@ -40,14 +40,16 @@ public class ServerPushTask extends AspiraTimerTask {
     public static final int SERVER_NULL_POINTER_EXCEPTION = -13;
     public static final int SERVER_UNKNOWN_ERROR = -99;
     
-    public static final int SPIROMETER_READINGS_TYPE = 1;
-    public static final int AIR_QUALITY_READINGS_TYPE = 2;
-    public static final int UI_EVENTS_TYPE = 4;
+    public static final int SPIROMETER_READINGS_TYPE = 0;
+    public static final int AIR_QUALITY_READINGS_TYPE = 1;
+    public static final int UI_EVENTS_TYPE = 2;
     
     private static final Logger LOGGER = AspiraSettings.getAspiraLogger();
     
     private Properties __props;
     private String __pushURL;
+    
+    protected Date[] _lastRead;  // override of parent
     
     public ServerPushTask() {
         super();
@@ -68,15 +70,33 @@ public class ServerPushTask extends AspiraTimerTask {
         _isInitialized = rval;
         
         // This section tries to initialize the last reading date
-        _lastRead = new Date(0L);  // Jan 1 1970, 00:00:00
+        Date lastRead = new Date(0L);  // Jan 1 1970, 00:00:00
+        
         try {
             IAspiraDAO dao = AspiraDAO.getDAO();
-            ServerPushEvent spe = dao.getLastServerPush();
+            ServerPushEvent spe = dao.getLastServerPush(SPIROMETER_READINGS_TYPE);
             if (spe != null) {                
-                _lastRead = spe.getEventDate();
+                _lastRead[SPIROMETER_READINGS_TYPE] = spe.getEventDate();
                 LOGGER.log(Level.INFO, "Last server push " + _lastRead.toString());
             } else {
-                LOGGER.log(Level.INFO, "Last server push unknown, using " + _lastRead.toString());
+                _lastRead[SPIROMETER_READINGS_TYPE] = lastRead;
+                LOGGER.log(Level.INFO, "Last server push unknown, using " + lastRead.toString());
+            }
+            spe = dao.getLastServerPush(AIR_QUALITY_READINGS_TYPE);
+            if (spe != null) {                
+                _lastRead[AIR_QUALITY_READINGS_TYPE] = spe.getEventDate();
+                LOGGER.log(Level.INFO, "Last server push " + _lastRead.toString());
+            } else {
+                _lastRead[AIR_QUALITY_READINGS_TYPE] = lastRead;
+                LOGGER.log(Level.INFO, "Last server push unknown, using " + lastRead.toString());
+            }
+            spe = dao.getLastServerPush(UI_EVENTS_TYPE);
+            if (spe != null) {                
+                _lastRead[UI_EVENTS_TYPE] = spe.getEventDate();
+                LOGGER.log(Level.INFO, "Last server push " + _lastRead.toString());
+            } else {
+                _lastRead[UI_EVENTS_TYPE] = lastRead;
+                LOGGER.log(Level.INFO, "Last server push unknown, using " + lastRead.toString());
             }
         } catch (Throwable t) {            
             LOGGER.log(Level.WARNING, "Unable to get last server push time, using " + _lastRead.toString());
@@ -93,11 +113,11 @@ public class ServerPushTask extends AspiraTimerTask {
             try {
                 IAspiraDAO dao = AspiraDAO.getDAO();
                 SpirometerReadings stoImport = dao.findSpirometerReadingsForPatient(__props.getProperty("patientid"), 
-                        _lastRead, d);
+                        _lastRead[SPIROMETER_READINGS_TYPE], d);
                 AirQualityReadings atoImport = dao.findAirQualityReadingsForPatient(__props.getProperty("patientid"),
-                        _lastRead, d);
+                        _lastRead[AIR_QUALITY_READINGS_TYPE], d);
                 UIEvents utoImport = dao.findUIEventsForPatient(__props.getProperty("patientid"),
-                        _lastRead, d);
+                        _lastRead[UI_EVENTS_TYPE], d);
                 
                 int rval = 0;
                 if (__pushURL != null) {
@@ -124,12 +144,13 @@ public class ServerPushTask extends AspiraTimerTask {
         String msg = "";
         if (rval >= 0) {
             msg = "Pushed " + rval + " " + label + " to the server";
+            _lastRead[type] = d;
         } else {
             msg = "Unable to push " + label + " to the server";
         }
         LOGGER.log(Level.WARNING, msg);
         try {
-            dao.addPushEvent(new ServerPushEvent(d, rval, type, msg)); 
+            dao.addPushEvent(new ServerPushEvent(d, rval, type, msg));
         } catch (Throwable ts) {
             LOGGER.log(Level.WARNING, "Unable to record " + label + " push event");
         }
