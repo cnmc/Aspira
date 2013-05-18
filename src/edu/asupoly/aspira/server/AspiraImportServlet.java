@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -18,6 +18,7 @@ import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.model.AirQualityReadings;
+import edu.asupoly.aspira.model.ServerPushEvent;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.UIEvents;
 import edu.asupoly.aspira.monitorservice.ServerPushTask;
@@ -26,7 +27,11 @@ import edu.asupoly.aspira.monitorservice.ServerPushTask;
 public class AspiraImportServlet extends HttpServlet {
 
     private static Date lastImportTime = new Date();
-
+    private static Logger LOGGER = AspiraSettings.getAspiraLogger();
+    public static final int SPIROMETER_READINGS_TYPE = 0;
+    public static final int AIR_QUALITY_READINGS_TYPE = 1;
+    public static final int UI_EVENTS_TYPE = 2;
+    
     /**
      * doGet returns the time of the last successful import for patient patientid
      */
@@ -37,20 +42,27 @@ public class AspiraImportServlet extends HttpServlet {
         try {
             response.setContentType("text/plain");
             out = response.getWriter();
-
-            //No this is not good form   
-            if (lastImportTime == null) {
-                out.println("No imports yet");
-                System.out.println("No imports yet");
-            } else {
-                synchronized (lastImportTime) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy at HH:mm:ss");
-                    out.println(sdf.format(lastImportTime));
-                    System.out.println(sdf.format(lastImportTime));
+            
+            IAspiraDAO dao = AspiraDAO.getDAO();
+            for (int i = 0; i < 3; i++) {
+                ServerPushEvent spe = dao.getLastServerPush(i);
+                if (spe == null) {
+                    out.println("No server push records for type " + i);
+                } else {
+                    out.println(request.getRemoteAddr() + " Last server push for type " + i + " " + spe.toString());
                 }
             }
         } catch (Throwable t) {
             t.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.flush();
+                    out.close();
+                }
+            } catch (Throwable t2) {
+                LOGGER.log(Level.WARNING, "Could not flush and close output stream on doGet");
+            }
         }
     }
 
@@ -69,9 +81,10 @@ public class AspiraImportServlet extends HttpServlet {
         ObjectInputStream  ois = null;
         ServletInputStream sis = null;        
         int appReturnValue = ServerPushTask.PUSH_UNSET;
+        lastImportTime = new Date();
         try {
             String objectType = request.getPathInfo();
-            AspiraSettings.getAspiraLogger().log(Level.INFO,"Server received push request for " + objectType);
+            LOGGER.log(Level.INFO,"Server received push request for " + objectType);
             if (objectType != null && objectType.length() > 0) {
                 if (objectType.startsWith("/")) objectType = objectType.substring(1);
                 sis = request.getInputStream();
@@ -81,37 +94,35 @@ public class AspiraImportServlet extends HttpServlet {
                     if (objectType.startsWith("airqualityreadings")) {                        
                         AirQualityReadings aqrs = (AirQualityReadings)ois.readObject();                        
                         if (aqrs != null && aqrs.size() > 0) {
-                            appReturnValue = (dao.importAirQualityReadings(aqrs, false) ? aqrs.size() : ServerPushTask.SERVER_AQ_IMPORT_FAILED);
-                            AspiraSettings.getAspiraLogger().log(Level.INFO, "Server imported AQ Readings: " + appReturnValue);
+                            appReturnValue = (dao.importAirQualityReadings(aqrs, false) ? aqrs.size() : ServerPushTask.SERVER_AQ_IMPORT_FAILED);                            
+                            LOGGER.log(Level.INFO, "Server imported AQ Readings: " + appReturnValue);
                         } else {
                             appReturnValue = ServerPushTask.SERVER_NO_AQ_READINGS;
                         }
+                        __recordResult(dao, appReturnValue, "airqualityreadings", lastImportTime, AIR_QUALITY_READINGS_TYPE);
                     } 
                     else if (objectType.startsWith("spirometerreadings")) {
                         SpirometerReadings sprs = (SpirometerReadings)ois.readObject();
                         if (sprs != null && sprs.size() > 0) {
                             appReturnValue = (dao.importSpirometerReadings(sprs, false) ? sprs.size() : ServerPushTask.SERVER_SPIROMETER_IMPORT_FAILED);
-                            AspiraSettings.getAspiraLogger().log(Level.INFO,"Server imported Spirometer Readings: " + appReturnValue);
+                            LOGGER.log(Level.INFO,"Server imported Spirometer Readings: " + appReturnValue);
                         } else {
                             appReturnValue = ServerPushTask.SERVER_NO_SPIROMETER_READINGS;
                         }
+                        __recordResult(dao, appReturnValue, "spirometerreadings", lastImportTime, SPIROMETER_READINGS_TYPE);
                     } 
                     else if (objectType.startsWith("uievents")) {
                         UIEvents events = (UIEvents)ois.readObject();
                         if (events != null && events.size() > 0) {
                             appReturnValue = (dao.importUIEvents(events, false) ? events.size() : ServerPushTask.SERVER_UIEVENT_IMPORT_FAILED);
-                            AspiraSettings.getAspiraLogger().log(Level.INFO,"Server imported UI Events: " + appReturnValue);
+                            LOGGER.log(Level.INFO,"Server imported UI Events: " + appReturnValue);
                         } else {
                             appReturnValue = ServerPushTask.SERVER_NO_UIEVENTS;
                         }
+                        __recordResult(dao, appReturnValue, "uievents", lastImportTime, UI_EVENTS_TYPE);
                     }                     
                 } else appReturnValue = ServerPushTask.SERVER_STREAM_ERROR;
             } else appReturnValue = ServerPushTask.SERVER_BAD_OBJECT_TYPE;
-            if (appReturnValue >= 0) {
-                synchronized (lastImportTime) {
-                    lastImportTime = new Date();
-                }
-            }
         } catch (StreamCorruptedException sce) {
             sce.printStackTrace();
             appReturnValue = ServerPushTask.SERVER_STREAM_CORRUPTED_EXCEPTION;
@@ -130,13 +141,13 @@ public class AspiraImportServlet extends HttpServlet {
         } 
         PrintWriter pw = null;
         try {
-            AspiraSettings.getAspiraLogger().log(Level.INFO,"Server returning value: " + appReturnValue);
+            LOGGER.log(Level.INFO,"Server returning value: " + appReturnValue);
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("text/plain");
             pw = response.getWriter();
             pw.println(""+appReturnValue);
         } catch (Throwable t3) {
-            AspiraSettings.getAspiraLogger().log(Level.SEVERE, "Server pushed stacktrace on response: " + t3.getMessage());
+            LOGGER.log(Level.SEVERE, "Server pushed stacktrace on response: " + t3.getMessage());
             t3.printStackTrace();
         } finally {        
             try {
@@ -147,6 +158,22 @@ public class AspiraImportServlet extends HttpServlet {
             } catch (Throwable t2) {
                 t2.printStackTrace();
             }
+        }
+    }
+    
+    private void __recordResult(IAspiraDAO dao, int rval, String label, Date d, int type) {
+        String msg = "";
+        if (rval >= 0) {
+            msg = "Pushed " + rval + " " + label + " to the server";            
+        } else {
+            msg = "Unable to push " + label + " to the server";
+        }
+        LOGGER.log(Level.INFO, msg);
+
+        try {
+            dao.addPushEvent(new ServerPushEvent(d, rval, type, msg));
+        } catch (Throwable ts) {
+            LOGGER.log(Level.WARNING, "Unable to record " + label + " push event");
         }
     }
 }

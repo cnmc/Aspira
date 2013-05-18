@@ -25,6 +25,7 @@ public final class Aspira {
         try {            
             long upTime = __startTime;
             System.out.println("Started Aspira at " + new Date(__startTime));
+            AspiraSettings settings = AspiraSettings.getAspiraSettings();
             AspiraSettings.log(Level.INFO, "Started Aspira at " + new Date(__startTime));
             theService = MonitoringService.getMonitoringService();
             if (theService == null) {

@@ -12,7 +12,7 @@ import java.util.logging.SimpleFormatter;
 
 public final class AspiraSettings {
     private static final String PROPERTY_FILENAME = "properties/aspira.properties";
-    private static final String PUSH_URL_PROPERTY_KEY = "push.url";
+    
     private Logger ASPIRA_LOGGER  = null;
     private Level ASPIRA_LOGLEVEL = null;
     private String ASPIRA_HOME = null;
@@ -79,16 +79,14 @@ public final class AspiraSettings {
             }
             
             String logFileName = __globalProperties.getProperty("aspira.log");
-            if (logFileName == null || logFileName.trim().equals("")) {
-                logFileName = "aspiradefault";
+            if (logFileName != null && !logFileName.trim().equals("")) {
+                SimpleDateFormat format = new SimpleDateFormat("E_MMddyy_HHmmss");
+                logFileName = ASPIRA_HOME + "logs" + File.separator + logFileName + "." + format.format(new Date()) + ".log";
+                FileHandler fhandler = new FileHandler(logFileName);
+                SimpleFormatter sformatter = new SimpleFormatter();
+                fhandler.setFormatter(sformatter);
+                ASPIRA_LOGGER.addHandler(fhandler);
             }
-            SimpleDateFormat format = new SimpleDateFormat("E_MMddyy_HHmmss");
-            logFileName = ASPIRA_HOME + "logs" + File.separator + logFileName + "." + format.format(new Date()) + ".log";
-            FileHandler fhandler = new FileHandler(logFileName);
-            SimpleFormatter sformatter = new SimpleFormatter();
-            fhandler.setFormatter(sformatter);
-            ASPIRA_LOGGER.addHandler(fhandler);
-            
             // Tell the User
             System.out.println("Aspira system starting with values:");
             System.out.println("\tASPIRA_HOME =\t" + ASPIRA_HOME);
@@ -104,21 +102,6 @@ public final class AspiraSettings {
             } catch (Throwable t) {
             }
         }
-    }
-
-    /**
-     * This allows the __pushURL to be reset if needed. Upon setting we'll re-init URL
-     */
-    public boolean setURL(String url) {
-        // figure the shortest possible valid URL is http://X.YYY
-        boolean rval = false;
-        if (url != null && url.trim().length() > 12) {  
-                String pushURL = url;
-                if (!pushURL.endsWith("/")) pushURL = pushURL + "/";
-                __globalProperties.setProperty(PUSH_URL_PROPERTY_KEY, pushURL);
-                rval = true;
-        }
-        return rval;
     }
     
     public static AspiraSettings getAspiraSettings() {

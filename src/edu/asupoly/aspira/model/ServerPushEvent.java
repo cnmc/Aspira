@@ -34,4 +34,8 @@ public class ServerPushEvent implements java.io.Serializable {
         __msg = m;        
     }
 
+    public String toString() {
+        return "Server Push Event on " + __eventDate + " for type " + __importType + " returned " +
+                __responseCode + " with message " + __msg;
+    }
 }
