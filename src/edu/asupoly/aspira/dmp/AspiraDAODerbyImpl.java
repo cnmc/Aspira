@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.model.AirQualityMonitor;
 import edu.asupoly.aspira.model.AirQualityReadings;
@@ -326,8 +327,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
-        if (patientId == null || start == null || end == null) return null;
-        
+        //if (patientId == null || start == null || end == null) return null;
+        if (start == null || end == null) return null;
         return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientBetween"),
                 start, end);
@@ -339,7 +340,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId)
             throws DMPException {
-        if (patientId == null) return null;
+        //if (patientId == null) return null;
         
         return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
@@ -352,7 +353,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatient(String patientId, int groupId)
             throws DMPException {
-        if (patientId == null || groupId <= NO_GROUP_IDENTIFIER) return null;
+        if (groupId <= NO_GROUP_IDENTIFIER) return null;
         
         return __findAirQualityReadingsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
@@ -362,8 +363,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientHead(String patientId, int head)
             throws DMPException {
-        if (patientId == null) return null;
-        
+        //if (patientId == null) return null;
+        if (head <= 0) return null;
         return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, head, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatient"),
                 null, null);
@@ -372,8 +373,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public AirQualityReadings findAirQualityReadingsForPatientTail(String patientId, int tail)
             throws DMPException {
-        if (patientId == null) return null;
-        
+        //if (patientId == null) return null;
+        if (tail <= 0) return null;
         return __findAirQualityReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
                 __derbyProperties.getProperty("sql.findAirQualityReadingsForPatientTail"),
                 null, null);
@@ -393,7 +394,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             int count, String query, Date begin, Date end)
             throws DMPException {
         if (query == null || query.trim().length() == 0) return null;
-        
+
         Connection c = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -401,7 +402,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         try {
             c = DriverManager.getConnection(__jdbcURL);
             ps = c.prepareStatement(query);
-            ps.setString(1, patientId);
+            if (patientId == null || patientId.length() == 0) {                
+                ps.setString(1,  "%");
+            } else {                
+                ps.setString(1, patientId);
+            }
             if (begin != null) {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
@@ -443,7 +448,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatient(String patientId)
             throws DMPException {
-        if (patientId == null) return null;
+        //if (patientId == null) return null;
         
         return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatient"),      
@@ -453,8 +458,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatientTail(String patientId, int tail)
             throws DMPException {
-        if (patientId == null) return null;
-        
+        //if (patientId == null) return null;
+        if (tail <= 0) return null;
         return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientTail"),
                 null, null);
@@ -466,7 +471,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatient(
             String patientId, Date start, Date end) throws DMPException {
-        if (patientId == null || start == null || end == null) return null;
+        if (/*patientId == null ||*/ start == null || end == null) return null;
         
         return __findSpirometerReadingsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientBetween"),      
@@ -476,7 +481,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public SpirometerReadings findSpirometerReadingsForPatient(String patientId, int groupId) 
             throws DMPException {
-       if (patientId == null || groupId <= NO_GROUP_IDENTIFIER) return null;
+       if (/* patientId == null || */ groupId <= NO_GROUP_IDENTIFIER) return null;
         
         return __findSpirometerReadingsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findSpirometerReadingsForPatientByGroup"),      
@@ -504,7 +509,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         try {
             c = DriverManager.getConnection(__jdbcURL);
             ps = c.prepareStatement(query);
-            ps.setString(1, patientId);
+            if (patientId == null || patientId.length() == 0) {
+                ps.setString(1,  "%");
+            } else {
+                ps.setString(1, patientId);
+            }
             if (begin != null) {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
@@ -545,7 +554,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public UIEvents findUIEventsForPatient(String patientId, Date start,
             Date end) throws DMPException {
-        if (patientId == null || start == null || end == null) return null;
+        if (/*patientId == null ||*/ start == null || end == null) return null;
         
         return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findUIEventsForPatientBetween"),      
@@ -554,8 +563,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     
     @Override
     public UIEvents findUIEventsForPatientTail(String patientId, int tail) throws DMPException {
-       if (patientId == null) return null;
-        
+       //if (patientId == null) return null;
+        if (tail <= 0) return null;
         return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, tail, 
                 __derbyProperties.getProperty("sql.findUIEventsForPatientTail"),
                 null, null);
@@ -564,7 +573,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public UIEvents findUIEventsForPatient(String patientId)
             throws DMPException {
-        if (patientId == null) return null;
+        //if (patientId == null) return null;
         return __findUIEventsForPatientByQuery(patientId, NO_GROUP_IDENTIFIER, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findUIEventsForPatient"),      
                 null, null);
@@ -573,7 +582,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     @Override
     public UIEvents findUIEventsForPatient(String patientId, int groupId)
             throws DMPException {
-        if (patientId == null || groupId < 0) return null;
+        if (/*patientId == null ||*/ groupId < 0) return null;
         return __findUIEventsForPatientByQuery(patientId, groupId, Integer.MAX_VALUE,
                 __derbyProperties.getProperty("sql.findUIEventsForPatientByGroup"),      
                 null, null);
@@ -600,7 +609,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         try {
             c = DriverManager.getConnection(__jdbcURL);
             ps = c.prepareStatement(query);
-            ps.setString(1, patientId);
+            if (patientId == null || patientId.length() == 0) {
+                ps.setString(1,  "%");
+            } else {
+                ps.setString(1, patientId);
+            }
             if (begin != null) {
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
                 if (end != null) {
@@ -1154,20 +1167,22 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     private Properties __derbyProperties;
 
     @Override
-    public ServerPushEvent getLastServerPush() throws DMPException {
+    public ServerPushEvent getLastServerPush() throws DMPException {        
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, true);
     }
     @Override
     public ServerPushEvent getLastServerPush(int type) throws DMPException {
-        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, true);
+        if (type <= 0) return getLastServerPush();
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, true);
     }
     @Override
-    public ServerPushEvent getLastValidServerPush() throws DMPException {
+    public ServerPushEvent getLastValidServerPush() throws DMPException {        
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEvents"), -1, false);
     }
     @Override
     public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
-        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, false);
+        if (type <= 0) return getLastValidServerPush();
+        return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, false);
     }
     @Override
     public ServerPushEvent[] getServerPushEvents() throws DMPException {
@@ -1175,7 +1190,8 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     @Override
     public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
-        return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEventsByType"), type, true);
+        if (type <= 0) return getServerPushEvents();
+        return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, true);
     }
     
     @Override
@@ -1257,7 +1273,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     private ServerPushEvent __findLastServerPushEventByQuery(String query, int type, boolean includeErrors) 
             throws DMPException {
 
-        if (query == null || query.trim().length() == 0) return null;
+        if (query == null || query.trim().length() == 0) return null;        
         
         Connection c = null;
         PreparedStatement ps = null;
@@ -1282,7 +1298,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             }            
             return rval;
         } catch (SQLException se) {
-            LOGGER.logp(Level.SEVERE, CLASS, "__findLastServerPushEventByQuery", "SQL Error");
+            LOGGER.logp(Level.SEVERE, CLASS, "__findLastServerPushEventByQuery", "SQL Error " + Aspira.stackToString(se));
             throw new DMPException(se);
         } catch (Throwable t) {
             LOGGER.logp(Level.SEVERE, CLASS, "__findLastServerPushEventByQuery", "Throwable");

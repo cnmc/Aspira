@@ -82,7 +82,7 @@ public final class AspiraDAO implements IAspiraDAO {
     // For server push
     @Override
     public ServerPushEvent getLastServerPush(int type) throws DMPException {
-        return __dao.getLastServerPush();
+        return __dao.getLastServerPush(type);
     }
     @Override
     public ServerPushEvent getLastValidServerPush() throws DMPException {
@@ -90,7 +90,7 @@ public final class AspiraDAO implements IAspiraDAO {
     }
     @Override
     public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
-        return __dao.getLastServerPush();
+        return __dao.getLastServerPush(type);
     }
     @Override
     public ServerPushEvent[] getServerPushEvents() throws DMPException {
@@ -98,7 +98,7 @@ public final class AspiraDAO implements IAspiraDAO {
     }
     @Override
     public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
-        return __dao.getServerPushEvents();
+        return __dao.getServerPushEvents(type);
     }
     @Override
     public boolean addPushEvent(ServerPushEvent s) throws DMPException {

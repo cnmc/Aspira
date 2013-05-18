@@ -90,6 +90,7 @@ public class ParticleReading implements java.io.Serializable, Comparable<Particl
     
     @Override
     public String toString() {
-        return dateTime.toString() + " " + getSmallParticleCount() + " " + getLargeParticleCount();
+        return dateTime.toString() + " " + getPatientId() + " " + getDeviceId() + " " + 
+                getSmallParticleCount() + " " + getLargeParticleCount();
     }
 }

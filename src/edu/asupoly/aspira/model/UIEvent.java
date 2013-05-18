@@ -51,6 +51,10 @@ public class UIEvent implements java.io.Serializable, Comparable<UIEvent> {
         this.groupId     = gid;
     }
     
+    public String toString() {
+        return date.toString() + " " + getPatientId() + " " + getDeviceId() + " " + getVersion() +
+                " " + getEventType() + " " + getEventTarget() + " " + getEventValue();
+    }
     public static Date formatDate(String date)
     {
         //

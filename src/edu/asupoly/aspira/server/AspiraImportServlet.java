@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,12 +16,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.asupoly.aspira.Aspira;
 import edu.asupoly.aspira.AspiraSettings;
 import edu.asupoly.aspira.dmp.AspiraDAO;
+import edu.asupoly.aspira.dmp.DMPException;
 import edu.asupoly.aspira.dmp.IAspiraDAO;
 import edu.asupoly.aspira.model.AirQualityReadings;
+import edu.asupoly.aspira.model.ParticleReading;
 import edu.asupoly.aspira.model.ServerPushEvent;
+import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
+import edu.asupoly.aspira.model.UIEvent;
 import edu.asupoly.aspira.model.UIEvents;
 import edu.asupoly.aspira.monitorservice.ServerPushTask;
 
@@ -31,6 +38,7 @@ public class AspiraImportServlet extends HttpServlet {
     public static final int SPIROMETER_READINGS_TYPE = 0;
     public static final int AIR_QUALITY_READINGS_TYPE = 1;
     public static final int UI_EVENTS_TYPE = 2;
+    private static final String[] __TYPES = { "SpirometerReadings", "AirQualityReadings", "UIEvents" };
     
     /**
      * doGet returns the time of the last successful import for patient patientid
@@ -42,16 +50,11 @@ public class AspiraImportServlet extends HttpServlet {
         try {
             response.setContentType("text/plain");
             out = response.getWriter();
-            
-            IAspiraDAO dao = AspiraDAO.getDAO();
+            Map<String, String[]> requestParams = request.getParameterMap();
+            IAspiraDAO dao = AspiraDAO.getDAO();            
             for (int i = 0; i < 3; i++) {
-                ServerPushEvent spe = dao.getLastServerPush(i);
-                if (spe == null) {
-                    out.println("No server push records for type " + i);
-                } else {
-                    out.println(request.getRemoteAddr() + " Last server push for type " + i + " " + spe.toString());
-                }
-            }
+                printByType(requestParams, dao, i, out);            
+            }        
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
@@ -66,6 +69,120 @@ public class AspiraImportServlet extends HttpServlet {
         }
     }
 
+    private void printByType(Map<String, String[]> requestParams, IAspiraDAO dao, int type, PrintWriter out) {
+        ServerPushEvent spe = null;
+        try {
+            spe = dao.getLastServerPush(type);
+        } catch (DMPException dme) {
+            LOGGER.log(Level.WARNING, "Could not retrieve last server push for type " + __TYPES[type]);
+        }
+        
+        if (spe == null) {
+          out.println("\nNo server push records for type " + __TYPES[type]);
+        } else {
+          out.println("\nLast server push for type " + __TYPES[type] + ":\n" + spe.toString());
+          String[] tail = requestParams.get(__TYPES[type]);
+          if (tail != null && tail.length > 0) {
+              LOGGER.log(Level.INFO, "Requesting " + tail[0] + " records for type " + __TYPES[type]);
+              switch (type) {
+              case SPIROMETER_READINGS_TYPE : 
+                  printSpirometerReadings(dao, out, tail[0]);
+                  break;
+              case AIR_QUALITY_READINGS_TYPE : 
+                  printAirQualityReadings(dao, out, tail[0]);
+                  break;
+              case UI_EVENTS_TYPE : 
+                  printUIEvents(dao, out, tail[0]);
+                  break;
+              default:
+                  out.println("\nUnknown event type passed to print: " + type);
+                  break;
+              }
+          }
+        }
+    }
+    
+    private void printAirQualityReadings(IAspiraDAO dao, PrintWriter out, String tail) {
+        try {
+            AirQualityReadings sprs = null;
+            int tailNum = Integer.parseInt(tail);
+            if (tailNum > 0) {
+                sprs = dao.findAirQualityReadingsForPatientTail(null, tailNum);
+            } else {
+                sprs = dao.findAirQualityReadingsForPatient(null);
+            }
+            if (sprs == null) {
+                out.println("No Air Quality Readings available");
+            } else {
+                Iterator<ParticleReading> iter = sprs.iterator();
+                if (iter == null) {
+                    out.println("No Air Quality Readings are available");
+                } else {
+                    while (iter.hasNext()) {
+                        out.println(iter.next().toString());
+                    }
+                }
+            }
+        } catch (Throwable ts) {
+            LOGGER.log(Level.WARNING, "Unable to retrieve air quality readings " + Aspira.stackToString(ts));
+            out.println("\nUnable to retrieve air quality readings\n");
+        }
+    }
+    
+    private void printSpirometerReadings(IAspiraDAO dao, PrintWriter out, String tail) {
+        try {
+            SpirometerReadings sprs = null;
+            int tailNum = Integer.parseInt(tail);
+            if (tailNum > 0) {
+                sprs = dao.findSpirometerReadingsForPatientTail(null, tailNum);
+            } else {
+                sprs = dao.findSpirometerReadingsForPatient(null);
+            }
+            if (sprs == null) {
+                out.println("No Spirometer Readings available");
+            } else {
+                Iterator<SpirometerReading> iter = sprs.iterator();
+                if (iter == null) {
+                    out.println("No Spirometer Readings are available");
+                } else {
+                    while (iter.hasNext()) {
+                        out.println(iter.next().toString());
+                    }
+                }
+            }
+        } catch (Throwable ts) {
+            LOGGER.log(Level.WARNING, "Unable to retrieve spirometer readings " + ts.getMessage());
+            out.println("\nUnable to retrieve spirometer readings\n");
+        }
+    }
+    
+    private void printUIEvents(IAspiraDAO dao, PrintWriter out, String tail) {
+        try {
+            UIEvents sprs = null;
+            int tailNum = Integer.parseInt(tail);
+            if (tailNum > 0) {
+                sprs = dao.findUIEventsForPatientTail(null, tailNum);
+            } else {
+                sprs = dao.findUIEventsForPatient(null);
+            }
+            if (sprs == null) {
+                out.println("No User Interaction Events available");
+            } else {
+                Iterator<UIEvent> iter = sprs.iterator();
+                if (iter == null) {
+                    out.println("No User Interaction Event are available");
+                } else {
+                    while (iter.hasNext()) {
+                        out.println(iter.next().toString());
+                    }
+                }
+            }
+        } catch (Throwable ts) {
+            LOGGER.log(Level.WARNING, "Unable to retrieve user interaction events " + ts.getMessage());
+            out.println("\nUnable to retrieve user interaction events\n");
+        }
+    }
+    
     /**
      * Handle upload of serialized objects
      *
