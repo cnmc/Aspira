@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -46,7 +48,6 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -155,45 +156,50 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             propertyValue = value;
         }        
     }
-    private List<PropertyFileData> readProps(String filename) {
-        List<PropertyFileData> rval = new ArrayList<PropertyFileData>();
-        
-        BufferedReader br = null;
+    
+    private Properties readProps(String filename) {
+        InputStreamReader isr = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-            String line = br.readLine();
-            while (line != null) {
-                if (!line.trim().startsWith("#")) {
-                    String[] prop = line.split("=");
-                    if (prop != null && prop.length == 2) {
-                        rval.add(new PropertyFileData(prop[0], new JTextField(prop[1])));
-                    }
-                }
-                line = br.readLine();
-            }
-        } catch (Exception exc) {
-            LOGGER.log(Level.WARNING, "Unable to read properties file " + filename);
-        } finally {
+        isr = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(filename));
+                    //new InputStreamReader(new FileInputStream(PROPERTY_FILENAME));
+            Properties p = new Properties();
+            p.load(isr);
+            return p;
+        } catch (Throwable t) {
+            LOGGER.log(Level.SEVERE, "Unable to load properties from " + filename);
+            return null;
+        }
+    }
+    
+    private List<PropertyFileData> __convertPropertiesToList(Properties p) {
+        if (p == null) return new ArrayList<PropertyFileData>();
+        
+        List<PropertyFileData> rval = new ArrayList<PropertyFileData>();
+        Set<Map.Entry<Object, Object>> plist = p.entrySet();
+        Iterator<Map.Entry<Object, Object>> iter = plist.iterator();
+        while (iter.hasNext()) {
             try {
-                if (br != null) br.close();
-            } catch (Throwable t) {
-                LOGGER.log(Level.WARNING, "Unable to close properties file " + filename);
+                Map.Entry<Object, Object> entry = iter.next();
+                rval.add(new PropertyFileData((String)entry.getKey(),
+                        new JTextField((String)entry.getValue())));
+            } catch (Throwable t2) {
+                LOGGER.log(Level.INFO, "Cannot parse a property in file");
             }
         }
-        
         return rval;
     }
     
     private javax.swing.JPanel __createPropsPanel(String filename) {
         final String fname = filename;
         javax.swing.JPanel propsPanel = new javax.swing.JPanel();
-        final List<PropertyFileData> props = readProps(filename);
-        propsPanel.setLayout(new GridLayout(0, 2));        
-        Iterator<PropertyFileData> iter = props.iterator();
+        final Properties props = readProps(fname);
+        final List<PropertyFileData> propData = __convertPropertiesToList(props);
+        propsPanel.setLayout(new GridLayout(0, 2)); 
+        Iterator<PropertyFileData> iter = propData.iterator();
         while (iter.hasNext()) {
-            PropertyFileData entry = iter.next();
-            propsPanel.add(new JLabel(entry.propertyName));
-            propsPanel.add(entry.propertyValue);
+            PropertyFileData next = iter.next();
+            propsPanel.add(new JLabel(next.propertyName));
+            propsPanel.add(next.propertyValue);
         }
         propsPanel.add(new JLabel(""));
         propsPanel.add(new JLabel(""));
@@ -204,9 +210,11 @@ public class AdminConfigWindow extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent ae) {
                 PrintWriter pw = null;
                 try {
-                    pw = new PrintWriter(new FileOutputStream(fname));
-
-                    Iterator<PropertyFileData> iter = props.iterator();
+                    URL url = this.getClass().getClassLoader().getResource(fname);
+                    File file = new File(url.toURI().getPath());
+                    pw = new PrintWriter(new FileOutputStream(file));
+                    Properties p = new Properties();
+                    Iterator<PropertyFileData> iter = propData.iterator();
                     while (iter.hasNext()) {
                         PropertyFileData entry = iter.next();
                         pw.println(entry.propertyName+"="+entry.propertyValue.getText());
