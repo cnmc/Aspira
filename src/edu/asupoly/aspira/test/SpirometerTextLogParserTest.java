@@ -29,15 +29,15 @@ public class SpirometerTextLogParserTest {
     @Before
     public void setUp() {
         try {
-            __benchmarkReadings.addReading(new SpirometerReading("device_one", "p_one", "2013-03- 24T17:26:00-00:00", "-1", false, "488.2", "145.3", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:39:15-00:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:41:57-00:00", "-1", false, "545.2", "111.6", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:43:26-00:00", "-1", false, "454.2", "141.2", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:55:42-00:00", "-1", false, "222.2", "111.1", "0", "-1", __T));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:00:42-00:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:07:02-00:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:22:38-00:00", "-1", false, "555.2", "111.1", "0", "-1", __F));
-        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-29T13:12:48-00:00", "-1", false, "333.3", "122.2", "0", "-1", __F));
+            __benchmarkReadings.addReading(new SpirometerReading("device_one", "p_one", "2013-03- 24T17:26:00-09:00", "-1", false, "488.2", "145.3", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:39:15-08:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:41:57-07:00", "-1", false, "545.2", "111.6", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:43:26-07:50", "-1", false, "454.2", "141.2", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-24T23:55:42-06:00", "-1", false, "222.2", "111.1", "0", "-1", __T));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:00:42-05:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:07:02-04:00", "-1", false, "555.5", "111.1", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-25T00:22:38+09:00", "-1", false, "555.2", "111.1", "0", "-1", __F));
+        __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-29T13:12:48+05:00", "-1", false, "333.3", "122.2", "0", "-1", __F));
         __benchmarkReadings.addReading(new SpirometerReading("device_one","p_one", "2013-03-29T14:20:30-00:00", "-1", false, "452.2", "111.1", "0", "-1", __F));
         p.put("deviceid", "device_one");
         p.put("patientid", "p_one");

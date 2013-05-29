@@ -408,11 +408,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(1, patientId);
             }
             if (begin != null) {
-                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 if (end != null) {
-                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 } else {  // if we have no end but we have a begin we set end to the way future
-                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW), AspiraSettings.ASPIRA_CALENDAR);
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);
@@ -420,7 +420,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             rs = ps.executeQuery();
             while (rs.next() && count > 0) {
                rval.addReading(new ParticleReading(rs.getString("deviceid"), rs.getString("patientid"),
-                       new Date(rs.getTimestamp("readingtime").getTime()), 
+                       new Date(rs.getTimestamp("readingtime", AspiraSettings.ASPIRA_CALENDAR).getTime()), 
                        rs.getInt("smallparticle"), rs.getInt("largeparticle"), rs.getInt("groupid")));
                count--;
             }
@@ -515,11 +515,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(1, patientId);
             }
             if (begin != null) {
-                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 if (end != null) {
-                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 } else {  // if we have no end but we have a begin we set end to the way future
-                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW), AspiraSettings.ASPIRA_CALENDAR);
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);
@@ -527,7 +527,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             rs = ps.executeQuery();
             while (rs.next() && count > 0) {
                rval.addReading(new SpirometerReading(rs.getString("deviceid"), rs.getString("patientid"),
-                       new Date(rs.getTimestamp("readingtime").getTime()), 
+                       new Date(rs.getTimestamp("readingtime", AspiraSettings.ASPIRA_CALENDAR).getTime()), 
                        rs.getInt("measureid"), rs.getBoolean("manual"),
                        rs.getInt("pefvalue"), rs.getFloat("fev1value"),
                        rs.getInt("error"), rs.getInt("bestvalue"), rs. getBoolean("symptoms"), rs.getInt("groupid")));
@@ -615,11 +615,11 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(1, patientId);
             }
             if (begin != null) {
-                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()));
+                ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 if (end != null) {
-                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()));
+                    ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 } else {  // if we have no end but we have a begin we set end to the way future
-                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW));
+                    ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW), AspiraSettings.ASPIRA_CALENDAR);
                 }
             } else if (groupId != NO_GROUP_IDENTIFIER) {
                 ps.setInt(2,  groupId);
@@ -629,7 +629,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                rval.addEvent(new UIEvent(rs.getString("deviceid"), rs.getString("patientid"),
                        rs.getString("version"), rs.getString("eventtype"),
                        rs.getString("eventtarget"), rs.getString("eventvalue"),
-                       new Date(rs.getTimestamp("eventtime").getTime()),
+                       new Date(rs.getTimestamp("eventtime", AspiraSettings.ASPIRA_CALENDAR).getTime()),
                        rs.getInt("groupid")));
                count--;
             }
@@ -685,7 +685,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(1, next.getDeviceId());
                 ps.setString(2, next.getPatientId());
                 // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
-                ps.setTimestamp(3, new java.sql.Timestamp(next.getDateTime().getTime()));
+                ps.setTimestamp(3, new java.sql.Timestamp(next.getDateTime().getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 ps.setInt(4, next.getSmallParticleCount());
                 ps.setInt(5, next.getLargeParticleCount());
                 ps.setInt(6, id);
@@ -748,7 +748,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(1, next.getDeviceId());
                 ps.setString(2, next.getPatientId());
                 // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
-                ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()));
+                ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 ps.setInt(4, next.getMeasureID());
                 ps.setBoolean(5, next.getManual());
                 ps.setInt(6, next.getPEFValue());
@@ -816,7 +816,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 ps.setString(5,  next.getEventTarget());
                 ps.setString(6,  next.getEventValue());
                 // java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(utilDate.getTime())
-                ps.setTimestamp(7, new java.sql.Timestamp(next.getDate().getTime()));
+                ps.setTimestamp(7, new java.sql.Timestamp(next.getDate().getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 ps.setInt(8, id);
                 ps.executeUpdate();
                 ps.clearParameters();
@@ -860,7 +860,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
 
             ps.setString(1, next.getDeviceId());
             ps.setString(2, next.getPatientId());
-            ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()));
+            ps.setTimestamp(3, new java.sql.Timestamp(next.getMeasureDate().getTime()), AspiraSettings.ASPIRA_CALENDAR);
             ps.setInt(4, next.getMeasureID());
             ps.setBoolean(5, next.getManual());
             ps.setInt(6, next.getPEFValue());
@@ -1204,7 +1204,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         try {
             c = DriverManager.getConnection(__jdbcURL);
             ps = c.prepareStatement(__derbyProperties.getProperty("sql.addServerPushEvent"));
-            ps.setTimestamp(1, new java.sql.Timestamp(s.getEventDate().getTime()));
+            ps.setTimestamp(1, new java.sql.Timestamp(s.getEventDate().getTime()), AspiraSettings.ASPIRA_CALENDAR);
             ps.setInt(2,  s.getResponseCode());
             ps.setInt(3, s.getImportType());
             ps.setString(4, s.getMessage());
@@ -1249,7 +1249,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
  
             rs = ps.executeQuery();
             while (rs.next()) {
-               rval.add(new ServerPushEvent(new Date(rs.getTimestamp("eventtime").getTime()),
+               rval.add(new ServerPushEvent(new Date(rs.getTimestamp("eventtime", AspiraSettings.ASPIRA_CALENDAR).getTime()),
                        rs.getInt("responsecode"), rs.getInt("objecttype"), rs.getString("message")));
             }            
             return rval.toArray(new ServerPushEvent[0]);
@@ -1293,7 +1293,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
  
             rs = ps.executeQuery();
             if (rs.next()) {
-               rval = new ServerPushEvent(new Date(rs.getTimestamp("eventtime").getTime()),
+               rval = new ServerPushEvent(new Date(rs.getTimestamp("eventtime", AspiraSettings.ASPIRA_CALENDAR).getTime()),
                        rs.getInt("responsecode"), rs.getInt("objecttype"), rs.getString("message"));
             }            
             return rval;

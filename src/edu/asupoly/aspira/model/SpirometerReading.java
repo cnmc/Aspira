@@ -93,14 +93,18 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             this.deviceId = deviceId;
             this.pid = id;
             this.measureID = Integer.parseInt(mid);
+            System.out.println("MDATE " + mdate);
             StringTokenizer st = new StringTokenizer(mdate, "T", false);     
             mdate = st.nextToken();
             String time = st.nextToken();
-            StringTokenizer _t = new StringTokenizer(time, "-", false);
-            time = _t.nextToken();  // note timezone info is thrown away right now
-            mdate = mdate + " " + time;
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            this.measureDate = df.parse(mdate);
+            StringTokenizer _t = new StringTokenizer(time, "-+", true);
+            // note the end of the String is HH:mm:ss<sign><GMT offset>            
+            mdate = mdate + " " + _t.nextToken();
+            time = _t.nextToken() + _t.nextToken();  // This is <sign>XX:YY, remove the :            
+            mdate = mdate + " " + time.substring(0, 3) + time.substring(4,6);            
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+            df.setLenient(false);
+            this.measureDate = df.parse(mdate);            
             this.measureID = Integer.valueOf(mid.trim()).intValue();
             this.manual = manual;  // hardwire this to false as this constructor only exists for device readings
             pefValue = Float.valueOf(pef.trim()).intValue();  // yes parse as float but return cast as int

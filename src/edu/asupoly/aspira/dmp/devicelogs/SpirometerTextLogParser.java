@@ -13,8 +13,10 @@ import edu.asupoly.aspira.model.SpirometerTextReadingFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,16 +112,29 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
             if(date != null)
             {
                 // Spirometer txt gives this format Sun Mar 24 17:26:00 MST 2013
-                // We need yyyy-MM-ddTHH:mm:ss-Z
+                // We need yyyy-MM-ddTHH:mm:ss Z
+                // BTW this is awful coding, we actually string manipulate the date
+                // field out of our program to look like the device XML format just
+                // so the SpirometerReading constructor can treat it the same - yikes!
                 StringTokenizer st = new StringTokenizer(date, " ", false);
                 String mm = st.nextToken();
                 mm = getMonth(st.nextToken());
                 String dd = st.nextToken();
                 String time = st.nextToken();
+                String zone = st.nextToken();
                 String yy = st.nextToken();
-                yy = st.nextToken();
-                String zone = "07:00";  // SpirometerReading Constructor throws this away now anyway
-                _dt = yy + '-' + mm + '-' + dd + 'T' + time + '-' +  zone;                
+                
+                // convert Timezone 3 character string to GMT offset
+                TimeZone tz = TimeZone.getTimeZone(zone);
+                Calendar cal = Calendar.getInstance(tz);
+                TimeZone gmttz  = TimeZone.getTimeZone("GMT");
+                Calendar calgmt = Calendar.getInstance(gmttz);
+                long delta = calgmt.getTimeInMillis() - cal.getTimeInMillis();
+                delta = delta / (1000*60*60); // milliseconds in one hour
+                zone = String.format("+3ld", delta) + "00";                
+                
+                _dt = yy + '-' + mm + '-' + dd + 'T' + time + '-' +  zone;
+                System.out.println("Return date string from SP text log parser: " + _dt);
             }
             return _dt;
         } catch (Throwable t) {

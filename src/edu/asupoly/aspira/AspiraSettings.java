@@ -3,8 +3,10 @@ package edu.asupoly.aspira;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +14,7 @@ import java.util.logging.SimpleFormatter;
 
 public final class AspiraSettings {
     private static final String PROPERTY_FILENAME = "properties/aspira.properties";
+    public static final Calendar ASPIRA_CALENDAR = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     
     private Logger ASPIRA_LOGGER  = null;
     private Level ASPIRA_LOGLEVEL = null;
@@ -113,6 +116,10 @@ public final class AspiraSettings {
             }
         }
         return __appSettings;
+    }
+    
+    public static Calendar getAspiraCalendar() {
+        return ASPIRA_CALENDAR;
     }
     
     public static String getAirQualityMonitorId() {
