@@ -110,7 +110,7 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
             if(date != null)
             {
                 // Spirometer txt gives this format Sun Mar 24 17:26:00 MST 2013
-                // We need yyyy-mm-ddThh:mm:ss-MM:SS
+                // We need yyyy-MM-ddTHH:mm:ss-Z
                 StringTokenizer st = new StringTokenizer(date, " ", false);
                 String mm = st.nextToken();
                 mm = getMonth(st.nextToken());
@@ -118,7 +118,7 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
                 String time = st.nextToken();
                 String yy = st.nextToken();
                 yy = st.nextToken();
-                String zone = "00:00";
+                String zone = "07:00";  // SpirometerReading Constructor throws this away now anyway
                 _dt = yy + '-' + mm + '-' + dd + 'T' + time + '-' +  zone;                
             }
             return _dt;

@@ -1172,7 +1172,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     @Override
     public ServerPushEvent getLastServerPush(int type) throws DMPException {
-        if (type <= 0) return getLastServerPush();
+        if (type < 0) return getLastServerPush();
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, true);
     }
     @Override
@@ -1181,7 +1181,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     @Override
     public ServerPushEvent getLastValidServerPush(int type) throws DMPException {
-        if (type <= 0) return getLastValidServerPush();
+        if (type < 0) return getLastValidServerPush();
         return __findLastServerPushEventByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, false);
     }
     @Override
@@ -1190,7 +1190,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
     }
     @Override
     public ServerPushEvent[] getServerPushEvents(int type) throws DMPException {
-        if (type <= 0) return getServerPushEvents();
+        if (type < 0) return getServerPushEvents();
         return __findServerPushEventsByQuery(__derbyProperties.getProperty("sql.getServerPushEventsForType"), type, true);
     }
     
@@ -1287,7 +1287,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                 minCode = -9999;
             }
             ps.setInt(1,  minCode);
-            if (type > 0) {
+            if (type >= 0) {
                 ps.setInt(2, type);
             }
  

@@ -97,9 +97,9 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
             mdate = st.nextToken();
             String time = st.nextToken();
             StringTokenizer _t = new StringTokenizer(time, "-", false);
-            time = _t.nextToken();
+            time = _t.nextToken();  // note timezone info is thrown away right now
             mdate = mdate + " " + time;
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             this.measureDate = df.parse(mdate);
             this.measureID = Integer.valueOf(mid.trim()).intValue();
             this.manual = manual;  // hardwire this to false as this constructor only exists for device readings
