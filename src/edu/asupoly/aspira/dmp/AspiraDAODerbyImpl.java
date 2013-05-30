@@ -611,12 +611,13 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
             ps = c.prepareStatement(query);
             if (patientId == null || patientId.length() == 0) {
                 ps.setString(1,  "%");
-            } else {
+            } else {                
                 ps.setString(1, patientId);
             }
-            if (begin != null) {
+            if (begin != null) {                
                 ps.setTimestamp(2, new java.sql.Timestamp(begin.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 if (end != null) {
+                    end = new Date(end.getTime() + 1000L*3600L*24L); // set one day ahead                    
                     ps.setTimestamp(3, new java.sql.Timestamp(end.getTime()), AspiraSettings.ASPIRA_CALENDAR);
                 } else {  // if we have no end but we have a begin we set end to the way future
                     ps.setTimestamp(3, new java.sql.Timestamp(begin.getTime()+MS_ONE_YEAR_FROM_NOW), AspiraSettings.ASPIRA_CALENDAR);
@@ -632,7 +633,7 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
                        new Date(rs.getTimestamp("eventtime", AspiraSettings.ASPIRA_CALENDAR).getTime()),
                        rs.getInt("groupid")));
                count--;
-            }
+            }            
             return rval;
         } catch (SQLException se) {
             LOGGER.logp(Level.SEVERE, CLASS, "__findUIEventsForPatientByQuery", "SQL Error");
@@ -1117,13 +1118,19 @@ public class AspiraDAODerbyImpl extends AspiraDAOBaseImpl {
         }
         // load the driver, test the URL
         try {
+            // In case we need to modify system properties for Derby
+            Properties sysProps = System.getProperties();
+            
             // read in all the derby properties and SQL queries we need  
             Enumeration<?> keys = p.keys();
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement();
-                if (key.startsWith("sql") || key.startsWith("derby")) {
+                if (key.startsWith("sql")) {
                     LOGGER.log(Level.FINEST, CLASS, "found property with key, value\t" + key + ", " + p.getProperty(key));                    
                     __derbyProperties.setProperty(key, p.getProperty(key));
+                } else if (key.startsWith("derby")) {
+                    LOGGER.log(Level.FINEST, CLASS, "found derby system property with key, value\t" + key + ", " + p.getProperty(key)); 
+                    sysProps.setProperty(key, p.getProperty(key));
                 }
             }
             

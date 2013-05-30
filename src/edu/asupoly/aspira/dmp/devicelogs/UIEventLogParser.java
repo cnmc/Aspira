@@ -43,9 +43,9 @@ public class UIEventLogParser implements UIEventsFactory  {
                 finput = finput.trim();
                 try {
                     st = new StringTokenizer(finput, UI_EVENT_DELIMITER, false);
-                    // first 5 tokens are deviceid, patientid, build version, event type, target
-                    deviceid  = st.nextToken().trim();
+                    // first 5 tokens are patientid, deviceid, build version, event type, target                    
                     patientid = st.nextToken().trim();
+                    deviceid  = st.nextToken().trim();
                     versionid = st.nextToken().trim();
                     eventType = st.nextToken().trim();
                     target    = st.nextToken().trim();
