@@ -13,7 +13,9 @@ import edu.asupoly.aspira.model.SpirometerTextReadingFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -55,7 +57,8 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
             String fevLine  = null;
             String symptoms = null;
             
-            String _date,  pef, fev;
+            Date _date;
+            String pef, fev;
             Boolean hasSymptoms;
             dateLine = br.readLine();
             pefLine  = br.readLine();
@@ -105,44 +108,57 @@ public class SpirometerTextLogParser implements SpirometerTextReadingFactory
         return _spReadings;
     }
 
-    public String formatDate(String date) throws DMPException
+    public Date formatDate(String date) throws DMPException
     {
-        try {
-            String _dt = null;
-            if(date != null)
-            {
-                // Spirometer txt gives this format Sun Mar 24 17:26:00 MST 2013
-                // We need yyyy-MM-ddTHH:mm:ss Z
-                // BTW this is awful coding, we actually string manipulate the date
-                // field out of our program to look like the device XML format just
-                // so the SpirometerReading constructor can treat it the same - yikes!
-                StringTokenizer st = new StringTokenizer(date, " ", false);
-                String mm = st.nextToken();
-                mm = getMonth(st.nextToken());
-                String dd = st.nextToken();
-                String time = st.nextToken();
-                String zone = st.nextToken();
-                String yy = st.nextToken();
-                
-                // convert Timezone 3 character string to GMT offset
-                TimeZone tz = TimeZone.getTimeZone(zone);
-                Calendar cal = Calendar.getInstance(tz);
-                TimeZone gmttz  = TimeZone.getTimeZone("GMT");
-                Calendar calgmt = Calendar.getInstance(gmttz);
-                long delta = calgmt.getTimeInMillis() - cal.getTimeInMillis();
-                delta = delta / (1000*60*60); // milliseconds in one hour
-                zone = String.format("+3ld", delta) + "00";                
-                
-                _dt = yy + '-' + mm + '-' + dd + 'T' + time + '-' +  zone;
-                System.out.println("Return date string from SP text log parser: " + _dt);
-            }
-            return _dt;
+        if (date == null) return null;
+        
+        try {     
+            // Spirometer txt gives this format Sun Mar 24 17:26:00 MST 2013
+            SimpleDateFormat sdfOrig   = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+            return sdfOrig.parse(date);
         } catch (Throwable t) {
             Logger.getLogger(SpirometerTextLogParser.class.getName()).log(Level.SEVERE, "Unable to parse date");
             throw new DMPException(t);
-        }
-        
+        }        
     }
+        // This mess used to be in the method above for some reason
+        /*
+        // We need yyyy-MM-ddTHH:mm:ss Z
+        SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd")
+        // BTW this is awful coding, we actually string manipulate the date
+        // field out of our program to look like the device XML format just
+        // so the SpirometerReading constructor can treat it the same - yikes!
+        StringTokenizer st = new StringTokenizer(date, " ", false);
+        String mm = st.nextToken();
+        mm = getMonth(st.nextToken());
+        String dd = st.nextToken();
+        String time = st.nextToken();
+        String zone = st.nextToken().trim();
+        String yy = st.nextToken();
+        
+        // convert Timezone 3 character string to GMT offset
+        System.out.println("zone: " + zone);
+        TimeZone tz = TimeZone.getTimeZone(zone);
+        Calendar cal = Calendar.getInstance(tz);
+        TimeZone gmttz  = TimeZone.getTimeZone("GMT");
+        Calendar calgmt = Calendar.getInstance(gmttz);
+        if (tz.equals(gmttz)) System.out.println("Timezones are the same");
+        else System.out.println("Timezones are NOT the same");
+        if (cal.equals(calgmt)) System.out.println("Calendars are the same");
+        else System.out.println("Calendars are NOT the same");
+        System.out.println("TZ cal in ms: " + cal.getTimeInMillis());
+        System.out.println("GMT cal in ms: " + calgmt.getTimeInMillis());
+        long delta = calgmt.getTimeInMillis() - cal.getTimeInMillis();
+        delta = delta / (1000*60*60); // milliseconds in one hour
+        System.out.println("DELTA: " + delta);
+        zone = String.format("%+03d", delta) + ":00";                
+        
+        _dt = yy + '-' + mm + '-' + dd + 'T' + time + zone;
+        System.out.println("Return date string from SP text log parser: " + _dt);
+    }
+    return _dt;
+    */
+        
 
     public String getMonth(String mm)
     {

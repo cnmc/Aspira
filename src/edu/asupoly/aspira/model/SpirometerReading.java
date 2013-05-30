@@ -87,39 +87,12 @@ public class SpirometerReading implements java.io.Serializable, Comparable<Spiro
         return measureDate.hashCode();
     }
 
-    public SpirometerReading(String deviceId, String id, String mdate, String mid, boolean manual, 
+    public SpirometerReading(String deviceId, String id, Date mdate, String mid, boolean manual, 
             String pef, String fev, String err, String bvalue, Boolean hasSymptoms) throws DeviceLogException {
-        try{
-            this.deviceId = deviceId;
-            this.pid = id;
-            this.measureID = Integer.parseInt(mid);
-            System.out.println("MDATE " + mdate);
-            StringTokenizer st = new StringTokenizer(mdate, "T", false);     
-            mdate = st.nextToken();
-            String time = st.nextToken();
-            StringTokenizer _t = new StringTokenizer(time, "-+", true);
-            // note the end of the String is HH:mm:ss<sign><GMT offset>            
-            mdate = mdate + " " + _t.nextToken();
-            time = _t.nextToken() + _t.nextToken();  // This is <sign>XX:YY, remove the :            
-            mdate = mdate + " " + time.substring(0, 3) + time.substring(4,6);            
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-            df.setLenient(false);
-            this.measureDate = df.parse(mdate);            
-            this.measureID = Integer.valueOf(mid.trim()).intValue();
-            this.manual = manual;  // hardwire this to false as this constructor only exists for device readings
-            pefValue = Float.valueOf(pef.trim()).intValue();  // yes parse as float but return cast as int
-            fev1Value = Float.valueOf(fev.trim()).floatValue();
-            error = Integer.parseInt(err);
-            bestValue = Integer.parseInt(bvalue);
-            if (hasSymptoms == null) hasSymptoms = false;
-            this.hasSymptoms = hasSymptoms;  // could be null
-            this.groupId = DEFAULT_NO_GROUP_ASSIGNED;
-        }
-        catch(Throwable th)
-        {
-            Logger.getLogger(SpirometerReading.class.getName()).log(Level.SEVERE, "Unable to create SpirometerReading", th);
-            throw new DeviceLogException(th);
-        }
+        
+        this(deviceId, id, mdate, Integer.valueOf(mid.trim()).intValue(), manual, Float.valueOf(pef.trim()).intValue(),
+                Float.valueOf(fev.trim()).floatValue(), Integer.parseInt(err), Integer.parseInt(bvalue), 
+                hasSymptoms, DEFAULT_NO_GROUP_ASSIGNED);
     }
 
     public SpirometerReading(String deviceId, String id, Date mdate, int mid, boolean manual,

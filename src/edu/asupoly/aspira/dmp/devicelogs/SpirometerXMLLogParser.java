@@ -9,7 +9,11 @@ import edu.asupoly.aspira.model.SpirometerReading;
 import edu.asupoly.aspira.model.SpirometerReadings;
 import edu.asupoly.aspira.model.SpirometerXMLReadingsFactory;
 import java.io.FileReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -72,11 +76,11 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
             }
         }
     }
-    */
+     */
 
     private void populateReadings(Document doc, SpirometerReadings _spReadings, String deviceId) 
             throws DeviceLogException
-    {
+            {
         NodeList nodeList = doc.getElementsByTagName("MeasureRec");
         int len = nodeList.getLength();
         for (int i = 0; i < len; i++) {
@@ -89,11 +93,28 @@ public class SpirometerXMLLogParser implements SpirometerXMLReadingsFactory
                 String fev = getFirstChildNodeValue(node, "FEV1Value");
                 String err = getFirstChildNodeValue(node, "Error");
                 String bvalue = getFirstChildNodeValue(node, "BestValue");
-                SpirometerReading pr = new SpirometerReading(deviceId, id,  dt, mid, false, pef, fev, err, bvalue, null);
+                Date md = new Date();
+                try {
+                    // convert their date string to a date
+                    StringTokenizer st = new StringTokenizer(dt, "T", false);     
+                    String mdate = st.nextToken();
+                    String time = st.nextToken();
+                    StringTokenizer _t = new StringTokenizer(time, "-+", true);
+                    // note the end of the String is HH:mm:ss<sign><GMT offset>            
+                    mdate = mdate + " " + _t.nextToken();
+                    time = _t.nextToken() + _t.nextToken();  // This is <sign>XX:YY, remove the :            
+                    mdate = mdate + " " + time.substring(0, 3) + time.substring(4,6);            
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+                    df.setLenient(false);
+                    md = df.parse(mdate); 
+                } catch (Throwable t) {
+                    Logger.getLogger(SpirometerXMLLogParser.class.getName()).log(Level.SEVERE, null, t);                    
+                }
+                SpirometerReading pr = new SpirometerReading(deviceId, id,  md, mid, false, pef, fev, err, bvalue, null);
                 _spReadings.addReading(pr);
             }
         }
-    }
+            }
 
     private String getFirstChildNodeValue(Node node, String name)
     {
