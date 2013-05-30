@@ -3,14 +3,13 @@
     <property name="classes" value="classes" />
 	<property name="build-dmp" value="build_dmp"/>
 	<property name="build-tc" value="build_tc"/>
-	<property name="build-config" value="build_config"/>
 	<property name="lib" value="lib"/>
 	<property name="properties" value="properties"/>
 	<property name="junit4.jar" value="jars/junit-4.10.jar"/>
 	<property name="tomcat.home" value="../aspiratc7029"/>
 	<property name="dist-tc.war" value="aspira.war"/>
-	<property name="dist-config.jar" value="configapp.jar"/>
-	<property name="dist-dmp.jar" value="aspira.jar"/>
+	<property name="dist-dmp.jar" value="aspira.zip"/>
+	<property name="aspiradeploy.home" value="../aspiradeploy"/>
 	
     <path id="compile.classpath">
        <pathelement path="${classes}"/>  
@@ -39,9 +38,9 @@
 		<copy todir="${build-tc}/WEB-INF" overwrite="true">
 			<fileset dir=".">
 				<exclude name="**/*Test.class"/>
-				<exclude name="*/gui/**"/>
-				<exclude name="*/server/**"/>
-				<exclude name="*/test/**"/>
+				<exclude name="**/gui/*"/>
+				<exclude name="**/server/*"/>
+				<exclude name="**/test/*"/>
 				<exclude name="${lib}/servlet-api.jar"/>
 				<exclude name="${properties}"/>
 				<include name="${classes}/**"/>
@@ -71,75 +70,43 @@
 		<copy todir="${build-dmp}/${classes}">
 			<fileset dir="${classes}">
 				<exclude name="**/*Test.class"/>
-				<exclude name="*/gui/**"/>
-				<exclude name="*/server/**"/>
-				<exclude name="*/test/**"/>
+				<exclude name="**/gui/*"/>
+				<exclude name="**/server/*"/>
+				<exclude name="**/test/*"/>
 			</fileset>
 		</copy>
 		<copy todir="${build-dmp}/${classes}/${properties}">
 		    <fileset dir="${properties}">
 		    		<include name="aspira.properties"/>
 		    		<include name="dao.properties"/>
-		    		<include name="monitoringservice.properties"/>
-		    		<exclude name="*/*properties"/>        		
+		    		<include name="monitoringservice.properties"/>		    		
 		    </fileset>
 		</copy>
 		<copy todir="${build-dmp}/${lib}">
-			<fileset dir="${lib}">
-				<include name="derby.jar"/>
-				<include name="json-simple-1.1.1.jar"/>
-				<include name="jssc25.jar"/>
-				<exclude name="*/*jar"/>
-			</fileset>		
+			<fileset dir="${lib}"/>		
 		</copy> 
 	</target>
 	
 	<target name="dist-dmp" depends="build-dmp">
     		<jar destfile="${dist-dmp.jar}" basedir="${build-dmp}"/>    
   	</target>
-  	
-	<!-- Not sure what the config-app needs for properties -->
-	<target name="build-config" depends="compile,prepare">
-		<copy todir="${build-config}/${classes}">
-			<fileset dir="${classes}">
-				<exclude name="**/*Test.class"/>
-				<exclude name="*devicelogs/**"/>				
-				<exclude name="*server/**"/>
-				<exclude name="*test/**"/>
+
+	<target name="build" depends="clean,build-dmp,build-tc"/>
+	<target name="dist" depends="dist-dmp,dist-tc"/>
+	
+	<target name="aspiradeploy" depends="dist">
+		<copy todir="${aspiradeploy.home}/java" overwrite="true">
+			<fileset dir=".">
+				<include name="**/aspira.war"/>
+				<include name="**/aspira.zip"/>
 			</fileset>
-		</copy>
-		<copy todir="${build-config}/${lib}">
-			<fileset dir="${lib}">
-				<include name="derby.jar"/>
-				<include name="json-simple-1.1.1.jar"/>
-				<include name="poi-3.9-20121203.jar"/>
-				<include name="poi-ooxml-3.9-20121203.jar"/>
-				<exclude name="*/*jar"/>
-			</fileset>		
-		</copy> 
-		<copy todir="${build-config}/${classes}/${properties}">
-		    <fileset dir="${properties}">
-		    		<include name="aspira.properties"/>
-		    		<include name="dao.properties"/>
-		    		<include name="monitoringservice.properties"/>
-		    		<exclude name="*/*properties"/>        		
-		    </fileset> 
-		</copy>
+		</copy>	
 	</target>
-
-	<target name="dist-config" depends="build-config">
-    		<jar destfile="${dist-config.jar}" basedir="${build-config}"/>    
-  	</target>
-
-	<target name="build" depends="clean,build-dmp,build-config,build-tc"/>
-	<target name="dist" depends="dist-dmp,dist-config,dist-tc"/>
-		
+	
 	<target name="clean">
 		<delete dir="${build-dmp}" />
-		<delete dir="${build-config}" />
 		<delete dir="${build-tc}" />
 		<delete file="${dist-tc.war}" />
-		<delete file="${dist-config.jar}" />
 		<delete file="${dist-dmp.jar}" />
 	</target>
 </project>
