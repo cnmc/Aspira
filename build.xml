@@ -37,10 +37,10 @@
 		<mkdir dir="${build-tc}/WEB-INF"/>
 		<copy todir="${build-tc}/WEB-INF" overwrite="true">
 			<fileset dir=".">
-				<exclude name="**/*Test.class"/>
-				<exclude name="**/gui/*"/>
-				<exclude name="**/server/*"/>
-				<exclude name="**/test/*"/>
+				<exclude name="*/*Test.class"/>
+				<exclude name="*/gui/**"/>
+				<exclude name="*/server/**"/>
+				<exclude name="*/test/**"/>
 				<exclude name="${lib}/servlet-api.jar"/>
 				<exclude name="${properties}"/>
 				<include name="${classes}/**"/>
@@ -70,7 +70,6 @@
 		<copy todir="${build-dmp}/${classes}">
 			<fileset dir="${classes}">
 				<exclude name="**/*Test.class"/>
-				<exclude name="**/gui/*"/>
 				<exclude name="**/server/*"/>
 				<exclude name="**/test/*"/>
 			</fileset>
