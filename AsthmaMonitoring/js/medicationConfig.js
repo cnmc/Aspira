@@ -1,5 +1,6 @@
 ﻿
 function setMedicationTimeout() {
+    appendLog("debug", "Entering function", "setMedicationTimeout function");
     var retString = "";
     var allMedicationStr = String(AsthmaGlobals.medicationArray);
     var MedicationInfoArray = allMedicationStr.split("##");
@@ -57,5 +58,6 @@ function setMedicationTimeout() {
     //    Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"] = setTimeout(
     //  setMedicationTimeout, timeout+3000);
     //}
+        appendLog("debug", "Leaving function", "setMedicationTimeout function");
 }
 

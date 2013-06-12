@@ -37,11 +37,15 @@
 //    });
 //}
 function initializeLogging() {
-    if (AsthmaGlobals.loggingIntervalSet == undefined) {
-
-       // setInterval(getLogFile, AsthmaGlobals.fileConfig.config.logFileWriteFrequency - 2000);
-        AsthmaGlobals.loggingIntervalSet =
-            setInterval(writeTextLogfile, AsthmaGlobals.fileConfig.config.logFileWriteFrequency);
+    if (AsthmaGlobals.loggingIntervalSet == undefined ) {
+        if (AsthmaGlobals.fileConfig != undefined) {
+            // setInterval(getLogFile, AsthmaGlobals.fileConfig.config.logFileWriteFrequency - 2000);
+            AsthmaGlobals.loggingIntervalSet =
+                setInterval(writeTextLogfile, AsthmaGlobals.fileConfig.config.logFileWriteFrequency);
+        } else {
+            AsthmaGlobals.loggingIntervalSet =
+                setInterval(writeTextLogfile, 7000);
+        }
     }
 
 }
@@ -56,25 +60,4 @@ function writeTextLogfile() {
     }
    
 
-}
-
-function appendLog(eventType, target, value) {
-    //getLogFile();
-
-    var bufferedLogString = new String();
-   // var bufferedLogArray = new Array(); 
-    if (AsthmaGlobals.logString != undefined && AsthmaGlobals.logString != null) {
-     //   bufferedLogArray = AsthmaGlobals.logString;
-        bufferedLogString = AsthmaGlobals.logString;
-    }
-    var currDate = new Date().toDateString();
-    var currTime = new Date().toTimeString();
-    var latestLog = AsthmaGlobals.fileConfig.config.patientID + " ### " +
-         AsthmaGlobals.fileConfig.config.deviceID + " ### " +
-          AsthmaGlobals.fileConfig.config.buildVer + " ### " + eventType + " ### " +
-          target + " ### " + value + " ### " + currDate + " " + currTime +  '\n';
-    bufferedLogString += latestLog;
-   // bufferedLogArray.push(latestLog);
-    AsthmaGlobals.logString = bufferedLogString;
-    initializeLogging();
 }

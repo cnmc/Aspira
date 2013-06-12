@@ -1,1 +1,1 @@
-C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\AppPackages\AsthmaMonitoring_1.0.0.3_AnyCPU_Test\AsthmaMonitoring_1.0.0.3_AnyCPU.appx
+C:\Users\vasu\Documents\GitHub\Aspira\AsthmaMonitoring\AppPackages\AsthmaMonitoring_1.0.0.5_AnyCPU_Test\AsthmaMonitoring_1.0.0.5_AnyCPU.appx

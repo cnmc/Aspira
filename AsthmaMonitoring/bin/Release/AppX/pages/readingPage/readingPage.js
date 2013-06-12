@@ -6,7 +6,8 @@
     WinJS.UI.Pages.define("/pages/readingPage/readingPage.html", {
         // This function is called whenever a user navigates to this page. It
         // populates the page elements with the app's data.
-        ready: function (element, options) {
+        ready: function (element, options) { 
+            appendLog("debug", "Creating reading page", "ready function");
              WinJS.Utilities.id("leftHelpItem1").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("leftHelpItem2").listen("click", this.navHelpPage, false);
             WinJS.Utilities.id("rightHelpItem3").listen("click", this.navHelpPage, false);
@@ -26,10 +27,13 @@
             //Initialize the awesome stuff
             initializeAnimation();
             AsthmaGlobals.toastNotifier.hide(AsthmaGlobals.toast);
+            appendLog("debug", "Created reading page", "ready function");
 
         },
 
         currReadingMonitor: function (eventInfo) {
+
+            appendLog("debug", "Entering function", "currReadingMonitor function");
             if (validateInput(eventInfo.currentTarget.id)) {
                 
                 if (!document.getElementById('confirmButton')) {
@@ -64,11 +68,14 @@
                     document.getElementById('confirmButton').removeNode(true);
                 }
             }
+            appendLog("debug", "leaving function", "currReadingMonitor function");
         },
 
         navHelpPage: function (eventInfo) {
+            appendLog("debug", "Entering function", "navHelpPage function");
             var invokingHelpIcon = eventInfo.currentTarget.id;
-            appendLog("navigation", "application", "Seek Help");
+            appendLog("navigation", "application", "Seek Help"); 
+            appendLog("debug", "leaving function", "navHelpPage function (navigating to helpDisplay)");
             WinJS.Navigation.navigate("/pages/helpDisplay/helpDisplay.html", {"displayContent" : invokingHelpIcon});
         },
 
@@ -76,6 +83,7 @@
             // TODO: Respond to navigations away from this page.
         }, 
         changeScreenFev: function () {
+            appendLog("debug", "Entering function", "changeScreenFev function");
             appendLog("navigation", "application", "PEF Complete");
             Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] =
                 document.getElementById("PEFValue").value;
@@ -83,8 +91,8 @@
                 document.getElementById("headingText").innerHTML = "FEV Reading";
                 document.getElementById("PEFValue").id = "FEVValue"
                 document.getElementById("FEVValue").value = "";
-                document.getElementById("confirmButton").removeNode(true);
-               
+                document.getElementById("confirmButton").removeNode(true); 
+                appendLog("debug", "leaving function", "changeScreenFev function");
         },
         
         updateLayout: function (element, viewState, lastViewState) {
@@ -95,6 +103,7 @@
     });
 
     function validateInput(feildName) {
+        appendLog("debug", "entering function", "validateInput function");
         var currValueEntered = document.getElementById(feildName).value.trim();
         appendLog("data entry", feildName+" " + "text box", currValueEntered);
         //appendLog("in " + feildName + " text box, user entered " + currValueEntered);
@@ -112,6 +121,7 @@
         else {
             return rangeCheck(feildName, currValueEntered); 
         }
+        appendLog("debug", "leaving function", "validateInput function");
     }
 
     function rangeCheck(feildName, currValueEntered) {
@@ -133,6 +143,8 @@
     }
 
     function askSymptonsView() {
+
+        appendLog("debug", "entering function", "askSymptonsView function");
         var content = "<div id='symptomBox' class='dynamicAlertBox' >"
         content += "<div class='dynamicContent'>";
             content += AsthmaGlobals.fileConfig.config.alertInfo.symptomBoxText;
@@ -147,23 +159,28 @@
         $("#symptomBoxDiv").append(content);
         document.getElementById("yes").onclick = logPressYes;
         document.getElementById("no").onclick = logPressNo;
+        appendLog("debug", "leaving function", "askSymptonsView function");
           
     }
     function logPressNo() {
+        appendLog("debug", "entering function", "logPressNo function");
         document.getElementById("symptomBox").removeNode(true);
         AsthmaGlobals.symptomQuestion = true;
         AsthmaGlobals.hasSymptoms = false;
         appendLog("click", "sympton button", "No");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "No";
+        appendLog("debug", "leaving function", "logPressNo function(going to page home.html)");
         WinJS.Navigation.navigate("/pages/home/home.html");
     }
     function logPressYes() {
+        appendLog("debug", "entering function", "logPressYes function");
         AsthmaGlobals.symptomQuestion = true;
         AsthmaGlobals.hasSymptoms = true;
         document.getElementById("symptomBox").removeNode(true);
         appendLog("click", "sympton button", "Yes");
         Windows.Storage.ApplicationData.current.localSettings.values["symptomsReply"] = "Yes";
-        WinJS.Navigation.navigate("/pages/home/home.html");
+        appendLog("debug", "Leaving function", "logPressYes function");
+        WinJS.Navigation.navigate("/pages/home/home.html(going to page home.html)");
     }
 
   

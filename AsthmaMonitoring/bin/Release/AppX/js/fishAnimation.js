@@ -7,7 +7,8 @@ function fishFloat() {
 
 
 function createAnimationDiv() {
-    
+
+    appendLog("debug", "entering function", "createAnimationDiv");
     var currentStage = calculateImageToShow();
     if (currentStage == 0 || currentStage == undefined || currentStage > 
         AsthmaGlobals.fileConfig.config.animation.totalStages) {
@@ -34,13 +35,16 @@ function createAnimationDiv() {
     content += "</div>";
     calculateImageToShow();
     $("#takeReading").append(content);
+    appendLog("debug", "leaving function", "createAnimationDiv");
 }
 function initializeAnimation() {
+    appendLog("debug", "entering function", "initializeAnimation");
     if (document.getElementById("animationMainContainer")) {
         document.getElementById("animationMainContainer").removeNode(true);
     }
     createAnimationDiv();
-    fishFloat()
+    fishFloat();
+    appendLog("debug", "leaving function", "initializeAnimation");
 }
 function changeFishMood(mood) {
     if (mood != undefined) {
@@ -58,6 +62,7 @@ function changeFishMood(mood) {
 }
 //boring stuff
 function calculateImageToShow() {
+    appendLog("debug", "entering function", "calculateImageToShow");
     var todaysDate = new Date();
     var startDate = new Date(AsthmaGlobals.fileConfig.config.animation.startDateMilliSec); 
     var totalDays = AsthmaGlobals.fileConfig.config.animation.totalDays;
@@ -71,7 +76,7 @@ function calculateImageToShow() {
         }
         whichStage++;
     }
-
+    appendLog("debug", "leaving function", "calculateImageToShow");
 }
 //mood is sad if the second reading is also missed and remains sad even after
 //the three or more readings have been missed.
