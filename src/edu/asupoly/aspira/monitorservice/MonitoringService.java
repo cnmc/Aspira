@@ -165,8 +165,9 @@ public final class MonitoringService {
                 nextTask = (AspiraTimerTask)taskClass.newInstance();
                 if (nextTask.init(__props)) {
                     __tasks.put(TASK_KEY_PREFIX+i, nextTask);
-                    // fire up the task 1 second from now
-                    __timer.scheduleAtFixedRate(nextTask, 1000L, interval*1000L); // repeat task in seconds
+                    // fire up the task 1 second from now and execute at fixed delay
+                    __timer.schedule(nextTask, 1000L, interval*1000L); // repeat task in seconds
+                    //__timer.scheduleAtFixedRate(nextTask, 1000L, interval*1000L); // repeat task in seconds
                     LOGGER.log(Level.INFO, 
                             "Created timer task " + (TASK_KEY_PREFIX+i) + " for task class " + taskClassName);
                 } else {
