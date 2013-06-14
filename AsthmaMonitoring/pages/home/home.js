@@ -320,19 +320,21 @@ function initateDynamicAlert(type, description) {
     AsthmaGlobals.idCount = AsthmaGlobals.idCount + 1;
     var content = "<div id='dynamicAlertBox"+id+"' class='dynamicAlertBox' >"
     content += "<div class='dynamicContent'>";
-    if (description != undefined) {
+    if (description != undefined && description != null) {
         content += description;
         if (type != "symptoms") {
             generateToast(description);
         }
-    } else {
+    } else if (AsthmaGlobals.medicationAlertText != null) {
         content += AsthmaGlobals.medicationAlertText;
         generateToast(AsthmaGlobals.medicationAlertText);
+    } else {
+        content += "Great job!";
     }
     content += "</div>";
     if (type != "scheduledReading") {
-    content += "<div class='buttonPanel'>";
-    content += "<span id='dismiss" + id + "' class='button-left'></span>";
+        content += "<div class='buttonPanel'>";
+        content += "<span id='dismiss" + id + "' class='button-left'></span>";
    
         if (type == "dynamicReading") {
             content += "<span id='takeReading" + id + "' class='button-right'></span>";
