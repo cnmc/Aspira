@@ -36,18 +36,33 @@
     });
    
     app.addEventListener("activated", function (eventObject) {
+        debugLog("debug", "activated", "event listener");
         if (eventObject.detail.kind === activation.ActivationKind.launch) {
             // Unlike other windows applications our app would never be suspended so we do not check 
             //the previous state of the app : Vasu 
             eventObject.setPromise(WinJS.UI.processAll().then(function () {
                 getProperties();
-
+                
                 return nav.navigate(displayPage[0].url);
             }));
         }
     });
 
+    app.addEventListener("ready", function (eventObject) {
+        generateScheduledToasts("Almost time to take a reading, come play with me!");
+    });
+
+    app.addEventListener("checkpoint", function (eventObject) {
+        debugLog("debug", "suspended", "event listener");
+    });
+    app.addEventListener("resuming", function (eventObject) {
+        debugLog("debug", "resuming", "event listener");
+    });
+    app.addEventListener("suspending", function (eventObject) {
+        debugLog("debug", "suspending", "event listener");
+    });
     app.oncheckpoint = function (eventObject) {
+        debugLog("debug", "oncheckpoint", "handler???");
         // TODO: This application is about to be suspended. Save any state
         // that needs to persist across suspensions here. If you need to 
         // complete an asynchronous operation before your application is 
@@ -56,6 +71,9 @@
         //WE GOT A PROBLEM!!! Our app should never closes : Vasu
         app.sessionState.history = nav.history;
     };
+
+    // This fires up debug logging, comment out in the Release version
+    // WinJS.Utilities.startLog("debug");
 
     app.start();
 })();

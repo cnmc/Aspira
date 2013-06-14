@@ -1,9 +1,17 @@
 ﻿
 function setMedicationTimeout() {
-    appendLog("debug", "Entering function", "setMedicationTimeout function");
+    debugLog("debug", "Entering function", "setMedicationTimeout function");
     var retString = "";
+
+    // KG all of a suddn getting a medication reminders error on null or undefined so
+    // adding some bailout statements just to avoid crashing
+    if (AsthmaGlobals.medicationArray == undefined || AsthmaGlobals.medicationArray == null) return;
+
     var allMedicationStr = String(AsthmaGlobals.medicationArray);
     var MedicationInfoArray = allMedicationStr.split("##");
+
+    if (MedicationInfoArray == undefined || MedicationInfoArray == null) return;
+
     var morningTime = String(MedicationInfoArray[0]).split("-")[1].trim();
     var eveningTime = String(MedicationInfoArray[1]).split("-")[1].trim();
    
@@ -58,6 +66,6 @@ function setMedicationTimeout() {
     //    Windows.Storage.ApplicationData.current.localSettings.values["afterNextMedicationTimeoutId"] = setTimeout(
     //  setMedicationTimeout, timeout+3000);
     //}
-        appendLog("debug", "Leaving function", "setMedicationTimeout function");
+        debugLog("debug", "Leaving function", "setMedicationTimeout function");
 }
 

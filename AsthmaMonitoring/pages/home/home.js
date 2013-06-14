@@ -8,7 +8,7 @@
         ready: function (element, options) {
             //  WinJS.Utilities.id("adminLogin").listen("click", this.adminLogin, false);
 
-            appendLog("debug", "Entering function", "ready function home.html");
+            debugLog("debug", "Entering function", "ready function home.html");
             WinJS.Utilities.id("helpLogin").listen("click", helpLogin, false);
             WinJS.Utilities.id("takeReading").listen("click", teaseListener, false);
           
@@ -17,8 +17,11 @@
             waitForConfigFileToLoad();
             waitForFileToLoad();
             enableSubsequentReading();
+            var nextReadingTime = calculateNextReadingTimeout();
             Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
-           this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
+           this.nextReadingAlert, nextReadingTime);// set next reading timer
+            // KG and set the next scheduled Toast
+            //generateToast("Time to take a reading soon!", nextReadingTime + new Date().getTime());
             if (AsthmaGlobals.fileConfig.config.airQualityConfig.airQualityMonitoringEnabled == false) {
                 $("#rightItem").hide();
             }
@@ -57,7 +60,7 @@
                 Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setTimeout(
                   this.checkAirQuality, readingInterval);//check air qulity regularly
             }
-            appendLog("debug", "leaving function", "ready function home.html");
+            debugLog("debug", "leaving function", "ready function home.html");
         },
         
        
@@ -68,7 +71,7 @@
         nextReadingAlert: function () {
             //enable user going into the flow when its time for new reading
 
-            appendLog("debug", "entering function", "nextReadingAlert function home.html");
+            debugLog("debug", "entering function", "nextReadingAlert function home.html");
             changeFishMood("attentive"); 
             appendLog("alert", "application home", "Take Reading");
             // Windows.Storage.ApplicationData.current.localSettings.values["bowlClickListener"] = 
@@ -86,12 +89,12 @@
                  Windows.Storage.ApplicationData.current.localSettings.values["nextReadingSoundAlert"] =
                 setInterval(playAlert, 6000);
             }
-            appendLog("debug", "leaving function", "nextReadingAlert function home.html");
+            debugLog("debug", "leaving function", "nextReadingAlert function home.html");
 
         },
        
         checkAirQuality: function () {
-            appendLog("debug", "entering function", "checkAirQuality function home.html");
+            debugLog("debug", "entering function", "checkAirQuality function home.html");
             getAirQualityProperties();// update config from a fresh config file
             var imageSrc = "/images/traffic_signal_"
             if (AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "true") {
@@ -120,7 +123,7 @@
                 initateDynamicAlert("dynamicReading", AsthmaGlobals.fileConfig.config.alertInfo.dynamicReadingAlertText);
                 AsthmaGlobals.dynamicAlertDisplay = true;
             } else if (AsthmaGlobals.airQualityConfig.airQualityMeter.isConnected == "false" && AsthmaGlobals.notifiedDisconnection == false) {
-                generateToast("The air quality meter seems to be disconnected, please refer the help manual and connect it again.")
+                generateToast("The air quality meter seems to be disconnected, please refer the help manual and connect it again.");
                 setTimeout(function () { AsthmaGlobals.notifiedDisconnection = false; }, 900000);
                 AsthmaGlobals.notifiedDisconnection = true;
             }
@@ -133,16 +136,16 @@
             Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"] = setTimeout(
                  this.checkAirQuality, readingInterval);//check air qulity regularly
 
-            appendLog("debug", "leaving function", "checkAirQuality function home.html");
+            debugLog("debug", "leaving function", "checkAirQuality function home.html");
         }
     });
 })();
 function helpLogin(eventInfo) {
 
-    appendLog("debug", "entering function", "helpLogin function home.html");
+    debugLog("debug", "entering function", "helpLogin function home.html");
     disableAllTimers();
     WinJS.Navigation.navigate("/pages/contact/contact.html");
-    appendLog("debug", "leaving function", "helpLogin function home.html");
+    debugLog("debug", "leaving function", "helpLogin function home.html");
 }
 // animate reading box
 function waitForFileToLoad() {
@@ -177,10 +180,10 @@ function waitForConfigFileToLoad() {
 }
 function animateNextReading() {
 
-    appendLog("debug", "entering function", "animateNextReading function home.html");
+    debugLog("debug", "entering function", "animateNextReading function home.html");
     $("#nextReadingCard").animate({ marginLeft: "+=50px"}, 1000, "swing");
     $("#nextReadingCard").animate({ marginLeft: "-=50px" }, 1000, "swing", animateNextReading);
-    appendLog("debug", "leaving function", "animateNextReading function home.html");
+    debugLog("debug", "leaving function", "animateNextReading function home.html");
 }
 // the next reading should be more than the minimum interval of X min
 function isNextReadingNear() {
@@ -196,37 +199,37 @@ function isNextReadingNear() {
 // subsequent reading after X mins
 function enableSubsequentReading() {
 
-    appendLog("debug", "entering function", "enableSubsequentReading function home.html");
+    debugLog("debug", "entering function", "enableSubsequentReading function home.html");
     setTimeout((function () {
         AsthmaGlobals.canTakeReading = true;
     }), AsthmaGlobals.fileConfig.config.alertInfo.intervalInTwoReadings)
-    appendLog("debug", "leaving function", "enableSubsequentReading function home.html");
+    debugLog("debug", "leaving function", "enableSubsequentReading function home.html");
 }
 
 //This func is called when you click on the bowl
 function takeReading(eventInfo) {
 
-    appendLog("debug", "entering function", "takeReading function home.html");
+    debugLog("debug", "entering function", "takeReading function home.html");
     appendLog("click", "Fish Bowl", "Started taking reading");
     AsthmaGlobals.dynamicAlertDisplay = false;
     takeDynamicReading(eventInfo);// 
-    appendLog("debug", "leaving function", "takeReading function home.html");
+    debugLog("debug", "leaving function", "takeReading function home.html");
 }
 // This func is for dynamic reading.
 function takeDynamicReading(eventInfo) {
-    appendLog("debug", "entering function", "takeDynamicReading function home.html");
+    debugLog("debug", "entering function", "takeDynamicReading function home.html");
     changeFishMood("attentive");
     disableAllTimers();
     Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"] =
          new Date().toString();
     AsthmaGlobals.tempPefVal == null;
-    appendLog("debug", "leaving function", "takeDynamicReading function navigating to readingPage.html");
+    debugLog("debug", "leaving function", "takeDynamicReading function navigating to readingPage.html");
     WinJS.Navigation.navigate("/pages/readingPage/readingPage.html");
 }
 
 
 function readingNotTaken() {
-    appendLog("debug", "entering function", "readingNotTaken");
+    debugLog("debug", "entering function", "readingNotTaken");
     // stop alert that says take reading
     appendLog("alert", "application", "missed reading");
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingSoundAlert"]);
@@ -235,8 +238,11 @@ function readingNotTaken() {
     AsthmaGlobals.canTakeReading == true;
     //clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingIntervalId"]);
     // go set new time for reading
+    var nextReadingTime = calculateNextReadingTimeout();
     Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeoutId"] = setTimeout(
-           this.nextReadingAlert, calculateNextReadingTimeout());// set next reading timer
+           this.nextReadingAlert, nextReadingTime);// set next reading timer
+    // KG set the next scheduled Toast
+    // generateToast("Time to take a reading in a bit!!", nextReadingTime + new Date().getTime());
     // change text of the card: put next time for reading 
      document.getElementById("nextReadingContent").innerHTML =
        Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"];
@@ -245,12 +251,12 @@ function readingNotTaken() {
      }
     //change the mood of the fish
      changeFishMood("sick");
-     appendLog("debug", "leaving function", "readingNotTaken");
+     debugLog("debug", "leaving function", "readingNotTaken");
      
 }
 
 function disableAllTimers() {
-    appendLog("debug", "entering function", "disableAllTimers");
+    debugLog("debug", "entering function", "disableAllTimers");
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["airQualityAlertInterval"]);
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["nextReadingSoundAlert"]);
     clearInterval(Windows.Storage.ApplicationData.current.localSettings.values["checkAirQualityTimeoutId"]);
@@ -260,10 +266,10 @@ function disableAllTimers() {
     clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["changeMoodNormalTimeoutId"]);
     clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["nextMedicationTimeoutId"]);
     clearTimeout(Windows.Storage.ApplicationData.current.localSettings.values["changeMoodSleepyTimeoutId"]);
-    appendLog("debug", "leaving function", "disableAllTimers");
+    debugLog("debug", "leaving function", "disableAllTimers");
 }
 function calculateNextReadingTimeout() {
-    appendLog("debug", "entering function", "calculateNextReadingTimeout");
+    debugLog("debug", "entering function", "calculateNextReadingTimeout");
     getProperties();
     var spiroReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.spiroReadingTime;
     spiroReadingTimeArray.sort();
@@ -304,11 +310,11 @@ function calculateNextReadingTimeout() {
     Windows.Storage.ApplicationData.current.localSettings.values["nextReadingTimeText"] =
         displayHours + ":" + nextReadingHour.substr(2, 2) + " " + ampm;
 
-    appendLog("debug", "leaving function", "calculateNextReadingTimeout");
+    debugLog("debug", "leaving function", "calculateNextReadingTimeout");
     return nextReadingObj.getTime() - new Date().getTime();
 } 
 function initateDynamicAlert(type, description) {
-    appendLog("debug", "entering function", "initateDynamicAlert");
+    debugLog("debug", "entering function", "initateDynamicAlert");
     changeFishMood("attentive");
     var id = AsthmaGlobals.idCount;
     AsthmaGlobals.idCount = AsthmaGlobals.idCount + 1;
@@ -373,11 +379,11 @@ function initateDynamicAlert(type, description) {
     }
     setMedicationTimeout();
 
-    appendLog("debug", "leaving function", "initateDynamicAlert");
+    debugLog("debug", "leaving function", "initateDynamicAlert");
 }
 
 function dismissAlert(id) {
-    appendLog("debug", "entering function", "dismissAlert");
+    debugLog("debug", "entering function", "dismissAlert");
     changeFishMood("sleepy");
     setMedicationTimeout();
     var divID = "dynamicAlertBox" + id;
@@ -385,17 +391,17 @@ function dismissAlert(id) {
         document.getElementById(divID).removeNode(true);
         appendLog("click", "alert", "dismissed");
     }
-    appendLog("debug", "leaving function", "dismissAlert");
+    debugLog("debug", "leaving function", "dismissAlert");
 }
 
 function alertActionComplete(id) {
-    appendLog("debug", "entering function", "alertActionComplete");
+    debugLog("debug", "entering function", "alertActionComplete");
     changeFishMood("sleepy");
     var divID = "dynamicAlertBox" + id;
     setMedicationTimeout();
     appendLog("click", "alert", "done");
     document.getElementById(divID).removeNode(true);
-    appendLog("debug", "leaving function", "alertActionComplete");
+    debugLog("debug", "leaving function", "alertActionComplete");
 }
 
 //function calculateNextmedicationTimeout() {
@@ -442,7 +448,7 @@ function alertActionComplete(id) {
 //}
 
 function teaseListener() {
-    appendLog("debug", "entering function", "teaseListener");
+    debugLog("debug", "entering function", "teaseListener");
     appendLog("click", "Fish Bowl", "tease");
     if (AsthmaGlobals.allTeaseImgArray.length == AsthmaGlobals.teaseIndex) {
         AsthmaGlobals.teaseIndex = 0;
@@ -458,11 +464,11 @@ function teaseListener() {
         }, 10000, "sleepy");
     }
     AsthmaGlobals.teaseIndex = AsthmaGlobals.teaseIndex + 1;
-    appendLog("debug", "leaving function", "teaseListener");
+    debugLog("debug", "leaving function", "teaseListener");
 }
 // calculates time elapsed from previous reading
 function calculatePrevReadingTimeout() {
-    appendLog("debug", "entering function", "calculatePrevReadingTimeout");
+    debugLog("debug", "entering function", "calculatePrevReadingTimeout");
     getProperties();
     var spiroReadingTimeArray = AsthmaGlobals.fileConfig.config.alertInfo.spiroReadingTime;
     spiroReadingTimeArray.sort();
@@ -509,7 +515,7 @@ function calculatePrevReadingTimeout() {
     Windows.Storage.ApplicationData.current.localSettings.values["prevReadingTimeText"] =
         displayHours + ":" + prevReadingHour.substr(2, 2) + " " + ampm;
 
-    appendLog("debug", "leaving function", "calculatePrevReadingTimeout");
+    debugLog("debug", "leaving function", "calculatePrevReadingTimeout");
     return new Date().getTime() - prevReadingObj.getTime(); 
 }
 

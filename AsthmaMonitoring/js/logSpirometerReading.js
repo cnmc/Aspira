@@ -2,7 +2,7 @@
     var content;
 
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("SpirometerReadingLog.txt").then(function (datafile) {
-        appendLog("debug", "entering function", "createSpirometerLog");
+        debugLog("debug", "entering function", "createSpirometerLog");
           
             content = Windows.Storage.ApplicationData.current.localSettings.values["readingStartTime"];
             content += "\nPEF Value : ";
@@ -15,7 +15,7 @@
 
             Windows.Storage.FileIO.appendTextAsync(datafile, content);
             Windows.Storage.ApplicationData.current.localSettings.values["PEFValCaptured"] = null;
-            appendLog("debug", "leaving function", "createSpirometerLog");
+            debugLog("debug", "leaving function", "createSpirometerLog");
         });
     
 }

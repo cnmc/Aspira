@@ -1,9 +1,9 @@
 ﻿function setProperties() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("config.json").done(function (datafile) {
-        appendLog("debug", "Start Writing File", "config.json");
+        debugLog("debug", "Start Writing File", "config.json");
         if (AsthmaGlobals.fileConfig != null) {
             Windows.Storage.FileIO.writeTextAsync(datafile, JSON.stringify(AsthmaGlobals.fileConfig));
-            appendLog("debug", "Done Reading File", "config.json");
+            debugLog("debug", "Done Reading File", "config.json");
         }
     });
 }
@@ -11,7 +11,7 @@ getProperties();
 function getProperties() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("config.json").done(function (datafile) {
 
-         appendLog("debug", "Reading File", "config.json");
+         debugLog("debug", "Reading File", "config.json");
         if (datafile !== null) {
             Windows.Storage.FileIO.readTextAsync(datafile).done(function (fileContent) {
                 try {
@@ -25,29 +25,29 @@ function getProperties() {
                     console.log(e.message);
                     // Windows.UI.Popups.MessageDialog(e.message).showAsync();
 
-                    appendLog("error", "Reading File, caught exception", "config.json");
+                    debugLog("error", "Reading File, caught exception", "config.json");
                 }
             });
         }
-         appendLog("debug", "Done Reading File", "config.json");
+         debugLog("debug", "Done Reading File", "config.json");
     });
 }
 
 // air quality config file
 function setAirQualityProperties() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("airQualityStatus.json").done(function (datafile) {
-        appendLog("debug", "writing File", "airQualityStatus.json");
+        debugLog("debug", "writing File", "airQualityStatus.json");
 
         if (AsthmaGlobals.airQualityConfig != null) {
             Windows.Storage.FileIO.writeTextAsync(datafile, JSON.stringify(AsthmaGlobals.airQualityConfig));
         }
-        appendLog("debug", "Done writing File", "airQualityStatus.json");
+        debugLog("debug", "Done writing File", "airQualityStatus.json");
     });
 }
 readMedicationfile();
 function readMedicationfile() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("medicationReminder.txt").done(function (datafile) {
-        appendLog("debug", "Reading File", "medicationReminder.txt");
+        debugLog("debug", "Reading File", "medicationReminder.txt");
         if (datafile !== null) {
             Windows.Storage.FileIO.readTextAsync(datafile).done(function (fileContent) {
                 try {
@@ -60,14 +60,14 @@ function readMedicationfile() {
             });
         }
 
-        appendLog("debug", "Done Reading File", "medicationReminder.txt");
+        debugLog("debug", "Done Reading File", "medicationReminder.txt");
     });
 }
 
 getAirQualityProperties();
 function getAirQualityProperties() {
     Windows.Storage.KnownFolders.documentsLibrary.getFileAsync("airQualityStatus.json").done(function (datafile) {
-        appendLog("debug", "Reading File", "airQualityStatus.json");
+        debugLog("debug", "Reading File", "airQualityStatus.json");
         if (datafile !== null) {
             Windows.Storage.FileIO.readTextAsync(datafile).done(function (fileContent) {
                 try {
@@ -79,8 +79,12 @@ function getAirQualityProperties() {
                 }
             });
         }
-        appendLog("debug", "Done Reading File", "airQualityStatus.json");
+        debugLog("debug", "Done Reading File", "airQualityStatus.json");
     });
+}
+
+function debugLog(tag, value, eventType) {
+    WinJS.log && WinJS.log(value, tag, eventType);
 }
 
 function appendLog(eventType, target, value) {

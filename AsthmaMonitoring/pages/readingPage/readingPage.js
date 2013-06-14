@@ -26,7 +26,8 @@
             }
             //Initialize the awesome stuff
             initializeAnimation();
-            AsthmaGlobals.toastNotifier.hide(AsthmaGlobals.toast);
+            // We no longer display a local toast when in focus, so we don't need to hide
+            //AsthmaGlobals.toastNotifier.hide(AsthmaGlobals.toast);
             appendLog("debug", "Created reading page", "ready function");
 
         },
