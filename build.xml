@@ -5,6 +5,7 @@
 	<property name="build-tc" value="build_tc"/>
 	<property name="lib" value="lib"/>
 	<property name="properties" value="properties"/>
+	<property name="sql" value="sql"/>
 	<property name="junit4.jar" value="jars/junit-4.10.jar"/>
 	<property name="tomcat.home" value="../aspiratc7029"/>
 	<property name="dist-tc.war" value="aspira.war"/>
@@ -21,7 +22,6 @@
 
 	<target name="prepare">
 		<tstamp/>
-		<mkdir dir="${build-config}"/>
 		<mkdir dir="${build-tc}"/>
 		<mkdir dir="${build-dmp}"/>
 	</target>
@@ -83,6 +83,12 @@
 		</copy>
 		<copy todir="${build-dmp}/${lib}">
 			<fileset dir="${lib}"/>		
+		</copy> 
+		<copy todir="${build-dmp}/${sql}">
+			<fileset dir="${sql}">
+				<include name="**/*prod.sql"/>
+				<include name="**/aspiraddl.sql"/>
+			</fileset>
 		</copy> 
 	</target>
 	

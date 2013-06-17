@@ -8,5 +8,6 @@ select * from "APP"."CLINICIAN";
 select * from "APP"."SPIROMETER";
 select * from "APP"."AQMONITOR";
 select * from "APP"."PATIENT";
+select * from "APP"."SERVERPUSHEVENTLOG";
 disconnect;
 exit;

@@ -8,5 +8,6 @@ delete from "APP"."CLINICIAN";
 delete from "APP"."SPIROMETER";
 delete from "APP"."AQMONITOR";
 delete from "APP"."PATIENT";
+delete from "APP"."SERVERPUSHEVENTLOG";
 disconnect;
 exit;
