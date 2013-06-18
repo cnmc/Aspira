@@ -1,5 +1,5 @@
 -- Script to select * all tuples from DB, to be run from ij tool
-connect 'jdbc:derby:/Users/$$USER$$/derby_home/aspiradb';
+connect 'jdbc:derby:/Users/$$USER$$/Documents/derby_home/aspiradb';
 select * from "APP"."PARTICLEREADING";
 select * from "APP"."SPIROMETERREADING";
 select * from "APP"."UIEVENT";

@@ -1,5 +1,5 @@
 -- This needs to change as we have the initial values in a property file now.
-connect 'jdbc:derby:/Users/$$USER$$/derby_home/aspiradb';
+connect 'jdbc:derby:/Users/$$USER$$/Documents/derby_home/aspiradb';
 insert into patient values ('$$USER$$','M','notes','bvtype',0,0,0,0,0);
 insert into clinician values ('clinician1');
 insert into patient_clinician values ('$$USER$$','clinician1');

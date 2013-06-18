@@ -1,5 +1,5 @@
 -- Script to delete all tuples from DB, to be run from ij tool
-connect 'jdbc:derby:/Users/$$USER$$/derby_home/aspiradb';
+connect 'jdbc:derby:/Users/$$USER$$/Documents/derby_home/aspiradb';
 delete from "APP"."PARTICLEREADING";
 delete from "APP"."SPIROMETERREADING";
 delete from "APP"."UIEVENT";
