@@ -1,8 +1,0 @@
-Morning - 0800##
-Evening - 1500##
-Morning##
-##
-Evening##
-##
-symptoms##
-##
