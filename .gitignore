@@ -1,6 +1,22 @@
 *.class
+classes/*
+build/*
+build_dmp/*
+build_config/*
+build_tc/*
+logs/*
+
+# Derby, uncomment to update db
+db/*
+derby.log
 
 # Package Files #
-*.jar
 *.war
 *.ear
+
+# For Eclipse
+.classpath
+.project
+
+# Emacs
+*~

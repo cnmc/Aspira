@@ -1,0 +1,124 @@
+<project name="Aspira" default="build" basedir=".">
+    <property name="src" value="src" />
+    <property name="classes" value="classes" />
+	<property name="build-dmp" value="build_dmp"/>
+	<property name="build-tc" value="build_tc"/>
+	<property name="lib" value="lib"/>
+	<property name="properties" value="properties"/>
+	<property name="resources" value="resources"/>
+	<property name="js" value="js"/>
+	<property name="sql" value="sql"/>
+	<property name="junit4.jar" value="jars/junit-4.10.jar"/>
+	<property name="tomcat.home" value="../aspiratc7029"/>
+	<property name="dist-tc.war" value="aspira.war"/>
+	<property name="dist-dmp.jar" value="aspira.zip"/>
+	<property name="aspiradeploy.home" value="../aspiradeploy"/>
+	
+    <path id="compile.classpath">
+       <pathelement path="${classes}"/>  
+       <fileset dir="${lib}">
+          <include name="**/*.jar"/>
+       </fileset>
+       <pathelement location="${junit4.jar}"/>   
+    </path>
+
+	<target name="prepare">
+		<tstamp/>
+		<mkdir dir="${build-tc}"/>
+		<mkdir dir="${build-dmp}"/>
+	</target>
+		
+	<target name="compile">
+		<javac target="1.6" srcdir="${src}" destdir="${classes}">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+		
+	<target name="build-tc" depends="compile,prepare">
+		<tstamp/>
+		<mkdir dir="${build-tc}/${js}"/>
+		<copy todir="${build-tc}/${js}" overwrite="true">
+			<fileset dir="${js}" />
+		</copy>
+		<mkdir dir="${build-tc}/WEB-INF"/>
+		<copy todir="${build-tc}/WEB-INF" overwrite="true">
+			<fileset dir=".">
+				<exclude name="*/*Test.class"/>
+				<exclude name="*/gui/**"/>
+				<exclude name="*/server/**"/>
+				<exclude name="*/test/**"/>
+				<exclude name="${lib}/servlet-api.jar"/>
+				<exclude name="${properties}"/>
+				<include name="${classes}/**"/>
+				<include name="${lib}/**"/>
+				<include name="${resources}/**"/>
+			</fileset>	
+		</copy>
+		<copy todir="${build-tc}/WEB-INF/${classes}/${properties}" overwrite="true">
+      		<fileset dir="${properties}">
+      		      <include name="daoserver.properties"/>
+      		      <include name="aspira.properties"/>
+			</fileset>
+    		</copy>
+    		<move   file="${build-tc}/WEB-INF/${classes}/${properties}/daoserver.properties" 
+    		      tofile="${build-tc}/WEB-INF/${classes}/${properties}/dao.properties"/>
+    		<copy file="web.xml" tofile="${build-tc}/WEB-INF/web.xml" overwrite="true"/>		
+	</target>
+
+	<target name="dist-tc" depends="build-tc">
+    		<jar destfile="${dist-tc.war}" basedir="${build-tc}"/>    
+  	</target>
+  	<target name="deploy-tc" depends="dist-tc">
+    		<copy file="${dist-tc.war}" todir="${tomcat.home}/webapps" overwrite="yes"/>
+  	</target>  
+
+	<!-- The excludes don't work. Ant is very frustrating sometimes -->
+	<target name="build-dmp" depends="compile,prepare">
+		<copy todir="${build-dmp}/${classes}">
+			<fileset dir="${classes}">
+				<exclude name="**/*Test.class"/>
+				<exclude name="**/server/*"/>
+				<exclude name="**/test/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${build-dmp}/${classes}/${properties}">
+		    <fileset dir="${properties}">
+		    		<include name="aspira.properties"/>
+		    		<include name="dao.properties"/>
+		    		<include name="monitoringservice.properties"/>		    		
+		    </fileset>
+		</copy>
+		<copy todir="${build-dmp}/${lib}">
+			<fileset dir="${lib}"/>		
+		</copy> 
+		<copy todir="${build-dmp}/${sql}">
+			<fileset dir="${sql}">
+				<include name="**/*prod.sql"/>
+				<include name="**/aspiraddl.sql"/>
+			</fileset>
+		</copy> 
+	</target>
+	
+	<target name="dist-dmp" depends="build-dmp">
+    		<jar destfile="${dist-dmp.jar}" basedir="${build-dmp}"/>    
+  	</target>
+
+	<target name="build" depends="clean,build-dmp,build-tc"/>
+	<target name="dist" depends="dist-dmp,dist-tc"/>
+	
+	<target name="aspiradeploy" depends="dist">
+		<copy todir="${aspiradeploy.home}/java" overwrite="true">
+			<fileset dir=".">
+				<include name="**/aspira.war"/>
+				<include name="**/aspira.zip"/>
+			</fileset>
+		</copy>	
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build-dmp}" />
+		<delete dir="${build-tc}" />
+		<delete file="${dist-tc.war}" />
+		<delete file="${dist-dmp.jar}" />
+	</target>
+</project>
