@@ -10,10 +10,21 @@
         <servlet-name>AspiraPush</servlet-name>
         <servlet-class>edu.asupoly.aspira.server.AspiraImportServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>AspiraChart</servlet-name>
+        <servlet-class>edu.asupoly.aspira.server.AspiraChartServlet</servlet-class>
+        <init-param>
+    			<param-name>htmltemplate</param-name>
+    			<param-value>/WEB-INF/resources/AQMChart.html</param-value>
+  		</init-param>
+    </servlet>
+       <servlet-mapping>
+        <servlet-name>AspiraChart</servlet-name>
+        <url-pattern>/chart/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AspiraPush</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/raw/*</url-pattern>
     </servlet-mapping>
     
 </web-app>

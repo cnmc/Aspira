@@ -5,6 +5,8 @@
 	<property name="build-tc" value="build_tc"/>
 	<property name="lib" value="lib"/>
 	<property name="properties" value="properties"/>
+	<property name="resources" value="resources"/>
+	<property name="js" value="js"/>
 	<property name="sql" value="sql"/>
 	<property name="junit4.jar" value="jars/junit-4.10.jar"/>
 	<property name="tomcat.home" value="../aspiratc7029"/>
@@ -34,6 +36,10 @@
 		
 	<target name="build-tc" depends="compile,prepare">
 		<tstamp/>
+		<mkdir dir="${build-tc}/${js}"/>
+		<copy todir="${build-tc}/${js}" overwrite="true">
+			<fileset dir="${js}" />
+		</copy>
 		<mkdir dir="${build-tc}/WEB-INF"/>
 		<copy todir="${build-tc}/WEB-INF" overwrite="true">
 			<fileset dir=".">
@@ -45,6 +51,7 @@
 				<exclude name="${properties}"/>
 				<include name="${classes}/**"/>
 				<include name="${lib}/**"/>
+				<include name="${resources}/**"/>
 			</fileset>	
 		</copy>
 		<copy todir="${build-tc}/WEB-INF/${classes}/${properties}" overwrite="true">
